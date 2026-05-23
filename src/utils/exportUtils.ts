@@ -34,19 +34,19 @@ function renderCell(
   const { panX, panY, zoom, rotation, flipX, flipY } = transform
 
   // V24: 1010px crop + 35px bars each side = 1080px
+  // T71: Crop area is 1010×1350 (not 1010×1346.67) - slightly off from pure 3:4
   const CROP_W = 1010
+  const CROP_H = 1350
 
-  // T69: Scale pan values from grid coordinates to export coordinates
-  // Use actual grid cell size from current viewport
+  // T69: Scale pan values from grid coordinates to export CROP coordinates
   const panScaleX = CROP_W / gridCellW
-  const panScaleY = EXPORT_H / gridCellH
+  const panScaleY = CROP_H / gridCellH
   const scaledPanX = panX * panScaleX
   const scaledPanY = panY * panScaleY
 
-  // T70: Calculate offset for this cell within the block
-  // Use EXPORT_W (1080) not CROP_W (1010) - each cell is 1080px wide in export
-  const cellOffsetX = relCol * EXPORT_W
-  const cellOffsetY = relRow * EXPORT_H
+  // T71: Cell offset in CROP coordinates (not full canvas)
+  const cellOffsetX = relCol * CROP_W
+  const cellOffsetY = relRow * CROP_H
 
   // T66: Fill canvas with bars color (no blur)
   ctx.fillStyle = block.barsColor || '#000000'
@@ -63,9 +63,9 @@ function renderCell(
   const flipScaleY = (flipY ? -1 : 1) * zoom
   ctx.scale(flipScaleX, flipScaleY)
 
-  // T66: Scale to fill full 1080px width (not just crop)
-  const fullW = totalCols * EXPORT_W
-  const fullH = totalRows * EXPORT_H
+  // T71: Scale image to fit within full block CROP area
+  const fullW = totalCols * CROP_W
+  const fullH = totalRows * CROP_H
   const imgScaleX = fullW / img.naturalWidth
   const imgScaleY = fullH / img.naturalHeight
   const imgScale = Math.min(imgScaleX, imgScaleY)
