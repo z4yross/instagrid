@@ -65,8 +65,8 @@ export default function RightToolbar() {
         height: '100vh',
         background: `
           linear-gradient(180deg, #0a0a0a 0%, #1a1a1a 50%, #0a0a0a 100%),
-          repeating-linear-gradient(0deg, transparent, transparent 1px, rgba(255,255,255,0.04) 1px, rgba(255,255,255,0.04) 2px),
-          repeating-linear-gradient(90deg, transparent, transparent 1px, rgba(255,255,255,0.04) 1px, rgba(255,255,255,0.04) 2px)
+          repeating-linear-gradient(0deg, transparent, transparent 1px, rgba(255,255,255,0.08) 1px, rgba(255,255,255,0.08) 2px),
+          repeating-linear-gradient(90deg, transparent, transparent 1px, rgba(255,255,255,0.08) 1px, rgba(255,255,255,0.08) 2px)
         `,
         borderLeft: 'none',
         boxShadow: 'inset 8px 0 12px rgba(0, 0, 0, 0.4)',
@@ -146,8 +146,8 @@ function IconBtn({ children, onClick, disabled, title, danger }: {
         justifyContent: 'center',
         fontSize: 16,
         fontWeight: 700,
-        background: disabled ? 'transparent' : danger ? 'transparent' : '#000000',
-        border: danger ? '1px dashed rgba(255, 255, 255, 0.3)' : '1px solid rgba(255, 255, 255, 0.3)',
+        background: disabled ? 'rgba(255, 255, 255, 0.05)' : danger ? 'transparent' : 'rgba(255, 255, 255, 0.08)',
+        border: danger ? '1px dashed rgba(255, 255, 255, 0.3)' : 'none',
         color: disabled ? '#555555' : danger ? '#ff4444' : '#ffffff',
         borderRadius: 8,
         cursor: disabled ? 'not-allowed' : 'pointer',
@@ -162,8 +162,7 @@ function IconBtn({ children, onClick, disabled, title, danger }: {
             e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.5)'
             e.currentTarget.style.color = '#ff6666'
           } else {
-            e.currentTarget.style.background = '#0a0a0a'
-            e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.5)'
+            e.currentTarget.style.background = 'rgba(255, 255, 255, 0.15)'
           }
         }
       }}
@@ -174,8 +173,7 @@ function IconBtn({ children, onClick, disabled, title, danger }: {
             e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.3)'
             e.currentTarget.style.color = '#ff4444'
           } else {
-            e.currentTarget.style.background = '#000000'
-            e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.3)'
+            e.currentTarget.style.background = 'rgba(255, 255, 255, 0.08)'
           }
         }
       }}
