@@ -20,14 +20,25 @@ export function loadState(): PersistedState | null {
 }
 
 let saveTimer: ReturnType<typeof setTimeout> | null = null
+let quotaWarned = false
 
 export function saveState(state: PersistedState, debounceMs = 500) {
   if (saveTimer) clearTimeout(saveTimer)
   saveTimer = setTimeout(() => {
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(state))
+      const serialized = JSON.stringify(state)
+      localStorage.setItem(STORAGE_KEY, serialized)
+      quotaWarned = false // reset on success
     } catch (err) {
+      // V18: catch quota errors, log + warn user
       console.error('Failed to save state to localStorage:', err)
+      if (err instanceof Error && err.name === 'QuotaExceededError') {
+        if (!quotaWarned) {
+          console.warn('localStorage quota exceeded. State will not persist. Consider reducing image count.')
+          quotaWarned = true
+          // could dispatch event here for UI notification
+        }
+      }
     }
   }, debounceMs)
 }
