@@ -10,7 +10,7 @@ export default function useKeyboard() {
       if ((e.target as HTMLElement).matches('input,textarea,select')) return
 
       const ctrl = e.ctrlKey || e.metaKey
-      const { selectedBlockIds, blocks, removeBlocks, setSelectedBlocks, updateBlock } = useStore.getState()
+      const { selectedBlockIds, blocks, removeBlocks, setSelectedBlocks, updateBlock, visibleRows, setVisibleRows } = useStore.getState()
 
       // undo/redo
       if (ctrl && e.key === 'z' && !e.shiftKey) { e.preventDefault(); undo(); return }
@@ -70,6 +70,37 @@ export default function useKeyboard() {
             },
           })
         })
+      }
+
+      // T75: +/- context-aware zoom
+      if (e.key === '+' || e.key === '=' || e.key === '-') {
+        e.preventDefault()
+        const isZoomIn = e.key === '+' || e.key === '='
+        const ZOOM_STEP = 0.1
+
+        if (selectedBlockIds.length > 0) {
+          // Image zoom: adjust transform.zoom for selected blocks
+          const selectedBlocks = blocks.filter(b => selectedBlockIds.includes(b.id))
+          selectedBlocks.forEach((block) => {
+            const newZoom = isZoomIn
+              ? Math.min(10, block.transform.zoom + ZOOM_STEP)
+              : Math.max(0.1, block.transform.zoom - ZOOM_STEP)
+
+            updateBlock(block.id, {
+              transform: {
+                ...block.transform,
+                zoom: newZoom,
+              },
+            })
+          })
+        } else {
+          // Grid zoom: adjust visibleRows
+          const newRows = isZoomIn
+            ? Math.max(1, visibleRows - 1)  // zoom in = fewer rows
+            : Math.min(10, visibleRows + 1) // zoom out = more rows
+
+          setVisibleRows(newRows)
+        }
       }
     }
 

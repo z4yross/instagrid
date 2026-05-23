@@ -151,6 +151,7 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | T72 | x | Design refresh: black/white color scheme with orange accents (remove purple), remove keyboard hint labels from sidebar | — |
 | T73 | x | Increase B/W contrast: use pure black (#000) and pure white (#fff) for dramatic contrast, remove all blue/purple gradients, replace with black/white/orange gradients | — |
 | T74 | x | Add white backgrounds to strategic UI elements (buttons, panels, modals) for true B/W contrast, not just black everywhere | — |
+| T75 | x | Context-aware +/- zoom: if block selected zoom image (transform.zoom), else zoom grid (visibleRows) | V16,V20,V5 |
 
 ---
 
