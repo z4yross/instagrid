@@ -1,4 +1,5 @@
 import { useStore } from '@/store/useStore'
+import ColorPicker from '@/components/ColorPicker/ColorPicker'
 
 export default function RightToolbar() {
   const selectedBlockId = useStore((s) => s.selectedBlockId)
@@ -77,26 +78,11 @@ export default function RightToolbar() {
       </Section>
 
       <Section label="Bars Color">
-        <label style={{ display: 'flex', alignItems: 'center', gap: 8, opacity: disabled ? 0.4 : 1, pointerEvents: disabled ? 'none' : 'auto' }}>
-          <input
-            type="color"
-            value={block?.barsColor ?? '#000000'}
-            onChange={(e) => block && updateBlock(block.id, { barsColor: e.target.value })}
-            disabled={disabled}
-            style={{
-              width: 32,
-              height: 32,
-              padding: 0,
-              border: '1px solid var(--color-border)',
-              borderRadius: 6,
-              cursor: disabled ? 'not-allowed' : 'pointer',
-              background: 'none',
-            }}
-          />
-          <span style={{ fontSize: 11, color: 'var(--color-text-secondary)' }}>
-            {block?.barsColor ?? '#000000'}
-          </span>
-        </label>
+        <ColorPicker
+          value={block?.barsColor ?? '#000000'}
+          onChange={(color) => block && updateBlock(block.id, { barsColor: color })}
+          disabled={disabled}
+        />
       </Section>
 
       <div style={{ flex: 1 }} />
