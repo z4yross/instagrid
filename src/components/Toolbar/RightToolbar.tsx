@@ -146,14 +146,14 @@ function IconBtn({ children, onClick, disabled, title, danger }: {
         justifyContent: 'center',
         fontSize: 16,
         fontWeight: 700,
-        background: disabled ? 'rgba(255, 255, 255, 0.05)' : danger ? 'transparent' : 'rgba(255, 255, 255, 0.08)',
+        background: disabled ? 'rgba(255, 255, 255, 0.05)' : danger ? 'transparent' : 'linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.06) 100%)',
         border: danger ? '1px dashed rgba(255, 255, 255, 0.3)' : 'none',
         color: disabled ? '#555555' : danger ? '#ff4444' : '#ffffff',
         borderRadius: 8,
         cursor: disabled ? 'not-allowed' : 'pointer',
         transition: 'all 0.2s',
         opacity: disabled ? 0.4 : 1,
-        boxShadow: danger ? 'none' : 'inset 0 1px 0 rgba(255, 255, 255, 0.1)',
+        boxShadow: danger ? 'none' : '0 4px 8px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.15)',
       }}
       onMouseEnter={(e) => {
         if (!disabled) {
@@ -162,7 +162,8 @@ function IconBtn({ children, onClick, disabled, title, danger }: {
             e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.5)'
             e.currentTarget.style.color = '#ff6666'
           } else {
-            e.currentTarget.style.background = 'rgba(255, 255, 255, 0.15)'
+            e.currentTarget.style.background = 'linear-gradient(135deg, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0.1) 100%)'
+            e.currentTarget.style.boxShadow = '0 6px 12px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.2)'
           }
         }
       }}
@@ -173,7 +174,8 @@ function IconBtn({ children, onClick, disabled, title, danger }: {
             e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.3)'
             e.currentTarget.style.color = '#ff4444'
           } else {
-            e.currentTarget.style.background = 'rgba(255, 255, 255, 0.08)'
+            e.currentTarget.style.background = 'linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.06) 100%)'
+            e.currentTarget.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.15)'
           }
         }
       }}
