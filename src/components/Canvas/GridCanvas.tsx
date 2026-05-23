@@ -12,6 +12,9 @@ export default function GridCanvas({ cellW, cellH, children }: Props) {
   const containerRef = useRef<HTMLDivElement>(null)
   const gridRows = useStore((s) => s.gridRows)
   const showGuides = useStore((s) => s.showGuides)
+  const isLoading = useStore((s) => s.isLoading)
+  const imageCount = useStore((s) => s.imageCount)
+  const images = useStore((s) => s.images)
 
   const gridW = cellW * COLS
   const totalHeight = cellH * gridRows
@@ -32,6 +35,31 @@ export default function GridCanvas({ cellW, cellH, children }: Props) {
     >
       {showGuides && (
         <GridGuides cols={COLS} rows={gridRows} cellW={cellW} cellH={cellH} />
+      )}
+      {isLoading && images.length === 0 && imageCount > 0 && (
+        <div style={{ position: 'absolute', inset: 0 }}>
+          {Array.from({ length: Math.min(imageCount, 9) }).map((_, i) => {
+            const col = i % COLS
+            const row = Math.floor(i / COLS)
+            return (
+              <div
+                key={i}
+                style={{
+                  position: 'absolute',
+                  left: col * cellW,
+                  top: row * cellH,
+                  width: cellW,
+                  height: cellH,
+                  background: 'var(--color-bg-elevated)',
+                  border: '1px solid var(--color-border)',
+                  borderRadius: 2,
+                  animation: 'pulse 1.5s ease-in-out infinite',
+                  animationDelay: `${i * 0.1}s`,
+                }}
+              />
+            )
+          })}
+        </div>
       )}
       {children}
     </div>

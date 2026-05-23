@@ -17,6 +17,7 @@ export default function Sidebar({ onLowRes }: Props) {
   const gridRows = useStore((s) => s.gridRows)
   const showGuides = useStore((s) => s.showGuides)
   const isLoading = useStore((s) => s.isLoading)
+  const imageCount = useStore((s) => s.imageCount)
   const addImage = useStore((s) => s.addImage)
   const addBlock = useStore((s) => s.addBlock)
   const addPlaceholder = useStore((s) => s.addPlaceholder)
@@ -121,10 +122,10 @@ export default function Sidebar({ onLowRes }: Props) {
       {isLoading ? (
         <div style={{ padding: '0 10px 8px' }}>
           <div style={{ fontSize: 10, fontWeight: 600, color: 'var(--color-text-muted)', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 6 }}>
-            Loading...
+            Loading{imageCount > 0 ? ` ${imageCount} image${imageCount !== 1 ? 's' : ''}` : ''}...
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 3 }}>
-            {Array.from({ length: 6 }).map((_, i) => (
+            {Array.from({ length: imageCount || 6 }).map((_, i) => (
               <div
                 key={i}
                 style={{

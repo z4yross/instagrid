@@ -90,6 +90,23 @@ export async function clearImagesFromIDB(): Promise<void> {
   }
 }
 
+export async function getImageCountFromIDB(): Promise<number> {
+  try {
+    const db = await openDB()
+    const tx = db.transaction(STORE_NAME, 'readonly')
+    const store = tx.objectStore(STORE_NAME)
+    const request = store.count()
+
+    return new Promise((resolve, reject) => {
+      request.onsuccess = () => resolve(request.result)
+      request.onerror = () => reject(request.error)
+    })
+  } catch (err) {
+    console.error('Failed to get image count from IndexedDB:', err)
+    return 0
+  }
+}
+
 export async function loadState(): Promise<PersistedState | null> {
   try {
     // Load blocks + gridRows from localStorage

@@ -124,7 +124,7 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | T46 | x | Replace fullscreen loading with skeleton placeholders in sidebar + grid | V23, B20 |
 | T47 | . | Fix drag from sidebar blocked after clear canvas - investigate drop zone / handlers | B21 |
 | T48 | x | Add "Clear images" button to sidebar - clears images from memory + IDB | B22 |
-| T49 | . | Add grid skeletons + IDB image count query for precise skeleton rendering | V23, B23 |
+| T49 | x | Add grid skeletons + IDB image count query for precise skeleton rendering | V23, B23 |
 | T50 | x | Fix batch upload stacking - debug T43, verify local blocks tracking works | B24 |
 | T51 | . | Fix drag duplicate visual - check DragOverlay, ensure single block rendered | B25 |
 

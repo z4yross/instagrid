@@ -2,7 +2,7 @@ import { create } from 'zustand'
 import { subscribeWithSelector } from 'zustand/middleware'
 import { temporal } from 'zundo'
 import type { AppState, ImageBlock, UploadedImage } from './types'
-import { loadState, saveState, clearImagesFromIDB } from '@/utils/storage'
+import { loadState, saveState, clearImagesFromIDB, getImageCountFromIDB } from '@/utils/storage'
 
 function ensureGridRows(blocks: ImageBlock[], current: number): number {
   const maxRow = blocks.reduce((m, b) => Math.max(m, b.row + b.rowSpan), 0)
@@ -21,6 +21,7 @@ const useStore = create<AppState>()(
         showGuides: true,
         visibleRows: 3,
         isLoading: true,
+        imageCount: 0,
 
       addImage: (img: UploadedImage) =>
         set((s) => ({ images: [...s.images, img] })),
@@ -154,16 +155,18 @@ useStore.subscribe(
 )
 
 // V22: Load persisted state from IndexedDB + localStorage on init
-loadState().then((persisted) => {
+// V23: Get image count first for accurate skeleton rendering
+Promise.all([getImageCountFromIDB(), loadState()]).then(([count, persisted]) => {
   if (persisted) {
     useStore.setState({
       images: persisted.images,
       blocks: persisted.blocks,
       gridRows: persisted.gridRows,
+      imageCount: count,
       isLoading: false,
     })
   } else {
-    useStore.setState({ isLoading: false })
+    useStore.setState({ imageCount: count, isLoading: false })
   }
 })
 

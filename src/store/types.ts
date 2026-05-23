@@ -39,6 +39,7 @@ export interface AppState {
   showGuides: boolean
   visibleRows: number
   isLoading: boolean
+  imageCount: number
 
   addImage: (img: UploadedImage) => void
   addBlock: (block: ImageBlock) => void
