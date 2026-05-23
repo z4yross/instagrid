@@ -13,6 +13,7 @@ export default function CellModeOverlay({ block, cellW, cellH }: Props) {
   const setCellMode = useStore((s) => s.setCellMode)
   const updateBlock = useStore((s) => s.updateBlock)
   const images = useStore((s) => s.images)
+  const gridRows = useStore((s) => s.gridRows)
   const image = images.find((i) => i.id === block.imageId)
   const [dragSrc, setDragSrc] = useState<number | null>(null)
 
@@ -43,7 +44,7 @@ export default function CellModeOverlay({ block, cellW, cellH }: Props) {
   const cells = block.cellOrder.map(([relCol, relRow], idx) => {
     const absCol = block.col + relCol
     const absRow = block.row + relRow
-    const num = cellUploadNumber(absCol, absRow, COLS)
+    const num = cellUploadNumber(absCol, absRow, gridRows, COLS)
     const t = getCellTransform(relCol, relRow)
 
     // image positioned to show the correct crop of the whole block

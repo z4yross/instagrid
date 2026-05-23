@@ -1,9 +1,9 @@
 import type { ImageBlock } from '@/store/types'
 
 export const COLS = 3
-/** Instagram upload order: right-to-left per row, top-to-bottom */
-export function cellUploadNumber(col: number, row: number, totalCols = COLS): number {
-  return row * totalCols + (totalCols - 1 - col) + 1
+/** Instagram upload order: left-to-right per row, bottom-to-top */
+export function cellUploadNumber(col: number, row: number, gridRows: number, totalCols = COLS): number {
+  return (gridRows - 1 - row) * totalCols + col + 1
 }
 
 /** Check if placing a block at (col, row, colSpan, rowSpan) collides with existing blocks */

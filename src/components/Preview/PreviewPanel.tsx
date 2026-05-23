@@ -68,7 +68,7 @@ export default function PreviewPanel({ onClose }: Props) {
               (b) => col >= b.col && col < b.col + b.colSpan && row >= b.row && row < b.row + b.rowSpan
             )
             const image = block ? images.find((im) => im.id === block.imageId) : null
-            const num = cellUploadNumber(col, row, COLS)
+            const num = cellUploadNumber(col, row, gridRows, COLS)
 
             return (
               <div

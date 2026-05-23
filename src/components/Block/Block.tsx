@@ -22,6 +22,7 @@ export default function Block({ block, cellW, cellH, isDragging }: Props) {
   const setSelectedBlock = useStore((s) => s.setSelectedBlock)
   const setCellMode = useStore((s) => s.setCellMode)
   const images = useStore((s) => s.images)
+  const gridRows = useStore((s) => s.gridRows)
   const image = images.find((i) => i.id === block.imageId)
 
   const isSelected = selectedBlockId === block.id
@@ -66,7 +67,7 @@ export default function Block({ block, cellW, cellH, isDragging }: Props) {
         </div>
       )}
 
-      <CellBadges block={block} cellW={cellW} cellH={cellH} />
+      <CellBadges block={block} cellW={cellW} cellH={cellH} gridRows={gridRows} />
 
       {selectedBlockId === block.id && !isDragging && (
         <>
@@ -90,11 +91,11 @@ function buildImgStyle(block: ImageBlock): React.CSSProperties {
   return { ...base, inset: 0, width: '100%', height: '100%', objectFit: block.fillMode === 'zoom' ? 'cover' : 'contain' }
 }
 
-function CellBadges({ block, cellW, cellH }: { block: ImageBlock; cellW: number; cellH: number }) {
+function CellBadges({ block, cellW, cellH, gridRows }: { block: ImageBlock; cellW: number; cellH: number; gridRows: number }) {
   const badges: React.ReactNode[] = []
   for (let r = 0; r < block.rowSpan; r++) {
     for (let c = 0; c < block.colSpan; c++) {
-      const num = cellUploadNumber(block.col + c, block.row + r, COLS)
+      const num = cellUploadNumber(block.col + c, block.row + r, gridRows, COLS)
       badges.push(
         <div key={`${c},${r}`} style={{
           position: 'absolute', left: c * cellW + 4, top: r * cellH + 4,
