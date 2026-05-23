@@ -190,6 +190,14 @@ export interface Profile {
 export async function saveProfile(name: string, blocks: ImageBlock[], gridRows: number): Promise<void> {
   try {
     const db = await openDB()
+
+    // Check if profiles store exists
+    if (!db.objectStoreNames.contains(PROFILES_STORE)) {
+      console.error('Profiles store does not exist. Please refresh the page.')
+      alert('Please refresh the page to enable profile saving.')
+      return
+    }
+
     const tx = db.transaction(PROFILES_STORE, 'readwrite')
     const store = tx.objectStore(PROFILES_STORE)
     const profile: Profile = {
@@ -201,11 +209,19 @@ export async function saveProfile(name: string, blocks: ImageBlock[], gridRows: 
     store.add(profile)
 
     return new Promise((resolve, reject) => {
-      tx.oncomplete = () => resolve()
-      tx.onerror = () => reject(tx.error)
+      tx.oncomplete = () => {
+        console.log('Profile saved successfully:', name)
+        resolve()
+      }
+      tx.onerror = () => {
+        console.error('Transaction error:', tx.error)
+        reject(tx.error)
+      }
     })
   } catch (err) {
     console.error('Failed to save profile:', err)
+    alert('Failed to save profile. Check console for details.')
+    throw err
   }
 }
 

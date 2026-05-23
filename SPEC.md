@@ -139,6 +139,8 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | T60 | x | Debug export: verify transform application, crop bounds, cell offset calculations | B31 |
 | T61 | x | Save/load profiles: store multiple named profiles in IDB (blocks + gridRows + timestamp). Switch between profiles via UI | V15, V22 |
 | T62 | x | Export bars from image content: extend/blur edge pixels instead of solid barsColor. Match IG carousel style | V24 |
+| T63 | x | Fix save profile: debug IDB transaction, ensure profiles persist correctly | B32 |
+| T64 | . | Add "New profile" button: clears canvas to start fresh (same as clear canvas) | — |
 
 ---
 
@@ -177,4 +179,5 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | B29 | 2026-05-23 | Exported images low resolution | Export quality or scaling issue? Need verify actual resolution vs expected → T56 |
 | B30 | 2026-05-23 | Color picker opens to right, overflows viewport | Picker should open to left for better positioning → T59 |
 | B31 | 2026-05-23 | Exported images still incorrect after T55 | Need debug actual export output vs expected. Transform application or crop logic issue → T60 |
+| B32 | 2026-05-23 | Save profile doesn't work | Need debug why saveProfile not persisting. Check IDB transaction or version upgrade → T63 |
 
