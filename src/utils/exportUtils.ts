@@ -43,8 +43,9 @@ function renderCell(
   const scaledPanX = panX * panScaleX
   const scaledPanY = panY * panScaleY
 
-  // Calculate offset for this cell within the block
-  const cellOffsetX = relCol * CROP_W
+  // T70: Calculate offset for this cell within the block
+  // Use EXPORT_W (1080) not CROP_W (1010) - each cell is 1080px wide in export
+  const cellOffsetX = relCol * EXPORT_W
   const cellOffsetY = relRow * EXPORT_H
 
   // T66: Fill canvas with bars color (no blur)
