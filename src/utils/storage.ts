@@ -90,6 +90,22 @@ export async function clearImagesFromIDB(): Promise<void> {
   }
 }
 
+export async function deleteImageFromIDB(id: string): Promise<void> {
+  try {
+    const db = await openDB()
+    const tx = db.transaction(STORE_NAME, 'readwrite')
+    const store = tx.objectStore(STORE_NAME)
+    store.delete(id)
+
+    return new Promise((resolve, reject) => {
+      tx.oncomplete = () => resolve()
+      tx.onerror = () => reject(tx.error)
+    })
+  } catch (err) {
+    console.error('Failed to delete image from IndexedDB:', err)
+  }
+}
+
 export async function getImageCountFromIDB(): Promise<number> {
   try {
     const db = await openDB()

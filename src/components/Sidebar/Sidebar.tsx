@@ -23,6 +23,7 @@ export default function Sidebar({ onLowRes }: Props) {
   const addPlaceholder = useStore((s) => s.addPlaceholder)
   const clearCanvas = useStore((s) => s.clearCanvas)
   const clearImages = useStore((s) => s.clearImages)
+  const removeImage = useStore((s) => s.removeImage)
   const toggleGuides = useStore ((s) => s.toggleGuides)
 
   function findFreeCellInBlocks(currentBlocks: ImageBlock[], rows: number): { col: number; row: number } {
@@ -148,14 +149,80 @@ export default function Sidebar({ onLowRes }: Props) {
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 3 }}>
             {images.map((img) => (
-              <div key={img.id} style={{
-                aspectRatio: '3/4',
-                borderRadius: 5,
-                overflow: 'hidden',
-                border: '1px solid var(--color-border)',
-                boxShadow: '0 2px 6px rgba(0,0,0,0.4)',
-              }}>
+              <div
+                key={img.id}
+                onClick={() => {
+                  const pos = findFreeCellInBlocks(blocks, gridRows)
+                  const block: ImageBlock = {
+                    id: crypto.randomUUID(),
+                    imageId: img.id,
+                    col: pos.col,
+                    row: pos.row,
+                    colSpan: 1,
+                    rowSpan: 1,
+                    barsColor: '#000000',
+                    transform: { panX: 0, panY: 0, zoom: 1, rotation: 0 },
+                  }
+                  addBlock(block)
+                }}
+                style={{
+                  position: 'relative',
+                  aspectRatio: '3/4',
+                  borderRadius: 5,
+                  overflow: 'hidden',
+                  border: '1px solid var(--color-border)',
+                  boxShadow: '0 2px 6px rgba(0,0,0,0.4)',
+                  cursor: 'pointer',
+                  transition: 'transform 0.15s, box-shadow 0.15s',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'scale(1.05)'
+                  e.currentTarget.style.boxShadow = '0 4px 12px rgba(168,85,247,0.3)'
+                  const deleteBtn = e.currentTarget.querySelector('[data-delete-btn]') as HTMLElement
+                  if (deleteBtn) deleteBtn.style.opacity = '1'
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'scale(1)'
+                  e.currentTarget.style.boxShadow = '0 2px 6px rgba(0,0,0,0.4)'
+                  const deleteBtn = e.currentTarget.querySelector('[data-delete-btn]') as HTMLElement
+                  if (deleteBtn) deleteBtn.style.opacity = '0'
+                }}
+              >
                 <img src={img.src} alt={img.name} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} draggable={false} />
+                <button
+                  data-delete-btn
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    removeImage(img.id)
+                  }}
+                  style={{
+                    position: 'absolute',
+                    top: 2,
+                    right: 2,
+                    width: 18,
+                    height: 18,
+                    borderRadius: '50%',
+                    background: 'rgba(0,0,0,0.75)',
+                    border: '1px solid rgba(255,255,255,0.3)',
+                    color: '#fff',
+                    fontSize: 10,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    cursor: 'pointer',
+                    opacity: 0,
+                    transition: 'opacity 0.15s, background 0.15s',
+                    padding: 0,
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = 'rgba(220,38,38,0.9)'
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = 'rgba(0,0,0,0.75)'
+                  }}
+                >
+                  ✕
+                </button>
               </div>
             ))}
           </div>

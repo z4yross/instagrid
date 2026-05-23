@@ -55,4 +55,5 @@ export interface AppState {
   setVisibleRows: (rows: number) => void
   clearCanvas: () => void
   clearImages: () => void
+  removeImage: (id: string) => void
 }
