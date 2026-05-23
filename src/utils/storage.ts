@@ -2,8 +2,9 @@ import type { ImageBlock, UploadedImage } from '@/store/types'
 
 const STORAGE_KEY = 'insta-grid-state'
 const DB_NAME = 'insta-grid-db'
-const DB_VERSION = 1
+const DB_VERSION = 2
 const STORE_NAME = 'images'
+const PROFILES_STORE = 'profiles'
 
 export interface PersistedState {
   images: UploadedImage[]
@@ -29,6 +30,9 @@ function openDB(): Promise<IDBDatabase> {
       const db = (event.target as IDBOpenDBRequest).result
       if (!db.objectStoreNames.contains(STORE_NAME)) {
         db.createObjectStore(STORE_NAME, { keyPath: 'id' })
+      }
+      if (!db.objectStoreNames.contains(PROFILES_STORE)) {
+        db.createObjectStore(PROFILES_STORE, { keyPath: 'id', autoIncrement: true })
       }
     }
   })
@@ -172,4 +176,85 @@ export function saveState(state: PersistedState, debounceMs = 500) {
       }
     }
   }, debounceMs)
+}
+
+// T61: Profile management
+export interface Profile {
+  id?: number
+  name: string
+  timestamp: number
+  blocks: ImageBlock[]
+  gridRows: number
+}
+
+export async function saveProfile(name: string, blocks: ImageBlock[], gridRows: number): Promise<void> {
+  try {
+    const db = await openDB()
+    const tx = db.transaction(PROFILES_STORE, 'readwrite')
+    const store = tx.objectStore(PROFILES_STORE)
+    const profile: Profile = {
+      name,
+      timestamp: Date.now(),
+      blocks,
+      gridRows,
+    }
+    store.add(profile)
+
+    return new Promise((resolve, reject) => {
+      tx.oncomplete = () => resolve()
+      tx.onerror = () => reject(tx.error)
+    })
+  } catch (err) {
+    console.error('Failed to save profile:', err)
+  }
+}
+
+export async function listProfiles(): Promise<Profile[]> {
+  try {
+    const db = await openDB()
+    const tx = db.transaction(PROFILES_STORE, 'readonly')
+    const store = tx.objectStore(PROFILES_STORE)
+    const request = store.getAll()
+
+    return new Promise((resolve, reject) => {
+      request.onsuccess = () => resolve(request.result || [])
+      request.onerror = () => reject(request.error)
+    })
+  } catch (err) {
+    console.error('Failed to list profiles:', err)
+    return []
+  }
+}
+
+export async function loadProfile(id: number): Promise<Profile | null> {
+  try {
+    const db = await openDB()
+    const tx = db.transaction(PROFILES_STORE, 'readonly')
+    const store = tx.objectStore(PROFILES_STORE)
+    const request = store.get(id)
+
+    return new Promise((resolve, reject) => {
+      request.onsuccess = () => resolve(request.result || null)
+      request.onerror = () => reject(request.error)
+    })
+  } catch (err) {
+    console.error('Failed to load profile:', err)
+    return null
+  }
+}
+
+export async function deleteProfile(id: number): Promise<void> {
+  try {
+    const db = await openDB()
+    const tx = db.transaction(PROFILES_STORE, 'readwrite')
+    const store = tx.objectStore(PROFILES_STORE)
+    store.delete(id)
+
+    return new Promise((resolve, reject) => {
+      tx.oncomplete = () => resolve()
+      tx.onerror = () => reject(tx.error)
+    })
+  } catch (err) {
+    console.error('Failed to delete profile:', err)
+  }
 }

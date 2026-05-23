@@ -153,6 +153,9 @@ const useStore = create<AppState>()(
             }),
           }
         }),
+
+      loadProfileState: (blocks: ImageBlock[], gridRows: number) =>
+        set({ blocks, gridRows, selectedBlockIds: [] }),
     }),
     {
       // V5: undo/redo only covers canvas mutations, not image uploads

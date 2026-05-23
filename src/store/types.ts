@@ -58,4 +58,5 @@ export interface AppState {
   clearCanvas: () => void
   clearImages: () => void
   removeImage: (id: string) => void
+  loadProfileState: (blocks: ImageBlock[], gridRows: number) => void
 }

@@ -1,7 +1,8 @@
-import { useRef, useState } from 'react'
+import { useRef, useState, useEffect } from 'react'
 import { useStore } from '@/store/useStore'
 import { loadImageFiles } from '@/utils/imageUtils'
 import { exportAllCells } from '@/utils/exportUtils'
+import { saveProfile, listProfiles, loadProfile, deleteProfile, type Profile } from '@/utils/storage'
 import type { ImageBlock } from '@/store/types'
 
 interface Props {
@@ -11,6 +12,8 @@ interface Props {
 export default function Sidebar({ onLowRes }: Props) {
   const fileRef = useRef<HTMLInputElement>(null)
   const [exporting, setExporting] = useState(false)
+  const [profiles, setProfiles] = useState<Profile[]>([])
+  const [showProfiles, setShowProfiles] = useState(false)
 
   const images = useStore((s) => s.images)
   const blocks = useStore((s) => s.blocks)
@@ -24,7 +27,38 @@ export default function Sidebar({ onLowRes }: Props) {
   const clearCanvas = useStore((s) => s.clearCanvas)
   const clearImages = useStore((s) => s.clearImages)
   const removeImage = useStore((s) => s.removeImage)
+  const loadProfileState = useStore((s) => s.loadProfileState)
   const toggleGuides = useStore ((s) => s.toggleGuides)
+
+  useEffect(() => {
+    if (showProfiles) {
+      listProfiles().then(setProfiles)
+    }
+  }, [showProfiles])
+
+  async function handleSaveProfile() {
+    const name = prompt('Profile name:')
+    if (!name) return
+    await saveProfile(name, blocks, gridRows)
+    const updated = await listProfiles()
+    setProfiles(updated)
+  }
+
+  async function handleLoadProfile(id: number) {
+    const profile = await loadProfile(id)
+    if (profile) {
+      loadProfileState(profile.blocks, profile.gridRows)
+      setShowProfiles(false)
+    }
+  }
+
+  async function handleDeleteProfile(id: number) {
+    if (confirm('Delete profile?')) {
+      await deleteProfile(id)
+      const updated = await listProfiles()
+      setProfiles(updated)
+    }
+  }
 
   function findFreeCellInBlocks(currentBlocks: ImageBlock[], rows: number): { col: number; row: number } {
     for (let r = 0; r < rows + 3; r++) {
@@ -248,6 +282,43 @@ export default function Sidebar({ onLowRes }: Props) {
 
       {/* actions */}
       <div style={{ padding: '8px 10px 12px', display: 'flex', flexDirection: 'column', gap: 5 }}>
+        <button className="ig-btn" style={{ width: '100%', justifyContent: 'flex-start' }} onClick={handleSaveProfile}>
+          <span>💾</span> Save profile
+        </button>
+
+        <button className="ig-btn" style={{ width: '100%', justifyContent: 'flex-start' }} onClick={() => setShowProfiles(!showProfiles)}>
+          <span>📁</span> {showProfiles ? 'Hide' : 'Load'} profiles
+        </button>
+
+        {showProfiles && (
+          <div style={{ maxHeight: 150, overflowY: 'auto', background: 'var(--color-bg-base)', borderRadius: 6, padding: 4 }}>
+            {profiles.length === 0 ? (
+              <div style={{ padding: 8, fontSize: 10, color: 'var(--color-text-muted)', textAlign: 'center' }}>No profiles saved</div>
+            ) : (
+              profiles.map((p) => (
+                <div key={p.id} style={{ display: 'flex', gap: 4, padding: 4 }}>
+                  <button
+                    className="ig-btn"
+                    style={{ flex: 1, justifyContent: 'flex-start', fontSize: 10, padding: '4px 6px' }}
+                    onClick={() => handleLoadProfile(p.id!)}
+                  >
+                    {p.name}
+                  </button>
+                  <button
+                    className="ig-btn ig-btn-danger"
+                    style={{ width: 24, height: 24, padding: 0, fontSize: 10 }}
+                    onClick={() => handleDeleteProfile(p.id!)}
+                  >
+                    ✕
+                  </button>
+                </div>
+              ))
+            )}
+          </div>
+        )}
+
+        <div style={{ height: 1, background: 'var(--color-border)', margin: '4px 0' }} />
+
         <button className="ig-btn" style={{ width: '100%', justifyContent: 'flex-start' }} onClick={toggleGuides}>
           <span style={{ opacity: 0.6 }}>▦</span>
           {showGuides ? 'Hide guides' : 'Show guides'}
