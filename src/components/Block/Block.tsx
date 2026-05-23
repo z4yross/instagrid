@@ -115,20 +115,23 @@ function buildImgStyle(block: ImageBlock): React.CSSProperties {
 }
 
 function CellBadges({ block, cellW, cellH, gridRows }: { block: ImageBlock; cellW: number; cellH: number; gridRows: number }) {
+  const blocks = useStore((s) => s.blocks)
   const badges: React.ReactNode[] = []
   for (let r = 0; r < block.rowSpan; r++) {
     for (let c = 0; c < block.colSpan; c++) {
-      const num = cellUploadNumber(block.col + c, block.row + r, gridRows, COLS)
-      badges.push(
-        <div key={`${c},${r}`} style={{
-          position: 'absolute', left: c * cellW + 4, top: r * cellH + 4,
-          width: 20, height: 20, background: 'rgba(0,0,0,0.55)', borderRadius: '50%',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          fontSize: 9, fontWeight: 700, color: '#fff', pointerEvents: 'none', zIndex: 5,
-        }}>
-          {String(num).padStart(2, '0')}
-        </div>
-      )
+      const num = cellUploadNumber(block.col + c, block.row + r, gridRows, blocks, COLS)
+      if (num > 0) {
+        badges.push(
+          <div key={`${c},${r}`} style={{
+            position: 'absolute', left: c * cellW + 4, top: r * cellH + 4,
+            width: 20, height: 20, background: 'rgba(0,0,0,0.55)', borderRadius: '50%',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            fontSize: 9, fontWeight: 700, color: '#fff', pointerEvents: 'none', zIndex: 5,
+          }}>
+            {String(num).padStart(2, '0')}
+          </div>
+        )
+      }
     }
   }
   return <>{badges}</>

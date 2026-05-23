@@ -42,7 +42,7 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | V1 | Blocks never overlap. Any drop/resize that causes collision rejected or snapped to nearest free zone. |
 | V2 | Block position always snapped to grid cell boundary. No fractional cell positions. |
 | V3 | Export cell size always exactly 1080×1350px regardless of canvas display size. |
-| V4 | Export numbering = left-to-right per row, bottom-to-top. Cell (col=0,row=last) = 01, (col=1,row=last) = 02, etc. |
+| V4 | Export numbering = left-to-right per row, bottom-to-top. Only non-empty cells (with images) numbered, starting from 1. |
 | V5 | Undo/redo only covers canvas state mutations (block add/move/resize/delete, transform). Not file uploads. |
 | V6 | Low-res warning shown if source image width < 1080px. Non-blocking. |
 | V7 | Grid rows grow dynamically — minimum 3 rows always visible, adds rows as blocks fill bottom. |
@@ -55,7 +55,10 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | V14 | Placeholders: empty cells can hold solid color or gradient (from adjacent images). |
 | V15 | localStorage: state persists on every mutation. Restore on load. |
 | V16 | Arrow keys: pan image (not block position). Direction rotates with image rotation. |
-| V17 | Grid zoom: viewport zoom 50%-200%, pan via drag. Does not affect export size. |
+| ~~V17~~ | ~~Grid zoom: viewport zoom 50%-200%, pan via drag. Does not affect export size.~~ DEPRECATED v3 |
+| V18 | localStorage quota errors caught, logged to console. User warned when storage fails. |
+| V19 | Group drag shows visual preview of all selected blocks, not just dragged block. |
+| V20 | Grid zoom adds/removes visible rows (not CSS scale). Grid stays centered. No pan controls. |
 
 ---
 
@@ -95,6 +98,15 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | T27 | x | Grid zoom/pan: zoom controls (50%-200%), pan via canvas drag, preserve cell sizes | V17 |
 | T28 | x | Style improvements: polish buttons, hover states, transitions | — |
 
+### v3 Tasks (bug fixes)
+
+| T29 | . | Redesign right toolbar as slim icon-only vertical bar (no section labels) | B5 |
+| T30 | . | Group drag: custom DndKit overlay showing all selected blocks preview | V19, B6 |
+| T31 | . | Group drag: smart row wrapping on border collision (not merge) | B7 |
+| T32 | . | Grid zoom: replace CSS scale with visible row count adjustment, center grid | V20, B8 |
+| T33 | . | localStorage: catch QuotaExceededError, log + warn user, graceful degradation | V18, B4 |
+| T34 | x | Export numbering: skip empty/placeholder cells, only number cells with images | V4, B9 |
+
 ---
 
 ## §B — Bug Log
@@ -104,4 +116,10 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | B1 | 2026-05-23 | Export numbering right-to-left top-to-bottom instead of left-to-right bottom-to-top | Fixed cellUploadNumber formula |
 | B2 | 2026-05-23 | Cell mode edits not reflected in grid view | Cell overrides not applied in block render |
 | B3 | 2026-05-23 | Bars mode in cell mode: image positioning uses relative pixels, hard to see bars color | Geometry issues with multi-cell blocks in cell mode |
+| B4 | 2026-05-23 | localStorage not persisting images/grid state on page reload | Data URLs exceed localStorage quota (5-10MB), saveState fails silently → V18 |
+| B5 | 2026-05-23 | Right toolbar too wide with categories, expected slim icon-only bar | RightToolbar uses 240px with section labels → T29 |
+| B6 | 2026-05-23 | Group drag shows single image preview, not whole group | DndKit only shows dragged element, need custom overlay → V19, T30 |
+| B7 | 2026-05-23 | Group drag border collision merges blocks instead of wrapping to adjacent row | Collision detection doesn't handle row wrapping → T31 |
+| B8 | 2026-05-23 | Grid zoom should add/remove rows and center grid, not scale with pan | Current zoom uses CSS transform, should modify visible row count → V20, T32 |
+| B9 | 2026-05-23 | Export numbering counts empty/placeholder cells, should only number cells with images | cellUploadNumber gives sequential numbers to all cells → V4 updated, T34 |
 

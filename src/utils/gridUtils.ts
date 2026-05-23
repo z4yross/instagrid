@@ -1,9 +1,32 @@
 import type { ImageBlock } from '@/store/types'
 
 export const COLS = 3
-/** Instagram upload order: left-to-right per row, bottom-to-top */
-export function cellUploadNumber(col: number, row: number, gridRows: number, totalCols = COLS): number {
-  return (gridRows - 1 - row) * totalCols + col + 1
+/**
+ * Instagram upload order: left-to-right per row, bottom-to-top.
+ * V4: Only non-empty cells (with images) are numbered.
+ */
+export function cellUploadNumber(
+  col: number,
+  row: number,
+  gridRows: number,
+  blocks: ImageBlock[],
+  totalCols = COLS
+): number {
+  let count = 0
+  // scan bottom-to-top, left-to-right
+  for (let r = gridRows - 1; r >= 0; r--) {
+    for (let c = 0; c < totalCols; c++) {
+      const block = blocks.find(
+        (b) => c >= b.col && c < b.col + b.colSpan && r >= b.row && r < b.row + b.rowSpan
+      )
+      // only count cells with actual images (not placeholders, not empty)
+      if (block && block.imageId) {
+        count++
+        if (c === col && r === row) return count
+      }
+    }
+  }
+  return 0 // cell is empty or placeholder
 }
 
 /** Check if placing a block at (col, row, colSpan, rowSpan) collides with existing blocks */

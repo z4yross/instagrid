@@ -76,9 +76,11 @@ export async function exportAllCells(
       const htmlImg = await loadHTMLImage(image.src)
       const relCol = col - block.col
       const relRow = row - block.row
-      const num = cellUploadNumber(col, row, gridRows, COLS)
+      const num = cellUploadNumber(col, row, gridRows, blocks, COLS)
       const blob = await renderCell(htmlImg, block, relCol, relRow)
-      zip.file(`${String(num).padStart(2, '0')}.jpg`, blob)
+      if (num > 0) {
+        zip.file(`${String(num).padStart(2, '0')}.jpg`, blob)
+      }
     }
   }
 
@@ -96,11 +98,12 @@ export async function exportSingleCell(
   image: UploadedImage,
   absCol: number,
   absRow: number,
-  gridRows: number
+  gridRows: number,
+  blocks: ImageBlock[]
 ): Promise<void> {
   const htmlImg = await loadHTMLImage(image.src)
   const blob = await renderCell(htmlImg, block, absCol - block.col, absRow - block.row)
-  const num = cellUploadNumber(absCol, absRow, gridRows, COLS)
+  const num = cellUploadNumber(absCol, absRow, gridRows, blocks, COLS)
   const url = URL.createObjectURL(blob)
   const a = document.createElement('a')
   a.href = url

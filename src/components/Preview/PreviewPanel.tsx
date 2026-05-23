@@ -68,7 +68,7 @@ export default function PreviewPanel({ onClose }: Props) {
               (b) => col >= b.col && col < b.col + b.colSpan && row >= b.row && row < b.row + b.rowSpan
             )
             const image = block ? images.find((im) => im.id === block.imageId) : null
-            const num = cellUploadNumber(col, row, gridRows, COLS)
+            const num = cellUploadNumber(col, row, gridRows, blocks, COLS)
 
             return (
               <div
@@ -97,25 +97,27 @@ export default function PreviewPanel({ onClose }: Props) {
                     }}
                   />
                 )}
-                <div
-                  style={{
-                    position: 'absolute',
-                    bottom: 3,
-                    right: 3,
-                    width: 18,
-                    height: 18,
-                    background: 'rgba(0,0,0,0.6)',
-                    borderRadius: '50%',
-                    fontSize: 8,
-                    fontWeight: 700,
-                    color: '#fff',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  }}
-                >
-                  {num}
-                </div>
+                {num > 0 && (
+                  <div
+                    style={{
+                      position: 'absolute',
+                      bottom: 3,
+                      right: 3,
+                      width: 18,
+                      height: 18,
+                      background: 'rgba(0,0,0,0.6)',
+                      borderRadius: '50%',
+                      fontSize: 8,
+                      fontWeight: 700,
+                      color: '#fff',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}
+                  >
+                    {num}
+                  </div>
+                )}
               </div>
             )
           })}
