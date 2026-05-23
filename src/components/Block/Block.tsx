@@ -50,6 +50,7 @@ export default function Block({ block, cellW, cellH, isDragging }: Props) {
     touchAction: 'none',
     transition: isDragging ? 'none' : 'box-shadow 0.2s',
     borderRadius: 2,
+    opacity: isDragging ? 0 : 1,
   }
 
   return (
