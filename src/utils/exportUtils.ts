@@ -44,10 +44,6 @@ function renderCell(
   const scaledPanX = panX * panScaleX
   const scaledPanY = panY * panScaleY
 
-  // T71: Cell offset in CROP coordinates (not full canvas)
-  const cellOffsetX = relCol * CROP_W
-  const cellOffsetY = relRow * CROP_H
-
   // T66: Fill canvas with bars color (no blur)
   ctx.fillStyle = block.barsColor || '#000000'
   ctx.fillRect(0, 0, EXPORT_W, EXPORT_H)
@@ -55,15 +51,21 @@ function renderCell(
   // Draw image covering full canvas width
   ctx.save()
 
-  // T71: Apply transforms matching CSS order: translate center, offset cell, rotate, pan, scale
-  // Cell offset in original coords (before rotation), pan in rotated coords (after rotation)
-  ctx.translate(EXPORT_W / 2, EXPORT_H / 2)  // Move origin to center
-  ctx.translate(-cellOffsetX, -cellOffsetY)  // Shift for this cell's position (before rotation)
-  ctx.rotate((rotation * Math.PI) / 180)     // Rotate coordinate system
+  // T71: Calculate block center position relative to this cell
+  // Block center in block coords: (totalCols * CROP_W / 2, totalRows * CROP_H / 2)
+  // This cell's crop starts at: (relCol * CROP_W, relRow * CROP_H)
+  // Block center relative to cell crop: blockCenter - cellStart
+  // Add 35px offset for bars to get canvas coords
+  const blockCenterX = 35 + (totalCols * CROP_W / 2 - relCol * CROP_W)
+  const blockCenterY = (totalRows * CROP_H / 2 - relRow * CROP_H)
+
+  // Apply transforms around block center (like CSS transformOrigin: center center)
+  ctx.translate(blockCenterX, blockCenterY)  // Move origin to block center
+  ctx.rotate((rotation * Math.PI) / 180)     // Rotate around block center
   ctx.translate(scaledPanX, scaledPanY)      // Pan in rotated system
   const flipScaleX = (flipX ? -1 : 1) * zoom
   const flipScaleY = (flipY ? -1 : 1) * zoom
-  ctx.scale(flipScaleX, flipScaleY)          // Scale in rotated+panned system
+  ctx.scale(flipScaleX, flipScaleY)          // Scale
 
   // T71: Scale image to fit within full block CROP area
   const fullW = totalCols * CROP_W
