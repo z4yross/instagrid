@@ -24,17 +24,6 @@ export function hasCollision(
   return false
 }
 
-/** Build default cellOrder for a block: left-to-right, top-to-bottom */
-export function defaultCellOrder(colSpan: number, rowSpan: number): [number, number][] {
-  const order: [number, number][] = []
-  for (let r = 0; r < rowSpan; r++) {
-    for (let c = 0; c < colSpan; c++) {
-      order.push([c, r])
-    }
-  }
-  return order
-}
-
 /**
  * Compute cell pixel size to fit VISIBLE_ROWS rows within availableHeight
  * while never exceeding containerWidth / COLS (whichever is smaller wins).

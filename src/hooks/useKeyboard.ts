@@ -11,15 +11,14 @@ export default function useKeyboard() {
       if ((e.target as HTMLElement).matches('input,textarea,select')) return
 
       const ctrl = e.ctrlKey || e.metaKey
-      const { selectedBlockId, cellModeBlockId, blocks, removeBlock, setSelectedBlock, setCellMode, updateBlock } = useStore.getState()
+      const { selectedBlockId, blocks, removeBlock, setSelectedBlock, updateBlock } = useStore.getState()
 
       // undo/redo
       if (ctrl && e.key === 'z' && !e.shiftKey) { e.preventDefault(); undo(); return }
       if (ctrl && (e.key === 'y' || (e.key === 'z' && e.shiftKey))) { e.preventDefault(); redo(); return }
 
-      // escape — exit cell mode first, then deselect
+      // escape — deselect
       if (e.key === 'Escape') {
-        if (cellModeBlockId) { setCellMode(null); return }
         if (selectedBlockId) { setSelectedBlock(null); return }
       }
 
@@ -31,7 +30,7 @@ export default function useKeyboard() {
       }
 
       // arrow keys — move selected block 1 cell
-      if (selectedBlockId && !cellModeBlockId && ['ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.key)) {
+      if (selectedBlockId && ['ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.key)) {
         e.preventDefault()
         const block = blocks.find(b => b.id === selectedBlockId)
         if (!block) return

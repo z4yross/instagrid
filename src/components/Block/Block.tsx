@@ -20,7 +20,6 @@ export default function Block({ block, cellW, cellH, isDragging }: Props) {
 
   const selectedBlockId = useStore((s) => s.selectedBlockId)
   const setSelectedBlock = useStore((s) => s.setSelectedBlock)
-  const setCellMode = useStore((s) => s.setCellMode)
   const images = useStore((s) => s.images)
   const gridRows = useStore((s) => s.gridRows)
   const image = images.find((i) => i.id === block.imageId)
@@ -54,7 +53,6 @@ export default function Block({ block, cellW, cellH, isDragging }: Props) {
       ref={setNodeRef}
       style={style}
       onClick={(e) => { e.stopPropagation(); setSelectedBlock(block.id) }}
-      onDoubleClick={(e) => { e.stopPropagation(); setCellMode(block.id) }}
       {...listeners}
       {...attributes}
     >

@@ -14,7 +14,6 @@ const useStore = create<AppState>()(
       blocks: [],
       gridRows: 3,
       selectedBlockId: null,
-      cellModeBlockId: null,
       showGuides: true,
 
       addImage: (img: UploadedImage) =>
@@ -42,21 +41,17 @@ const useStore = create<AppState>()(
             gridRows: ensureGridRows(blocks, 3),
             selectedBlockId:
               s.selectedBlockId === id ? null : s.selectedBlockId,
-            cellModeBlockId:
-              s.cellModeBlockId === id ? null : s.cellModeBlockId,
           }
         }),
 
       setSelectedBlock: (id) => set({ selectedBlockId: id }),
-
-      setCellMode: (id) => set({ cellModeBlockId: id }),
 
       setGridRows: (rows) => set({ gridRows: Math.max(rows, 3) }),
 
       toggleGuides: () => set((s) => ({ showGuides: !s.showGuides })),
 
       clearCanvas: () =>
-        set({ blocks: [], gridRows: 3, selectedBlockId: null, cellModeBlockId: null }),
+        set({ blocks: [], gridRows: 3, selectedBlockId: null }),
     }),
     {
       // V5: undo/redo only covers canvas mutations, not image uploads

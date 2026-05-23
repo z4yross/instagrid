@@ -6,7 +6,6 @@ import { cellPixelSize, hasCollision, COLS } from '@/utils/gridUtils'
 import GridCanvas from './GridCanvas'
 import DropZone from './DropZone'
 import Block from '../Block/Block'
-import CellModeOverlay from '../CellMode/CellModeOverlay'
 import type { ImageBlock } from '@/store/types'
 
 interface Props {
@@ -21,7 +20,6 @@ export default function CanvasArea({ onLowRes }: Props) {
   const blocks = useStore((s) => s.blocks)
   const updateBlock = useStore((s) => s.updateBlock)
   const setSelectedBlock = useStore((s) => s.setSelectedBlock)
-  const cellModeBlockId = useStore((s) => s.cellModeBlockId)
 
   useEffect(() => {
     const el = containerRef.current
@@ -72,8 +70,6 @@ export default function CanvasArea({ onLowRes }: Props) {
     updateBlock(block.id, { col: clampedCol, row: clampedRow })
   }
 
-  const cellModeBlock = blocks.find((b) => b.id === cellModeBlockId)
-
   return (
     <div
       ref={containerRef}
@@ -92,9 +88,6 @@ export default function CanvasArea({ onLowRes }: Props) {
                 isDragging={activeId === block.id}
               />
             ))}
-            {cellModeBlock && (
-              <CellModeOverlay block={cellModeBlock} cellW={cellW} cellH={cellH} />
-            )}
           </GridCanvas>
         </DropZone>
       </DndContext>

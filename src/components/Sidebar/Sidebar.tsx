@@ -2,7 +2,6 @@ import { useRef, useState } from 'react'
 import { useStore } from '@/store/useStore'
 import { loadImageFiles } from '@/utils/imageUtils'
 import { exportAllCells } from '@/utils/exportUtils'
-import { defaultCellOrder } from '@/utils/gridUtils'
 import type { ImageBlock } from '@/store/types'
 
 interface Props {
@@ -50,8 +49,6 @@ export default function Sidebar({ onLowRes, onPreview }: Props) {
         rowSpan: 1,
         barsColor: '#000000',
         transform: { panX: 0, panY: 0, zoom: 1, rotation: 0 },
-        cellOverrides: {},
-        cellOrder: defaultCellOrder(1, 1),
       }
       addBlock(block)
     }

@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { loadImageFiles } from '@/utils/imageUtils'
 import { useStore } from '@/store/useStore'
-import { defaultCellOrder } from '@/utils/gridUtils'
 import type { ImageBlock } from '@/store/types'
 
 interface Props {
@@ -44,8 +43,6 @@ export default function DropZone({ children, onLowRes }: Props) {
         rowSpan: 1,
         barsColor: '#000000',
         transform: { panX: 0, panY: 0, zoom: 1, rotation: 0 },
-        cellOverrides: {},
-        cellOrder: defaultCellOrder(1, 1),
       }
       addBlock(block)
     }

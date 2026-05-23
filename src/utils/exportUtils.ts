@@ -29,12 +29,7 @@ function renderCell(
   const totalRows = block.rowSpan
 
   const { transform } = block
-  const cellKey = `${relCol},${relRow}`
-  const cellOverride = block.cellOverrides[cellKey] ?? {}
-  const panX = cellOverride.panX ?? transform.panX
-  const panY = cellOverride.panY ?? transform.panY
-  const zoom = cellOverride.zoom ?? transform.zoom
-  const rotation = cellOverride.rotation ?? transform.rotation
+  const { panX, panY, zoom, rotation } = transform
 
   // bars background
   ctx.fillStyle = block.barsColor

@@ -19,10 +19,6 @@ export interface ImageBlock {
   barsColor: string
   /** block-level transform applied to the whole image */
   transform: CellTransform
-  /** per-cell overrides keyed by "col,row" relative to block origin */
-  cellOverrides: Record<string, Partial<CellTransform>>
-  /** per-cell reorder: array of [relCol, relRow] in display order */
-  cellOrder: [number, number][]
 }
 
 export interface UploadedImage {
@@ -38,7 +34,6 @@ export interface AppState {
   blocks: ImageBlock[]
   gridRows: number
   selectedBlockId: string | null
-  cellModeBlockId: string | null
   showGuides: boolean
 
   addImage: (img: UploadedImage) => void
@@ -46,7 +41,6 @@ export interface AppState {
   updateBlock: (id: string, patch: Partial<ImageBlock>) => void
   removeBlock: (id: string) => void
   setSelectedBlock: (id: string | null) => void
-  setCellMode: (id: string | null) => void
   setGridRows: (rows: number) => void
   toggleGuides: () => void
   clearCanvas: () => void

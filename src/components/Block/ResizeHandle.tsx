@@ -1,6 +1,6 @@
 import { useRef } from 'react'
 import { useStore } from '@/store/useStore'
-import { hasCollision, COLS, defaultCellOrder } from '@/utils/gridUtils'
+import { hasCollision, COLS } from '@/utils/gridUtils'
 import type { ImageBlock } from '@/store/types'
 
 type Edge = 'right' | 'bottom' | 'corner-br'
@@ -52,7 +52,6 @@ export default function ResizeHandle({ block, cellW, cellH, edge }: Props) {
     updateBlock(block.id, {
       colSpan: newColSpan,
       rowSpan: newRowSpan,
-      cellOrder: defaultCellOrder(newColSpan, newRowSpan),
     })
   }
 
