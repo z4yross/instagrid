@@ -19,8 +19,13 @@ export default function CanvasArea({ onLowRes }: Props) {
 
   const blocks = useStore((s) => s.blocks)
   const selectedBlockIds = useStore((s) => s.selectedBlockIds)
+  const gridZoom = useStore((s) => s.gridZoom)
+  const gridPanX = useStore((s) => s.gridPanX)
+  const gridPanY = useStore((s) => s.gridPanY)
   const updateBlock = useStore((s) => s.updateBlock)
   const setSelectedBlocks = useStore((s) => s.setSelectedBlocks)
+  const setGridZoom = useStore((s) => s.setGridZoom)
+  const setGridPan = useStore((s) => s.setGridPan)
 
   useEffect(() => {
     const el = containerRef.current
@@ -105,24 +110,93 @@ export default function CanvasArea({ onLowRes }: Props) {
   return (
     <div
       ref={containerRef}
-      style={{ flex: 1, position: 'relative', overflow: 'hidden auto', display: 'flex', flexDirection: 'column' }}
+      style={{ flex: 1, position: 'relative', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}
       onClick={() => setSelectedBlocks([])}
     >
-      <DndContext sensors={sensors} onDragStart={onDragStart} onDragEnd={onDragEnd}>
-        <DropZone onLowRes={onLowRes}>
-          <GridCanvas cellW={cellW} cellH={cellH}>
-            {blocks.map((block) => (
-              <Block
-                key={block.id}
-                block={block}
-                cellW={cellW}
-                cellH={cellH}
-                isDragging={activeId === block.id}
-              />
-            ))}
-          </GridCanvas>
-        </DropZone>
-      </DndContext>
+      {/* V17: zoom controls */}
+      <div
+        style={{
+          position: 'absolute',
+          bottom: 16,
+          left: 16,
+          zIndex: 50,
+          display: 'flex',
+          gap: 4,
+          background: 'var(--color-bg-surface)',
+          border: '1px solid var(--color-border)',
+          borderRadius: 8,
+          padding: 4,
+          boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
+        }}
+      >
+        <button
+          onClick={(e) => { e.stopPropagation(); setGridZoom(gridZoom - 0.1) }}
+          disabled={gridZoom <= 0.5}
+          style={{
+            padding: '6px 10px',
+            fontSize: 12,
+            background: 'var(--color-bg-elevated)',
+            border: '1px solid var(--color-border)',
+            borderRadius: 6,
+            cursor: 'pointer',
+            color: 'var(--color-text-primary)',
+          }}
+        >−</button>
+        <span style={{ padding: '6px 10px', fontSize: 11, color: 'var(--color-text-secondary)', minWidth: 48, textAlign: 'center' }}>
+          {Math.round(gridZoom * 100)}%
+        </span>
+        <button
+          onClick={(e) => { e.stopPropagation(); setGridZoom(gridZoom + 0.1) }}
+          disabled={gridZoom >= 2}
+          style={{
+            padding: '6px 10px',
+            fontSize: 12,
+            background: 'var(--color-bg-elevated)',
+            border: '1px solid var(--color-border)',
+            borderRadius: 6,
+            cursor: 'pointer',
+            color: 'var(--color-text-primary)',
+          }}
+        >+</button>
+        <button
+          onClick={(e) => { e.stopPropagation(); setGridZoom(1); setGridPan(0, 0) }}
+          style={{
+            padding: '6px 10px',
+            fontSize: 11,
+            background: 'var(--color-bg-elevated)',
+            border: '1px solid var(--color-border)',
+            borderRadius: 6,
+            cursor: 'pointer',
+            color: 'var(--color-text-secondary)',
+          }}
+        >Reset</button>
+      </div>
+
+      <div style={{ flex: 1, overflow: 'auto', position: 'relative' }}>
+        <div
+          style={{
+            transform: `translate(${gridPanX}px, ${gridPanY}px) scale(${gridZoom})`,
+            transformOrigin: 'top left',
+            transition: 'transform 0.1s ease-out',
+          }}
+        >
+          <DndContext sensors={sensors} onDragStart={onDragStart} onDragEnd={onDragEnd}>
+            <DropZone onLowRes={onLowRes}>
+              <GridCanvas cellW={cellW} cellH={cellH}>
+                {blocks.map((block) => (
+                  <Block
+                    key={block.id}
+                    block={block}
+                    cellW={cellW}
+                    cellH={cellH}
+                    isDragging={activeId === block.id}
+                  />
+                ))}
+              </GridCanvas>
+            </DropZone>
+          </DndContext>
+        </div>
+      </div>
     </div>
   )
 }

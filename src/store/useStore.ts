@@ -21,6 +21,9 @@ const useStore = create<AppState>()(
         gridRows: persisted?.gridRows ?? 3,
         selectedBlockIds: [],
         showGuides: true,
+        gridZoom: 1,
+        gridPanX: 0,
+        gridPanY: 0,
 
       addImage: (img: UploadedImage) =>
         set((s) => ({ images: [...s.images, img] })),
@@ -79,6 +82,10 @@ const useStore = create<AppState>()(
       setGridRows: (rows) => set({ gridRows: Math.max(rows, 3) }),
 
       toggleGuides: () => set((s) => ({ showGuides: !s.showGuides })),
+
+      setGridZoom: (zoom) => set({ gridZoom: Math.max(0.5, Math.min(2, zoom)) }),
+
+      setGridPan: (x, y) => set({ gridPanX: x, gridPanY: y }),
 
       clearCanvas: () =>
         set({ blocks: [], gridRows: 3, selectedBlockIds: [] }),

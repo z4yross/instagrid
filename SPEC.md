@@ -92,7 +92,7 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | T24 | x | Group selection: Shift+click blocks, render selection box, move/transform as group | V12 |
 | T25 | x | Auto-flow: on upload/move, snap block to first free position (left→right, top→bottom) | V13 |
 | T26 | . | Placeholder blocks: add/remove, render solid color or gradient from adjacent images | V14 |
-| T27 | . | Grid zoom/pan: zoom controls (50%-200%), pan via canvas drag, preserve cell sizes | V17 |
+| T27 | x | Grid zoom/pan: zoom controls (50%-200%), pan via canvas drag, preserve cell sizes | V17 |
 | T28 | . | Style improvements: polish buttons, hover states, transitions | — |
 
 ---

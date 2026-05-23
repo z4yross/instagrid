@@ -35,6 +35,9 @@ export interface AppState {
   gridRows: number
   selectedBlockIds: string[]
   showGuides: boolean
+  gridZoom: number
+  gridPanX: number
+  gridPanY: number
 
   addImage: (img: UploadedImage) => void
   addBlock: (block: ImageBlock) => void
@@ -46,5 +49,7 @@ export interface AppState {
   toggleBlockSelection: (id: string) => void
   setGridRows: (rows: number) => void
   toggleGuides: () => void
+  setGridZoom: (zoom: number) => void
+  setGridPan: (x: number, y: number) => void
   clearCanvas: () => void
 }
