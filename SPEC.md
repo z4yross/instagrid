@@ -136,6 +136,9 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | T57 | x | Copy/paste block: Ctrl+C selected block, Ctrl+V paste at first free cell | — |
 | T58 | x | Mirror vertical/horizontal: add flip-x and flip-y transform controls to toolbar | — |
 | T59 | x | Fix color picker position: open to left not right to avoid viewport overflow | B30 |
+| T60 | x | Debug export: verify transform application, crop bounds, cell offset calculations | B31 |
+| T61 | . | Save/load profiles: store multiple named profiles in IDB (blocks + gridRows + timestamp). Switch between profiles via UI | V15, V22 |
+| T62 | . | Export bars from image content: extend/blur edge pixels instead of solid barsColor. Match IG carousel style | V24 |
 
 ---
 
@@ -173,4 +176,5 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | B28 | 2026-05-23 | Export not applying image transforms, crops wrong | renderCell uses contain (full image per cell) not crop (visible portion per cell). Should slice image by cell bounds like IG carousel: 1010px crop + 35px bars → V24, T55 |
 | B29 | 2026-05-23 | Exported images low resolution | Export quality or scaling issue? Need verify actual resolution vs expected → T56 |
 | B30 | 2026-05-23 | Color picker opens to right, overflows viewport | Picker should open to left for better positioning → T59 |
+| B31 | 2026-05-23 | Exported images still incorrect after T55 | Need debug actual export output vs expected. Transform application or crop logic issue → T60 |
 

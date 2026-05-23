@@ -49,18 +49,16 @@ function renderCell(
   // Translate to center of 1010px crop region
   ctx.translate(BAR_W + CROP_W / 2, EXPORT_H / 2)
 
-  // Apply transforms
-  ctx.rotate((rotation * Math.PI) / 180)
-  const flipScaleX = (flipX ? -1 : 1) * zoom
-  const flipScaleY = (flipY ? -1 : 1) * zoom
-  ctx.scale(flipScaleX, flipScaleY)
-
   // Calculate offset for this cell within the block
   const cellOffsetX = relCol * CROP_W
   const cellOffsetY = relRow * EXPORT_H
 
-  // Translate by pan and cell offset
+  // Apply transforms in same order as CSS: rotate → translate → scale
+  ctx.rotate((rotation * Math.PI) / 180)
   ctx.translate(panX - cellOffsetX, panY - cellOffsetY)
+  const flipScaleX = (flipX ? -1 : 1) * zoom
+  const flipScaleY = (flipY ? -1 : 1) * zoom
+  ctx.scale(flipScaleX, flipScaleY)
 
   // contain: fit image in total block area
   const totalPxW = totalCols * CROP_W
