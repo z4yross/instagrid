@@ -61,6 +61,7 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | V19 | Group drag shows visual preview of all selected blocks, not just dragged block. |
 | V20 | Grid zoom adds/removes visible rows (not CSS scale). Grid stays centered. No pan controls. |
 | V21 | Grid rows shrink when zooming in. If trailing rows empty, gridRows reduced to match highest block + 1 row min. |
+| V22 | IndexedDB: images persist via IndexedDB (not localStorage). Blocks/gridRows in localStorage. No quota issues. |
 
 ---
 
@@ -114,6 +115,7 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | T38 | x | Remove preview feed panel (PreviewPanel, onPreview button) | — |
 | T39 | x | Zoom in removes trailing empty rows: shrink gridRows to content when reducing visibleRows | V21, B13 |
 | T40 | x | Design-focused color scheme: refined palette, stronger visual identity | B14 |
+| T41 | . | IndexedDB for image persistence: store images in IDB, blocks/gridRows in localStorage | V22, B15 |
 
 ---
 
@@ -135,4 +137,5 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | B12 | 2026-05-23 | App too dark, lacks contrast (only upload button has contrast) | Color scheme needs more visual hierarchy, accent highlights → T37 |
 | B13 | 2026-05-23 | Zoom in doesn't remove trailing empty rows, keeps large gridRows | setVisibleRows only expands gridRows, never shrinks. Inverse of B10 → V21, T39 |
 | B14 | 2026-05-23 | Color scheme after T37 still not design-focused enough | Need palette with stronger design identity, refined visual language → T40 |
+| B15 | 2026-05-23 | Images still lost on reload despite T33 fix | localStorage quota (5-10MB) insufficient for image data URLs. V18 warns but doesn't solve persistence → V22, T41 |
 
