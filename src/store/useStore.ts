@@ -111,8 +111,19 @@ const useStore = create<AppState>()(
       setVisibleRows: (rows) =>
         set((s) => {
           const newVisible = Math.max(1, Math.min(10, rows))
-          // B10: ensure gridRows >= visibleRows to show empty cells
-          const newGridRows = Math.max(s.gridRows, newVisible)
+
+          // V21: shrink gridRows when zooming in if trailing rows empty
+          const highestBlockEnd = s.blocks.reduce((max, b) => Math.max(max, b.row + b.rowSpan), 0)
+
+          let newGridRows: number
+          if (newVisible < s.visibleRows) {
+            // Zoom in: shrink to content
+            newGridRows = Math.max(newVisible, highestBlockEnd, 3)
+          } else {
+            // Zoom out: expand to show empty cells (B10)
+            newGridRows = Math.max(s.gridRows, newVisible)
+          }
+
           return { visibleRows: newVisible, gridRows: newGridRows }
         }),
 

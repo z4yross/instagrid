@@ -111,7 +111,7 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | T36 | x | Reduce grid gradient opacity, make subtle (0.04 → 0.015 alpha) | B11 |
 | T37 | x | Increase app contrast: lighter surfaces, accent borders, visual hierarchy | B12 |
 | T38 | x | Remove preview feed panel (PreviewPanel, onPreview button) | — |
-| T39 | . | Zoom in removes trailing empty rows: shrink gridRows to content when reducing visibleRows | V21, B13 |
+| T39 | x | Zoom in removes trailing empty rows: shrink gridRows to content when reducing visibleRows | V21, B13 |
 | T40 | . | Design-focused color scheme: refined palette, stronger visual identity | B14 |
 
 ---
