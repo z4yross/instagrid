@@ -65,7 +65,7 @@ export default function Modal({
     >
       <div
         style={{
-          background: 'var(--color-bg-elevated)',
+          background: '#ffffff',
           border: '1px solid var(--color-border)',
           borderRadius: 8,
           boxShadow: '0 8px 32px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 107, 53, 0.2)',
@@ -81,7 +81,7 @@ export default function Modal({
             style={{
               fontSize: 16,
               fontWeight: 600,
-              color: 'var(--color-text-primary)',
+              color: '#000000',
               marginBottom: 12,
             }}
           >
@@ -92,7 +92,7 @@ export default function Modal({
         <div
           style={{
             fontSize: 14,
-            color: 'var(--color-text-secondary)',
+            color: '#222222',
             marginBottom: type === 'prompt' ? 16 : 20,
             lineHeight: 1.5,
           }}
@@ -109,10 +109,10 @@ export default function Modal({
               width: '100%',
               padding: '8px 12px',
               fontSize: 14,
-              background: 'var(--color-bg-base)',
-              border: '1px solid var(--color-border)',
+              background: '#f9f9f9',
+              border: '1px solid #cccccc',
               borderRadius: 4,
-              color: 'var(--color-text-primary)',
+              color: '#000000',
               marginBottom: 16,
               outline: 'none',
             }}
@@ -121,7 +121,7 @@ export default function Modal({
               e.target.style.boxShadow = '0 0 0 3px rgba(255, 107, 53, 0.1)'
             }}
             onBlur={(e) => {
-              e.target.style.borderColor = 'var(--color-border)'
+              e.target.style.borderColor = '#cccccc'
               e.target.style.boxShadow = 'none'
             }}
           />

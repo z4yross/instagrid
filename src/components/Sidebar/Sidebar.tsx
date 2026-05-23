@@ -154,12 +154,12 @@ export default function Sidebar({ onLowRes }: Props) {
       <div style={{
         padding: '14px 14px 10px',
         borderBottom: '1px solid var(--color-border)',
-        background: 'linear-gradient(135deg, rgba(255,107,53,0.08) 0%, transparent 60%)',
+        background: '#ffffff',
       }}>
-        <div style={{ fontSize: 15, fontWeight: 700, letterSpacing: '-0.3px', color: 'var(--color-text-primary)' }}>
+        <div style={{ fontSize: 15, fontWeight: 700, letterSpacing: '-0.3px', color: '#000000' }}>
           insta<span style={{ color: 'var(--color-accent)' }}>grid</span>
         </div>
-        <div style={{ fontSize: 10, color: 'var(--color-text-muted)', marginTop: 2 }}>feed planner</div>
+        <div style={{ fontSize: 10, color: '#666666', marginTop: 2 }}>feed planner</div>
       </div>
 
       {/* upload */}
@@ -344,9 +344,9 @@ export default function Sidebar({ onLowRes }: Props) {
         </button>
 
         {showProfiles && (
-          <div style={{ maxHeight: 150, overflowY: 'auto', background: 'var(--color-bg-base)', borderRadius: 6, padding: 4 }}>
+          <div style={{ maxHeight: 150, overflowY: 'auto', background: '#ffffff', borderRadius: 6, padding: 4, border: '1px solid var(--color-border)' }}>
             {profiles.length === 0 ? (
-              <div style={{ padding: 8, fontSize: 10, color: 'var(--color-text-muted)', textAlign: 'center' }}>No profiles saved</div>
+              <div style={{ padding: 8, fontSize: 10, color: '#666666', textAlign: 'center' }}>No profiles saved</div>
             ) : (
               profiles.map((p) => (
                 <div key={p.id} style={{ display: 'flex', gap: 4, padding: 4 }}>

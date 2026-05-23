@@ -76,11 +76,13 @@ export default function RightToolbar() {
         <div style={{
           fontSize: 9,
           fontWeight: 600,
-          color: 'var(--color-accent)',
+          color: '#000000',
           textAlign: 'center',
           padding: '4px 0',
-          background: 'rgba(255,107,53,0.1)',
+          background: '#ffffff',
           borderRadius: 4,
+          border: '1px solid var(--color-accent)',
+          boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
         }}>
           {selectedBlocks.length}
         </div>
@@ -139,16 +141,17 @@ function IconBtn({ children, onClick, disabled, title, danger }: {
         justifyContent: 'center',
         fontSize: 16,
         fontWeight: 500,
-        background: disabled ? 'var(--color-bg-base)' : danger ? 'rgba(248,113,113,0.1)' : 'var(--color-bg-elevated)',
-        border: `1px solid ${disabled ? 'var(--color-border-subtle)' : danger ? 'rgba(248,113,113,0.3)' : 'var(--color-border)'}`,
-        color: disabled ? 'var(--color-text-muted)' : danger ? 'var(--color-danger)' : 'var(--color-text-primary)',
+        background: disabled ? '#e0e0e0' : danger ? 'rgba(248,113,113,0.1)' : '#ffffff',
+        border: `1px solid ${disabled ? '#cccccc' : danger ? 'rgba(248,113,113,0.3)' : 'var(--color-border)'}`,
+        color: disabled ? '#888888' : danger ? 'var(--color-danger)' : '#000000',
         borderRadius: 8,
         cursor: disabled ? 'not-allowed' : 'pointer',
         transition: 'all 0.15s',
         opacity: disabled ? 0.5 : 1,
+        boxShadow: disabled ? 'none' : '0 2px 4px rgba(0,0,0,0.1)',
       }}
-      onMouseEnter={(e) => !disabled && (e.currentTarget.style.background = danger ? 'rgba(248,113,113,0.18)' : 'var(--color-bg-hover)')}
-      onMouseLeave={(e) => !disabled && (e.currentTarget.style.background = danger ? 'rgba(248,113,113,0.1)' : 'var(--color-bg-elevated)')}
+      onMouseEnter={(e) => !disabled && (e.currentTarget.style.background = danger ? 'rgba(248,113,113,0.18)' : '#f5f5f5')}
+      onMouseLeave={(e) => !disabled && (e.currentTarget.style.background = danger ? 'rgba(248,113,113,0.1)' : '#ffffff')}
     >
       {children}
     </button>
