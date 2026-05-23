@@ -81,7 +81,7 @@ export default function ColorPicker({ value, onChange, disabled }: Props) {
           style={{
             position: 'absolute',
             top: '100%',
-            left: 0,
+            right: 0,
             marginTop: 4,
             background: 'var(--color-bg-surface)',
             border: '1px solid var(--color-border)',
