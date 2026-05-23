@@ -86,7 +86,7 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | T18 | x | Remove fillMode from types/store/components — single mode: contain + bars | V11 |
 | T19 | x | Remove cell mode: double-click, CellModeOverlay, cellOverrides, cellOrder | V11 |
 | T20 | x | localStorage: persist/restore state on mutation (debounced 500ms) | V15 |
-| T21 | . | Right sidebar toolbar: always visible, context-aware enable/disable | — |
+| T21 | x | Right sidebar toolbar: always visible, context-aware enable/disable | — |
 | T22 | . | Custom color picker component for bars (replace `<input type="color">`) | — |
 | T23 | . | Arrow keys pan image: ←→↑↓ modify transform.panX/panY, rotated by transform.rotation | V16 |
 | T24 | . | Group selection: Shift+click blocks, render selection box, move/transform as group | V12 |
