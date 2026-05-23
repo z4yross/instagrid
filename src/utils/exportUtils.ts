@@ -55,13 +55,15 @@ function renderCell(
   // Draw image covering full canvas width
   ctx.save()
 
-  // Apply transforms to full canvas (including bars)
-  ctx.translate(EXPORT_W / 2, EXPORT_H / 2)
-  ctx.rotate((rotation * Math.PI) / 180)
-  ctx.translate(scaledPanX - cellOffsetX, scaledPanY - cellOffsetY)
+  // T71: Apply transforms matching CSS order: translate center, offset cell, rotate, pan, scale
+  // Cell offset in original coords (before rotation), pan in rotated coords (after rotation)
+  ctx.translate(EXPORT_W / 2, EXPORT_H / 2)  // Move origin to center
+  ctx.translate(-cellOffsetX, -cellOffsetY)  // Shift for this cell's position (before rotation)
+  ctx.rotate((rotation * Math.PI) / 180)     // Rotate coordinate system
+  ctx.translate(scaledPanX, scaledPanY)      // Pan in rotated system
   const flipScaleX = (flipX ? -1 : 1) * zoom
   const flipScaleY = (flipY ? -1 : 1) * zoom
-  ctx.scale(flipScaleX, flipScaleY)
+  ctx.scale(flipScaleX, flipScaleY)          // Scale in rotated+panned system
 
   // T71: Scale image to fit within full block CROP area
   const fullW = totalCols * CROP_W
