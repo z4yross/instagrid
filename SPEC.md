@@ -148,6 +148,7 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | T69 | x | Fix export crop to exactly match grid display: pass actual grid cell size to export or store transforms as percentages | V24, B36 |
 | T70 | x | Fix export cell X offset: use EXPORT_W (1080) not CROP_W (1010) for cellOffsetX | V24, B37 |
 | T71 | x | Fix export for multi-row blocks: verify Y offset and image scaling use correct dimensions (crop vs full canvas) | V24, B38 |
+| T72 | . | Design refresh: black/white color scheme with orange accents (remove purple), remove keyboard hint labels from sidebar | — |
 
 ---
 
