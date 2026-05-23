@@ -258,11 +258,11 @@ export default function CanvasArea({ onLowRes }: Props) {
 					zIndex: 50,
 					display: "flex",
 					gap: 4,
-					background: "var(--color-bg-surface)",
-					border: "1px solid var(--color-border)",
+					background: "rgba(255, 255, 255, 0.05)",
+					border: "none",
 					borderRadius: 8,
 					padding: 4,
-					boxShadow: "0 4px 12px rgba(0,0,0,0.3)",
+					boxShadow: "inset 0 1px 0 rgba(255, 255, 255, 0.1)",
 				}}
 			>
 				<button
@@ -274,8 +274,8 @@ export default function CanvasArea({ onLowRes }: Props) {
 					style={{
 						padding: "6px 10px",
 						fontSize: 12,
-						background: "var(--color-bg-elevated)",
-						border: "1px solid var(--color-border)",
+						background: "rgba(255, 255, 255, 0.08)",
+						border: "none",
 						borderRadius: 6,
 						cursor: visibleRows >= 10 ? "not-allowed" : "pointer",
 						color: "var(--color-text-primary)",
@@ -304,8 +304,8 @@ export default function CanvasArea({ onLowRes }: Props) {
 					style={{
 						padding: "6px 10px",
 						fontSize: 12,
-						background: "var(--color-bg-elevated)",
-						border: "1px solid var(--color-border)",
+						background: "rgba(255, 255, 255, 0.08)",
+						border: "none",
 						borderRadius: 6,
 						cursor: visibleRows <= 1 ? "not-allowed" : "pointer",
 						color: "var(--color-text-primary)",
@@ -322,8 +322,8 @@ export default function CanvasArea({ onLowRes }: Props) {
 					style={{
 						padding: "6px 10px",
 						fontSize: 11,
-						background: "var(--color-bg-elevated)",
-						border: "1px solid var(--color-border)",
+						background: "rgba(255, 255, 255, 0.08)",
+						border: "none",
 						borderRadius: 6,
 						cursor: "pointer",
 						color: "var(--color-text-secondary)",

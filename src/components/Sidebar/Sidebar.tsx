@@ -147,8 +147,8 @@ export default function Sidebar({ onLowRes }: Props) {
       display: 'flex',
       flexDirection: 'column',
       gap: 0,
-      background: 'linear-gradient(180deg, #000000 0%, #0a0a0a 50%, #000000 100%)',
-      boxShadow: 'none',
+      background: 'linear-gradient(180deg, #0a0a0a 0%, #1a1a1a 50%, #0a0a0a 100%)',
+      boxShadow: 'inset -8px 0 12px rgba(0, 0, 0, 0.4)',
       overflowY: 'auto',
     }}>
       {/* header */}
