@@ -16,7 +16,7 @@ export default function CanvasArea({ onLowRes }: Props) {
   const containerRef = useRef<HTMLDivElement>(null)
   const [dims, setDims] = useState({ w: 0, h: 0 })
   const [activeId, setActiveId] = useState<string | null>(null)
-  const [grabOffset, setGrabOffset] = useState({ x: 0, y: 0 })
+  const initialOffsetRef = useRef({ x: 0, y: 0 })
 
   const blocks = useStore((s) => s.blocks)
   const selectedBlockIds = useStore((s) => s.selectedBlockIds)
@@ -55,14 +55,13 @@ export default function CanvasArea({ onLowRes }: Props) {
   function onDragStart(e: DragStartEvent) {
     setActiveId(e.active.id as string)
 
-    // B26: calculate grab offset within element
-    if (e.activatorEvent && 'clientX' in e.activatorEvent) {
+    if (e.activatorEvent && 'clientX' in e.activatorEvent && e.active.rect.current.initial) {
+      const rect = e.active.rect.current.initial
       const event = e.activatorEvent as PointerEvent
-      const rect = (e.activatorEvent.target as HTMLElement).getBoundingClientRect()
-      setGrabOffset({
+      initialOffsetRef.current = {
         x: event.clientX - rect.left,
         y: event.clientY - rect.top,
-      })
+      }
     }
   }
 
@@ -213,9 +212,12 @@ export default function CanvasArea({ onLowRes }: Props) {
         </DropZone>
 
         {/* V19: group drag overlay */}
-        <DragOverlay>
+        <DragOverlay style={{ pointerEvents: 'none' }}>
           {activeId ? (
-            <div style={{ marginLeft: -grabOffset.x, marginTop: -grabOffset.y }}>
+            <div style={{
+              transform: `translate(${-initialOffsetRef.current.x}px, ${-initialOffsetRef.current.y}px)`,
+              pointerEvents: 'none',
+            }}>
               {selectedBlockIds.includes(activeId) && selectedBlockIds.length > 1 ? (
                 <div style={{ position: 'relative' }}>
                   {blocks.filter((b) => selectedBlockIds.includes(b.id)).map((block) => {
