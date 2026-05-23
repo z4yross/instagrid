@@ -51,7 +51,7 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | ~~V9~~ | ~~Single-cell export~~ DEPRECATED v2 |
 | ~~V10~~ | ~~Cell-mode edits~~ DEPRECATED v2 |
 | V11 | Images always render with objectFit:contain + bars color background. No zoom/cover mode. |
-| V12 | Group selection: multiple blocks selected, move/transform together, no overlap with non-selected. |
+| V12 | Group selection: Ctrl+click toggles individual, Shift+click selects range. Move/transform together, no overlap with non-selected. |
 | V13 | Auto-flow: on upload/move, blocks snap to first available position (top-left priority). |
 | V14 | Placeholders: empty cells can hold solid color or gradient (from adjacent images). |
 | V15 | localStorage: state persists on every mutation. Restore on load. |
@@ -62,7 +62,7 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | V20 | Grid zoom adds/removes visible rows (not CSS scale). Grid stays centered. No pan controls. |
 | V21 | Grid rows shrink when zooming in. If trailing rows empty, gridRows reduced to match highest block + 1 row min. |
 | V22 | IndexedDB: images persist via IndexedDB (not localStorage). Blocks/gridRows in localStorage. No quota issues. |
-| V23 | Loading state shown during IndexedDB image restore. User sees indicator until images loaded. |
+| V23 | Loading state: skeleton placeholders in sidebar thumbnails + grid blocks during IDB restore. No fullscreen overlay. |
 
 ---
 
@@ -120,6 +120,8 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | T42 | x | Loading state during IndexedDB restore: show spinner/skeleton until images loaded | V23, B16 |
 | T43 | x | Fix batch upload overlap: track blocks locally in handleFiles loop, findFreeCell uses updated array | V13, B17 |
 | T44 | x | Fix export numbering: right-to-left scan in cellUploadNumber (reverse col loop) | V4, B18 |
+| T45 | . | Ctrl+click toggle selection, Shift+click range selection (Windows-style multi-select) | V12, B19 |
+| T46 | . | Replace fullscreen loading with skeleton placeholders in sidebar + grid | V23, B20 |
 
 ---
 
@@ -145,4 +147,6 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | B16 | 2026-05-23 | No loading indicator on page reload, images pop in after IndexedDB delay | T41 async IDB load lacks visual feedback. User sees empty grid then sudden image load → V23, T42 |
 | B17 | 2026-05-23 | Multiple images uploaded together overlap at same position | findFreeCell reads stale blocks state. Loop doesn't track newly added blocks, all find same position → V13, T43 |
 | B18 | 2026-05-23 | Export numbering left-to-right, should be right-to-left for Instagram upload order | cellUploadNumber scans left-to-right but IG displays first upload on right. V4 wrong → V4 updated, T44 |
+| B19 | 2026-05-23 | Group selection only Shift+click, missing Ctrl+click for Windows-style toggle | Block.tsx only checks shiftKey. Need ctrlKey/metaKey for individual add/remove, shiftKey for range → V12 updated, T45 |
+| B20 | 2026-05-23 | Loading state fullscreen overlay blocks entire UI | T42 shows fullscreen spinner. Should be skeleton placeholders in sidebar + grid only → V23 updated, T46 |
 
