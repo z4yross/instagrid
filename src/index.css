@@ -1,0 +1,83 @@
+@import "tailwindcss";
+
+@theme {
+  --color-bg-base:     #0a0a0f;
+  --color-bg-surface:  #111118;
+  --color-bg-elevated: #1a1a24;
+  --color-bg-hover:    #222230;
+  --color-border:      #2a2a3a;
+  --color-border-subtle: #1a1a24;
+  --color-text-primary:  #eeeef5;
+  --color-text-secondary: #8888aa;
+  --color-text-muted:  #44445a;
+  --color-accent:      #a855f7;
+  --color-accent-glow: rgba(168,85,247,0.35);
+  --color-accent-soft: rgba(168,85,247,0.12);
+  --color-accent-hover:#c084fc;
+  --color-danger:      #f87171;
+  --color-warning:     #fbbf24;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--color-bg-base);
+  color: var(--color-text-primary);
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: 13px;
+  -webkit-font-smoothing: antialiased;
+}
+
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--color-text-muted); }
+
+/* ── reusable button base ── */
+.ig-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 6px 11px;
+  font-size: 12px;
+  font-weight: 500;
+  border-radius: 7px;
+  cursor: pointer;
+  transition: background 0.15s, box-shadow 0.15s, transform 0.1s;
+  border: 1px solid var(--color-border);
+  background: var(--color-bg-elevated);
+  color: var(--color-text-primary);
+  white-space: nowrap;
+  user-select: none;
+}
+.ig-btn:hover {
+  background: var(--color-bg-hover);
+  border-color: var(--color-border);
+}
+.ig-btn:active { transform: scale(0.97); }
+
+.ig-btn-accent {
+  background: var(--color-accent);
+  border-color: transparent;
+  color: #fff;
+  box-shadow: 0 0 14px var(--color-accent-glow);
+}
+.ig-btn-accent:hover {
+  background: var(--color-accent-hover);
+  box-shadow: 0 0 22px var(--color-accent-glow);
+}
+
+.ig-btn-danger {
+  color: var(--color-danger);
+  border-color: rgba(248,113,113,0.3);
+}
+.ig-btn-danger:hover {
+  background: rgba(248,113,113,0.08);
+}

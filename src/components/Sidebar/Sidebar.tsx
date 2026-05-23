@@ -1,0 +1,188 @@
+import { useRef, useState } from 'react'
+import { useStore } from '@/store/useStore'
+import { loadImageFiles } from '@/utils/imageUtils'
+import { exportAllCells } from '@/utils/exportUtils'
+import { defaultCellOrder } from '@/utils/gridUtils'
+import type { ImageBlock } from '@/store/types'
+
+interface Props {
+  onLowRes?: (names: string[]) => void
+  onPreview?: () => void
+}
+
+export default function Sidebar({ onLowRes, onPreview }: Props) {
+  const fileRef = useRef<HTMLInputElement>(null)
+  const [exporting, setExporting] = useState(false)
+
+  const images = useStore((s) => s.images)
+  const blocks = useStore((s) => s.blocks)
+  const gridRows = useStore((s) => s.gridRows)
+  const showGuides = useStore((s) => s.showGuides)
+  const addImage = useStore((s) => s.addImage)
+  const addBlock = useStore((s) => s.addBlock)
+  const clearCanvas = useStore((s) => s.clearCanvas)
+  const toggleGuides = useStore((s) => s.toggleGuides)
+
+  function findFreeCell(): { col: number; row: number } {
+    for (let r = 0; r < gridRows + 3; r++) {
+      for (let c = 0; c < 3; c++) {
+        const occupied = blocks.some(
+          (b) => c >= b.col && c < b.col + b.colSpan && r >= b.row && r < b.row + b.rowSpan
+        )
+        if (!occupied) return { col: c, row: r }
+      }
+    }
+    return { col: 0, row: gridRows }
+  }
+
+  async function handleFiles(files: FileList | File[]) {
+    const { loaded, lowRes } = await loadImageFiles(files)
+    if (lowRes.length > 0) onLowRes?.(lowRes)
+    for (const img of loaded) {
+      addImage(img)
+      const pos = findFreeCell()
+      const block: ImageBlock = {
+        id: crypto.randomUUID(),
+        imageId: img.id,
+        col: pos.col,
+        row: pos.row,
+        colSpan: 1,
+        rowSpan: 1,
+        fillMode: 'zoom',
+        barsColor: '#000000',
+        transform: { panX: 0, panY: 0, zoom: 1, rotation: 0 },
+        cellOverrides: {},
+        cellOrder: defaultCellOrder(1, 1),
+      }
+      addBlock(block)
+    }
+  }
+
+  async function doExport() {
+    if (exporting) return
+    setExporting(true)
+    try { await exportAllCells(blocks, images, gridRows) }
+    finally { setExporting(false) }
+  }
+
+  return (
+    <aside style={{
+      width: 210,
+      flexShrink: 0,
+      borderRight: '1px solid var(--color-border)',
+      display: 'flex',
+      flexDirection: 'column',
+      gap: 0,
+      background: 'linear-gradient(180deg, #13131e 0%, #0f0f18 100%)',
+      overflowY: 'auto',
+    }}>
+      {/* header */}
+      <div style={{
+        padding: '14px 14px 10px',
+        borderBottom: '1px solid var(--color-border)',
+        background: 'linear-gradient(135deg, rgba(168,85,247,0.08) 0%, transparent 60%)',
+      }}>
+        <div style={{ fontSize: 15, fontWeight: 700, letterSpacing: '-0.3px', color: 'var(--color-text-primary)' }}>
+          insta<span style={{ color: 'var(--color-accent)' }}>grid</span>
+        </div>
+        <div style={{ fontSize: 10, color: 'var(--color-text-muted)', marginTop: 2 }}>feed planner</div>
+      </div>
+
+      {/* upload */}
+      <div style={{ padding: '10px 10px 8px' }}>
+        <button
+          className="ig-btn ig-btn-accent"
+          style={{ width: '100%', padding: '8px', fontSize: 12 }}
+          onClick={() => fileRef.current?.click()}
+        >
+          ＋ Upload images
+        </button>
+        <input
+          ref={fileRef}
+          type="file"
+          accept="image/jpeg,image/png,image/webp"
+          multiple
+          style={{ display: 'none' }}
+          onChange={(e) => { if (e.target.files) handleFiles(e.target.files); e.target.value = '' }}
+        />
+      </div>
+
+      {/* thumbnails */}
+      {images.length > 0 ? (
+        <div style={{ padding: '0 10px 8px' }}>
+          <div style={{ fontSize: 10, fontWeight: 600, color: 'var(--color-text-muted)', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 6 }}>
+            {images.length} image{images.length !== 1 ? 's' : ''}
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 3 }}>
+            {images.map((img) => (
+              <div key={img.id} style={{
+                aspectRatio: '3/4',
+                borderRadius: 5,
+                overflow: 'hidden',
+                border: '1px solid var(--color-border)',
+                boxShadow: '0 2px 6px rgba(0,0,0,0.4)',
+              }}>
+                <img src={img.src} alt={img.name} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} draggable={false} />
+              </div>
+            ))}
+          </div>
+        </div>
+      ) : (
+        <div style={{
+          margin: '0 10px 8px',
+          padding: '18px 10px',
+          borderRadius: 8,
+          border: '1px dashed var(--color-border)',
+          textAlign: 'center',
+          color: 'var(--color-text-muted)',
+          fontSize: 11,
+          lineHeight: 1.5,
+        }}>
+          Drop images on canvas<br/>or click upload
+        </div>
+      )}
+
+      {/* divider */}
+      <div style={{ flex: 1 }} />
+      <div style={{ margin: '0 10px', borderTop: '1px solid var(--color-border)' }} />
+
+      {/* actions */}
+      <div style={{ padding: '8px 10px 12px', display: 'flex', flexDirection: 'column', gap: 5 }}>
+        <button className="ig-btn" style={{ width: '100%', justifyContent: 'flex-start' }} onClick={toggleGuides}>
+          <span style={{ opacity: 0.6 }}>▦</span>
+          {showGuides ? 'Hide guides' : 'Show guides'}
+        </button>
+
+        <button className="ig-btn" style={{ width: '100%', justifyContent: 'flex-start' }} onClick={onPreview}>
+          <span style={{ opacity: 0.6 }}>👁</span>
+          Preview feed
+        </button>
+
+        <button
+          className={`ig-btn${blocks.length > 0 ? ' ig-btn-accent' : ''}`}
+          style={{ width: '100%', justifyContent: 'flex-start', opacity: blocks.length === 0 ? 0.4 : 1 }}
+          onClick={doExport}
+          disabled={exporting || blocks.length === 0}
+        >
+          <span>⬇</span>
+          {exporting ? 'Exporting…' : 'Export ZIP'}
+        </button>
+
+        <button
+          className="ig-btn ig-btn-danger"
+          style={{ width: '100%', justifyContent: 'flex-start' }}
+          onClick={() => { if (confirm('Clear canvas?')) clearCanvas() }}
+        >
+          <span>✕</span> Clear canvas
+        </button>
+      </div>
+
+      {/* keyboard hint */}
+      <div style={{ padding: '6px 10px 10px', fontSize: 10, color: 'var(--color-text-muted)', lineHeight: 1.7 }}>
+        Del — delete block<br/>
+        Arrows — move block<br/>
+        Ctrl+Z/Y — undo/redo
+      </div>
+    </aside>
+  )
+}
