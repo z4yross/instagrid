@@ -102,7 +102,7 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 
 | T29 | x | Redesign right toolbar as slim icon-only vertical bar (no section labels) | B5 |
 | T30 | x | Group drag: custom DndKit overlay showing all selected blocks preview | V19, B6 |
-| T31 | . | Group drag: smart row wrapping on border collision (not merge) | B7 |
+| T31 | x | Group drag: smart row wrapping on border collision (not merge) | B7 |
 | T32 | x | Grid zoom: replace CSS scale with visible row count adjustment, center grid | V20, B8 |
 | T33 | x | localStorage: catch QuotaExceededError, log + warn user, graceful degradation | V18, B4 |
 | T34 | x | Export numbering: skip empty/placeholder cells, only number cells with images | V4, B9 |

@@ -70,11 +70,27 @@ export default function CanvasArea({ onLowRes }: Props) {
       const deltaCol = Math.round(delta.x / cW)
       const deltaRow = Math.round(delta.y / cH)
 
-      // check if all blocks can move
       const selectedBlocks = blocks.filter((b) => selectedBlockIds.includes(b.id))
+
+      // B7: prevent border collision merge by ensuring all blocks move uniformly
+      // If any block would hit a border, clamp the entire group's delta
+      let clampedDeltaCol = deltaCol
+      let clampedDeltaRow = deltaRow
+
+      for (const b of selectedBlocks) {
+        const maxCol = COLS - b.colSpan
+        const proposedCol = b.col + deltaCol
+        if (proposedCol < 0) clampedDeltaCol = Math.max(clampedDeltaCol, -b.col)
+        if (proposedCol > maxCol) clampedDeltaCol = Math.min(clampedDeltaCol, maxCol - b.col)
+
+        const proposedRow = b.row + deltaRow
+        if (proposedRow < 0) clampedDeltaRow = Math.max(clampedDeltaRow, -b.row)
+      }
+
+      // check if all blocks can move with clamped delta
       const canMove = selectedBlocks.every((b) => {
-        const newCol = Math.max(0, Math.min(COLS - b.colSpan, b.col + deltaCol))
-        const newRow = Math.max(0, b.row + deltaRow)
+        const newCol = b.col + clampedDeltaCol
+        const newRow = b.row + clampedDeltaRow
         return !hasCollision(
           blocks.filter((bl) => !selectedBlockIds.includes(bl.id)),
           newCol,
@@ -86,9 +102,7 @@ export default function CanvasArea({ onLowRes }: Props) {
 
       if (canMove) {
         selectedBlocks.forEach((b) => {
-          const newCol = Math.max(0, Math.min(COLS - b.colSpan, b.col + deltaCol))
-          const newRow = Math.max(0, b.row + deltaRow)
-          updateBlock(b.id, { col: newCol, row: newRow })
+          updateBlock(b.id, { col: b.col + clampedDeltaCol, row: b.row + clampedDeltaRow })
         })
       }
     } else {
