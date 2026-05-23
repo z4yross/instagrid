@@ -143,7 +143,7 @@ export default function Sidebar({ onLowRes }: Props) {
     <aside style={{
       width: 210,
       flexShrink: 0,
-      borderRight: '2px solid rgba(255, 255, 255, 0.15)',
+      borderRight: 'none',
       display: 'flex',
       flexDirection: 'column',
       gap: 0,

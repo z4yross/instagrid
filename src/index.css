@@ -106,14 +106,16 @@ body {
 }
 
 .ig-btn-danger {
-  background: #ff4444;
-  color: #ffffff;
-  box-shadow: 0 2px 8px rgba(255, 68, 68, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  background: transparent;
+  border: 2px dotted #ff4444;
+  color: #ff4444;
+  box-shadow: none;
 }
 .ig-btn-danger:hover {
-  background: #ff6666;
-  color: #ffffff;
-  box-shadow: 0 4px 12px rgba(255, 68, 68, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  background: rgba(255, 68, 68, 0.08);
+  border: 2px dotted #ff6666;
+  color: #ff6666;
+  box-shadow: 0 2px 8px rgba(255, 68, 68, 0.2);
 }
 
 .ig-btn:disabled {
