@@ -63,7 +63,7 @@ export default function RightToolbar() {
         right: 0,
         width: 64,
         height: '100vh',
-        background: 'linear-gradient(180deg, #13131e 0%, #0d0d14 100%)',
+        background: 'linear-gradient(180deg, #0d0d0d 0%, #000000 100%)',
         borderLeft: '1px solid var(--color-border)',
         display: 'flex',
         flexDirection: 'column',
