@@ -146,7 +146,7 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | T67 | x | Fix profiles store creation: delete old DB, force v2 creation on init | B35 |
 | T68 | x | Replace browser dialogs (alert/confirm/prompt) with custom modal components | — |
 | T69 | x | Fix export crop to exactly match grid display: pass actual grid cell size to export or store transforms as percentages | V24, B36 |
-| T70 | . | Fix export cell X offset: use EXPORT_W (1080) not CROP_W (1010) for cellOffsetX | V24, B37 |
+| T70 | x | Fix export cell X offset: use EXPORT_W (1080) not CROP_W (1010) for cellOffsetX | V24, B37 |
 
 ---
 
