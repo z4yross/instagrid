@@ -118,6 +118,7 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | T40 | x | Design-focused color scheme: refined palette, stronger visual identity | B14 |
 | T41 | x | IndexedDB for image persistence: store images in IDB, blocks/gridRows in localStorage | V22, B15 |
 | T42 | . | Loading state during IndexedDB restore: show spinner/skeleton until images loaded | V23, B16 |
+| T43 | . | Fix batch upload overlap: track blocks locally in handleFiles loop, findFreeCell uses updated array | V13, B17 |
 
 ---
 
@@ -141,4 +142,5 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | B14 | 2026-05-23 | Color scheme after T37 still not design-focused enough | Need palette with stronger design identity, refined visual language → T40 |
 | B15 | 2026-05-23 | Images still lost on reload despite T33 fix | localStorage quota (5-10MB) insufficient for image data URLs. V18 warns but doesn't solve persistence → V22, T41 |
 | B16 | 2026-05-23 | No loading indicator on page reload, images pop in after IndexedDB delay | T41 async IDB load lacks visual feedback. User sees empty grid then sudden image load → V23, T42 |
+| B17 | 2026-05-23 | Multiple images uploaded together overlap at same position | findFreeCell reads stale blocks state. Loop doesn't track newly added blocks, all find same position → V13, T43 |
 
