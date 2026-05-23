@@ -154,8 +154,6 @@ export default function Sidebar({ onLowRes }: Props) {
       {/* header */}
       <div style={{
         padding: '14px 14px 10px',
-        borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
-        background: 'rgba(255, 255, 255, 0.03)',
       }}>
         <div style={{ fontSize: 15, fontWeight: 700, letterSpacing: '-0.3px', color: 'var(--color-text-primary)' }}>
           insta<span style={{ color: 'var(--color-accent)' }}>grid</span>
