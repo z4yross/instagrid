@@ -1,19 +1,17 @@
 import { useState } from 'react'
 import Sidebar from '@/components/Sidebar/Sidebar'
 import CanvasArea from '@/components/Canvas/CanvasArea'
-import PreviewPanel from '@/components/Preview/PreviewPanel'
 import RightToolbar from '@/components/Toolbar/RightToolbar'
 import useKeyboard from '@/hooks/useKeyboard'
 
 export default function App() {
   useKeyboard()
 
-  const [showPreview, setShowPreview] = useState(false)
   const [lowResWarning, setLowResWarning] = useState<string[]>([])
 
   return (
     <div style={{ display: 'flex', height: '100%', overflow: 'hidden', background: 'var(--color-bg-base)' }}>
-      <Sidebar onLowRes={setLowResWarning} onPreview={() => setShowPreview(true)} />
+      <Sidebar onLowRes={setLowResWarning} />
 
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', marginRight: 64 }}>
         {lowResWarning.length > 0 && (
@@ -34,8 +32,6 @@ export default function App() {
       </div>
 
       <RightToolbar />
-
-      {showPreview && <PreviewPanel onClose={() => setShowPreview(false)} />}
     </div>
   )
 }

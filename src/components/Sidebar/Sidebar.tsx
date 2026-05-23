@@ -6,10 +6,9 @@ import type { ImageBlock } from '@/store/types'
 
 interface Props {
   onLowRes?: (names: string[]) => void
-  onPreview?: () => void
 }
 
-export default function Sidebar({ onLowRes, onPreview }: Props) {
+export default function Sidebar({ onLowRes }: Props) {
   const fileRef = useRef<HTMLInputElement>(null)
   const [exporting, setExporting] = useState(false)
 
@@ -155,11 +154,6 @@ export default function Sidebar({ onLowRes, onPreview }: Props) {
         <button className="ig-btn" style={{ width: '100%', justifyContent: 'flex-start' }} onClick={toggleGuides}>
           <span style={{ opacity: 0.6 }}>▦</span>
           {showGuides ? 'Hide guides' : 'Show guides'}
-        </button>
-
-        <button className="ig-btn" style={{ width: '100%', justifyContent: 'flex-start' }} onClick={onPreview}>
-          <span style={{ opacity: 0.6 }}>👁</span>
-          Preview feed
         </button>
 
         <button
