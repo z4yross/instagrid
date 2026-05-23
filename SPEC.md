@@ -115,7 +115,7 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | T38 | x | Remove preview feed panel (PreviewPanel, onPreview button) | — |
 | T39 | x | Zoom in removes trailing empty rows: shrink gridRows to content when reducing visibleRows | V21, B13 |
 | T40 | x | Design-focused color scheme: refined palette, stronger visual identity | B14 |
-| T41 | . | IndexedDB for image persistence: store images in IDB, blocks/gridRows in localStorage | V22, B15 |
+| T41 | x | IndexedDB for image persistence: store images in IDB, blocks/gridRows in localStorage | V22, B15 |
 
 ---
 

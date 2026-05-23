@@ -9,16 +9,13 @@ function ensureGridRows(blocks: ImageBlock[], current: number): number {
   return Math.max(current, maxRow + 1, 3)
 }
 
-// Load persisted state
-const persisted = loadState()
-
 const useStore = create<AppState>()(
   subscribeWithSelector(
     temporal(
       (set, _get) => ({
-        images: persisted?.images ?? [],
-        blocks: persisted?.blocks ?? [],
-        gridRows: persisted?.gridRows ?? 3,
+        images: [],
+        blocks: [],
+        gridRows: 3,
         selectedBlockIds: [],
         showGuides: true,
         visibleRows: 3,
@@ -147,6 +144,17 @@ useStore.subscribe(
   (state) => saveState(state),
   { equalityFn: (a, b) => a === b }
 )
+
+// V22: Load persisted state from IndexedDB + localStorage on init
+loadState().then((persisted) => {
+  if (persisted) {
+    useStore.setState({
+      images: persisted.images,
+      blocks: persisted.blocks,
+      gridRows: persisted.gridRows,
+    })
+  }
+})
 
 export default useStore
 export { useStore }
