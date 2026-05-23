@@ -146,6 +146,7 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | T67 | x | Fix profiles store creation: delete old DB, force v2 creation on init | B35 |
 | T68 | x | Replace browser dialogs (alert/confirm/prompt) with custom modal components | — |
 | T69 | x | Fix export crop to exactly match grid display: pass actual grid cell size to export or store transforms as percentages | V24, B36 |
+| T70 | . | Fix export cell X offset: use EXPORT_W (1080) not CROP_W (1010) for cellOffsetX | V24, B37 |
 
 ---
 
@@ -189,4 +190,5 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | B34 | 2026-05-23 | Export bars should extend image not blur | T62 uses blur. Should extend image edges naturally. Black bars only if no image extension possible → T66 |
 | B35 | 2026-05-23 | Profile save broken after reload - profiles store missing | DB upgrade from v1→v2 not creating profiles store. Need force recreate or check existing connections → T67 |
 | B36 | 2026-05-23 | Export crop shows wrong portion of image compared to grid display | T65/T66 used hardcoded 400px reference for pan scaling. Actual grid cell size varies by viewport. Need pass real cell size or store transforms as viewport-independent values → T69 |
+| B37 | 2026-05-23 | Export multi-cell X offset wrong (zoom/panY correct, panX offset wrong) | cellOffsetX uses CROP_W (1010) but each export cell is EXPORT_W (1080) wide. Cells overlap/gap incorrectly → T70 |
 
