@@ -18,13 +18,14 @@ export default function Block({ block, cellW, cellH, isDragging }: Props) {
     data: { block },
   })
 
-  const selectedBlockId = useStore((s) => s.selectedBlockId)
-  const setSelectedBlock = useStore((s) => s.setSelectedBlock)
+  const selectedBlockIds = useStore((s) => s.selectedBlockIds)
+  const setSelectedBlocks = useStore((s) => s.setSelectedBlocks)
+  const toggleBlockSelection = useStore((s) => s.toggleBlockSelection)
   const images = useStore((s) => s.images)
   const gridRows = useStore((s) => s.gridRows)
   const image = images.find((i) => i.id === block.imageId)
 
-  const isSelected = selectedBlockId === block.id
+  const isSelected = selectedBlockIds.includes(block.id)
   const style: React.CSSProperties = {
     position: 'absolute',
     left: block.col * cellW,
@@ -52,7 +53,14 @@ export default function Block({ block, cellW, cellH, isDragging }: Props) {
     <div
       ref={setNodeRef}
       style={style}
-      onClick={(e) => { e.stopPropagation(); setSelectedBlock(block.id) }}
+      onClick={(e) => {
+        e.stopPropagation()
+        if (e.shiftKey) {
+          toggleBlockSelection(block.id)
+        } else {
+          setSelectedBlocks([block.id])
+        }
+      }}
       {...listeners}
       {...attributes}
     >
@@ -65,7 +73,7 @@ export default function Block({ block, cellW, cellH, isDragging }: Props) {
 
       <CellBadges block={block} cellW={cellW} cellH={cellH} gridRows={gridRows} />
 
-      {selectedBlockId === block.id && !isDragging && (
+      {isSelected && selectedBlockIds.length === 1 && !isDragging && (
         <>
           <ResizeHandle block={block} cellW={cellW} cellH={cellH} edge="right" />
           <ResizeHandle block={block} cellW={cellW} cellH={cellH} edge="bottom" />

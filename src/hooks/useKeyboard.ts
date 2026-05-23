@@ -10,7 +10,7 @@ export default function useKeyboard() {
       if ((e.target as HTMLElement).matches('input,textarea,select')) return
 
       const ctrl = e.ctrlKey || e.metaKey
-      const { selectedBlockId, blocks, removeBlock, setSelectedBlock, updateBlock } = useStore.getState()
+      const { selectedBlockIds, blocks, removeBlocks, setSelectedBlocks, updateBlock } = useStore.getState()
 
       // undo/redo
       if (ctrl && e.key === 'z' && !e.shiftKey) { e.preventDefault(); undo(); return }
@@ -18,21 +18,21 @@ export default function useKeyboard() {
 
       // escape — deselect
       if (e.key === 'Escape') {
-        if (selectedBlockId) { setSelectedBlock(null); return }
+        if (selectedBlockIds.length > 0) { setSelectedBlocks([]); return }
       }
 
-      // delete/backspace — remove selected block
-      if ((e.key === 'Delete' || e.key === 'Backspace') && selectedBlockId) {
+      // delete/backspace — remove selected blocks
+      if ((e.key === 'Delete' || e.key === 'Backspace') && selectedBlockIds.length > 0) {
         e.preventDefault()
-        removeBlock(selectedBlockId)
+        removeBlocks(selectedBlockIds)
         return
       }
 
       // V16: arrow keys pan image, direction rotates with image rotation
-      if (selectedBlockId && ['ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.key)) {
+      if (selectedBlockIds.length > 0 && ['ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.key)) {
         e.preventDefault()
-        const block = blocks.find(b => b.id === selectedBlockId)
-        if (!block) return
+        const selectedBlocks = blocks.filter(b => selectedBlockIds.includes(b.id))
+        if (selectedBlocks.length === 0) return
 
         const PAN_STEP = 10
         let dx = 0
@@ -44,28 +44,31 @@ export default function useKeyboard() {
         if (e.key === 'ArrowUp')    dy = -PAN_STEP
         if (e.key === 'ArrowDown')  dy = PAN_STEP
 
-        // rotate direction by image rotation
-        const rot = block.transform.rotation
-        let rotatedDx = dx
-        let rotatedDy = dy
+        // apply to all selected blocks
+        selectedBlocks.forEach((block) => {
+          // rotate direction by image rotation
+          const rot = block.transform.rotation
+          let rotatedDx = dx
+          let rotatedDy = dy
 
-        if (rot === 90) {
-          rotatedDx = dy
-          rotatedDy = -dx
-        } else if (rot === 180) {
-          rotatedDx = -dx
-          rotatedDy = -dy
-        } else if (rot === 270) {
-          rotatedDx = -dy
-          rotatedDy = dx
-        }
+          if (rot === 90) {
+            rotatedDx = dy
+            rotatedDy = -dx
+          } else if (rot === 180) {
+            rotatedDx = -dx
+            rotatedDy = -dy
+          } else if (rot === 270) {
+            rotatedDx = -dy
+            rotatedDy = dx
+          }
 
-        updateBlock(block.id, {
-          transform: {
-            ...block.transform,
-            panX: block.transform.panX + rotatedDx,
-            panY: block.transform.panY + rotatedDy,
-          },
+          updateBlock(block.id, {
+            transform: {
+              ...block.transform,
+              panX: block.transform.panX + rotatedDx,
+              panY: block.transform.panY + rotatedDy,
+            },
+          })
         })
       }
     }

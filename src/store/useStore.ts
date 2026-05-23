@@ -19,7 +19,7 @@ const useStore = create<AppState>()(
         images: persisted?.images ?? [],
         blocks: persisted?.blocks ?? [],
         gridRows: persisted?.gridRows ?? 3,
-        selectedBlockId: null,
+        selectedBlockIds: [],
         showGuides: true,
 
       addImage: (img: UploadedImage) =>
@@ -39,25 +39,49 @@ const useStore = create<AppState>()(
           return { blocks, gridRows: ensureGridRows(blocks, s.gridRows) }
         }),
 
+      updateBlocks: (ids: string[], patch: Partial<ImageBlock>) =>
+        set((s) => {
+          const blocks = s.blocks.map((b) =>
+            ids.includes(b.id) ? { ...b, ...patch } : b
+          )
+          return { blocks, gridRows: ensureGridRows(blocks, s.gridRows) }
+        }),
+
       removeBlock: (id: string) =>
         set((s) => {
           const blocks = s.blocks.filter((b) => b.id !== id)
           return {
             blocks,
             gridRows: ensureGridRows(blocks, 3),
-            selectedBlockId:
-              s.selectedBlockId === id ? null : s.selectedBlockId,
+            selectedBlockIds: s.selectedBlockIds.filter((bid) => bid !== id),
           }
         }),
 
-      setSelectedBlock: (id) => set({ selectedBlockId: id }),
+      removeBlocks: (ids: string[]) =>
+        set((s) => {
+          const blocks = s.blocks.filter((b) => !ids.includes(b.id))
+          return {
+            blocks,
+            gridRows: ensureGridRows(blocks, 3),
+            selectedBlockIds: s.selectedBlockIds.filter((bid) => !ids.includes(bid)),
+          }
+        }),
+
+      setSelectedBlocks: (ids) => set({ selectedBlockIds: ids }),
+
+      toggleBlockSelection: (id) =>
+        set((s) => ({
+          selectedBlockIds: s.selectedBlockIds.includes(id)
+            ? s.selectedBlockIds.filter((bid) => bid !== id)
+            : [...s.selectedBlockIds, id],
+        })),
 
       setGridRows: (rows) => set({ gridRows: Math.max(rows, 3) }),
 
       toggleGuides: () => set((s) => ({ showGuides: !s.showGuides })),
 
       clearCanvas: () =>
-        set({ blocks: [], gridRows: 3, selectedBlockId: null }),
+        set({ blocks: [], gridRows: 3, selectedBlockIds: [] }),
     }),
     {
       // V5: undo/redo only covers canvas mutations, not image uploads

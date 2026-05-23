@@ -18,8 +18,9 @@ export default function CanvasArea({ onLowRes }: Props) {
   const [activeId, setActiveId] = useState<string | null>(null)
 
   const blocks = useStore((s) => s.blocks)
+  const selectedBlockIds = useStore((s) => s.selectedBlockIds)
   const updateBlock = useStore((s) => s.updateBlock)
-  const setSelectedBlock = useStore((s) => s.setSelectedBlock)
+  const setSelectedBlocks = useStore((s) => s.setSelectedBlocks)
 
   useEffect(() => {
     const el = containerRef.current
@@ -54,27 +55,58 @@ export default function CanvasArea({ onLowRes }: Props) {
   function onDragEnd(e: DragEndEvent) {
     setActiveId(null)
     const { active, delta } = e
-    const block = blocks.find((b) => b.id === active.id) as ImageBlock | undefined
-    if (!block) return
+    const draggedBlock = blocks.find((b) => b.id === active.id) as ImageBlock | undefined
+    if (!draggedBlock) return
 
     const { w: cW, h: cH } = getCellSize()
-    const newPixelX = block.col * cW + delta.x
-    const newPixelY = block.row * cH + delta.y
-    const { col, row } = snapToGrid(newPixelX, newPixelY)
 
-    const clampedCol = Math.min(col, COLS - block.colSpan)
-    const clampedRow = Math.max(0, row)
+    // V12: if part of group, move all selected blocks
+    const isGroupDrag = selectedBlockIds.includes(draggedBlock.id) && selectedBlockIds.length > 1
 
-    if (hasCollision(blocks, clampedCol, clampedRow, block.colSpan, block.rowSpan, block.id)) return
+    if (isGroupDrag) {
+      const deltaCol = Math.round(delta.x / cW)
+      const deltaRow = Math.round(delta.y / cH)
 
-    updateBlock(block.id, { col: clampedCol, row: clampedRow })
+      // check if all blocks can move
+      const selectedBlocks = blocks.filter((b) => selectedBlockIds.includes(b.id))
+      const canMove = selectedBlocks.every((b) => {
+        const newCol = Math.max(0, Math.min(COLS - b.colSpan, b.col + deltaCol))
+        const newRow = Math.max(0, b.row + deltaRow)
+        return !hasCollision(
+          blocks.filter((bl) => !selectedBlockIds.includes(bl.id)),
+          newCol,
+          newRow,
+          b.colSpan,
+          b.rowSpan
+        )
+      })
+
+      if (canMove) {
+        selectedBlocks.forEach((b) => {
+          const newCol = Math.max(0, Math.min(COLS - b.colSpan, b.col + deltaCol))
+          const newRow = Math.max(0, b.row + deltaRow)
+          updateBlock(b.id, { col: newCol, row: newRow })
+        })
+      }
+    } else {
+      const newPixelX = draggedBlock.col * cW + delta.x
+      const newPixelY = draggedBlock.row * cH + delta.y
+      const { col, row } = snapToGrid(newPixelX, newPixelY)
+
+      const clampedCol = Math.min(col, COLS - draggedBlock.colSpan)
+      const clampedRow = Math.max(0, row)
+
+      if (hasCollision(blocks, clampedCol, clampedRow, draggedBlock.colSpan, draggedBlock.rowSpan, draggedBlock.id)) return
+
+      updateBlock(draggedBlock.id, { col: clampedCol, row: clampedRow })
+    }
   }
 
   return (
     <div
       ref={containerRef}
       style={{ flex: 1, position: 'relative', overflow: 'hidden auto', display: 'flex', flexDirection: 'column' }}
-      onClick={() => setSelectedBlock(null)}
+      onClick={() => setSelectedBlocks([])}
     >
       <DndContext sensors={sensors} onDragStart={onDragStart} onDragEnd={onDragEnd}>
         <DropZone onLowRes={onLowRes}>

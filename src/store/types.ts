@@ -33,14 +33,17 @@ export interface AppState {
   images: UploadedImage[]
   blocks: ImageBlock[]
   gridRows: number
-  selectedBlockId: string | null
+  selectedBlockIds: string[]
   showGuides: boolean
 
   addImage: (img: UploadedImage) => void
   addBlock: (block: ImageBlock) => void
   updateBlock: (id: string, patch: Partial<ImageBlock>) => void
+  updateBlocks: (ids: string[], patch: Partial<ImageBlock>) => void
   removeBlock: (id: string) => void
-  setSelectedBlock: (id: string | null) => void
+  removeBlocks: (ids: string[]) => void
+  setSelectedBlocks: (ids: string[]) => void
+  toggleBlockSelection: (id: string) => void
   setGridRows: (rows: number) => void
   toggleGuides: () => void
   clearCanvas: () => void

@@ -2,36 +2,43 @@ import { useStore } from '@/store/useStore'
 import ColorPicker from '@/components/ColorPicker/ColorPicker'
 
 export default function RightToolbar() {
-  const selectedBlockId = useStore((s) => s.selectedBlockId)
+  const selectedBlockIds = useStore((s) => s.selectedBlockIds)
   const blocks = useStore((s) => s.blocks)
   const updateBlock = useStore((s) => s.updateBlock)
-  const removeBlock = useStore((s) => s.removeBlock)
-  const setSelectedBlock = useStore((s) => s.setSelectedBlock)
+  const removeBlocks = useStore((s) => s.removeBlocks)
+  const setSelectedBlocks = useStore((s) => s.setSelectedBlocks)
 
-  const block = blocks.find((b) => b.id === selectedBlockId)
-  const disabled = !block
+  const selectedBlocks = blocks.filter((b) => selectedBlockIds.includes(b.id))
+  const block = selectedBlocks.length === 1 ? selectedBlocks[0] : null
+  const disabled = selectedBlocks.length === 0
 
   function rotate() {
-    if (!block) return
-    const next = ((block.transform.rotation + 90) % 360) as 0 | 90 | 180 | 270
-    updateBlock(block.id, { transform: { ...block.transform, rotation: next } })
+    if (selectedBlocks.length === 0) return
+    selectedBlocks.forEach((b) => {
+      const next = ((b.transform.rotation + 90) % 360) as 0 | 90 | 180 | 270
+      updateBlock(b.id, { transform: { ...b.transform, rotation: next } })
+    })
   }
 
   function adjustPan(dx: number, dy: number) {
-    if (!block) return
-    updateBlock(block.id, { transform: { ...block.transform, panX: block.transform.panX + dx, panY: block.transform.panY + dy } })
+    if (selectedBlocks.length === 0) return
+    selectedBlocks.forEach((b) => {
+      updateBlock(b.id, { transform: { ...b.transform, panX: b.transform.panX + dx, panY: b.transform.panY + dy } })
+    })
   }
 
   function adjustZoom(delta: number) {
-    if (!block) return
-    const zoom = Math.max(0.1, Math.min(10, block.transform.zoom + delta))
-    updateBlock(block.id, { transform: { ...block.transform, zoom } })
+    if (selectedBlocks.length === 0) return
+    selectedBlocks.forEach((b) => {
+      const zoom = Math.max(0.1, Math.min(10, b.transform.zoom + delta))
+      updateBlock(b.id, { transform: { ...b.transform, zoom } })
+    })
   }
 
   function del() {
-    if (!block) return
-    removeBlock(block.id)
-    setSelectedBlock(null)
+    if (selectedBlocks.length === 0) return
+    removeBlocks(selectedBlockIds)
+    setSelectedBlocks([])
   }
 
   return (
@@ -52,7 +59,7 @@ export default function RightToolbar() {
       }}
     >
       <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--color-text-secondary)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
-        Transform
+        {selectedBlocks.length > 1 ? `Transform (${selectedBlocks.length})` : 'Transform'}
       </div>
 
       <Section label="Rotate">
@@ -105,7 +112,7 @@ export default function RightToolbar() {
         onMouseEnter={(e) => !disabled && (e.currentTarget.style.background = 'rgba(248,113,113,0.18)')}
         onMouseLeave={(e) => !disabled && (e.currentTarget.style.background = 'rgba(248,113,113,0.1)')}
       >
-        ✕ Delete Block
+        ✕ Delete {selectedBlocks.length > 1 ? `(${selectedBlocks.length})` : 'Block'}
       </button>
     </div>
   )
