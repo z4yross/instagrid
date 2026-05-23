@@ -138,7 +138,7 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | T59 | x | Fix color picker position: open to left not right to avoid viewport overflow | B30 |
 | T60 | x | Debug export: verify transform application, crop bounds, cell offset calculations | B31 |
 | T61 | x | Save/load profiles: store multiple named profiles in IDB (blocks + gridRows + timestamp). Switch between profiles via UI | V15, V22 |
-| T62 | . | Export bars from image content: extend/blur edge pixels instead of solid barsColor. Match IG carousel style | V24 |
+| T62 | x | Export bars from image content: extend/blur edge pixels instead of solid barsColor. Match IG carousel style | V24 |
 
 ---
 

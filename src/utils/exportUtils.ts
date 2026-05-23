@@ -35,41 +35,52 @@ function renderCell(
   const CROP_W = 1010
   const BAR_W = 35
 
-  // bars background
-  ctx.fillStyle = block.barsColor
-  ctx.fillRect(0, 0, EXPORT_W, EXPORT_H)
-
-  ctx.save()
-
-  // Clip to 1010px center region
-  ctx.beginPath()
-  ctx.rect(BAR_W, 0, CROP_W, EXPORT_H)
-  ctx.clip()
-
-  // Translate to center of 1010px crop region
-  ctx.translate(BAR_W + CROP_W / 2, EXPORT_H / 2)
-
   // Calculate offset for this cell within the block
   const cellOffsetX = relCol * CROP_W
   const cellOffsetY = relRow * EXPORT_H
 
-  // Apply transforms in same order as CSS: rotate → translate → scale
+  // T62: Draw blurred background for bars
+  ctx.save()
+  ctx.filter = 'blur(20px)'
+  ctx.translate(EXPORT_W / 2, EXPORT_H / 2)
+  ctx.rotate((rotation * Math.PI) / 180)
+  ctx.translate(panX - cellOffsetX, panY - cellOffsetY)
+  const bgFlipScaleX = (flipX ? -1 : 1) * zoom
+  const bgFlipScaleY = (flipY ? -1 : 1) * zoom
+  ctx.scale(bgFlipScaleX, bgFlipScaleY)
+
+  // Scale to fill full width for bars
+  const totalPxW = totalCols * EXPORT_W  // Use full width for background
+  const totalPxH = totalRows * EXPORT_H
+  const bgScaleX = totalPxW / img.naturalWidth
+  const bgScaleY = totalPxH / img.naturalHeight
+  const bgScale = Math.max(bgScaleX, bgScaleY)  // cover instead of contain
+  const bgDrawW = img.naturalWidth * bgScale
+  const bgDrawH = img.naturalHeight * bgScale
+  ctx.drawImage(img, -bgDrawW / 2, -bgDrawH / 2, bgDrawW, bgDrawH)
+  ctx.restore()
+
+  // Draw sharp crop in center
+  ctx.save()
+  ctx.beginPath()
+  ctx.rect(BAR_W, 0, CROP_W, EXPORT_H)
+  ctx.clip()
+
+  ctx.translate(BAR_W + CROP_W / 2, EXPORT_H / 2)
   ctx.rotate((rotation * Math.PI) / 180)
   ctx.translate(panX - cellOffsetX, panY - cellOffsetY)
   const flipScaleX = (flipX ? -1 : 1) * zoom
   const flipScaleY = (flipY ? -1 : 1) * zoom
   ctx.scale(flipScaleX, flipScaleY)
 
-  // contain: fit image in total block area
-  const totalPxW = totalCols * CROP_W
-  const totalPxH = totalRows * EXPORT_H
-  const scaleX = totalPxW / img.naturalWidth
-  const scaleY = totalPxH / img.naturalHeight
+  // contain: fit image in crop area
+  const cropPxW = totalCols * CROP_W
+  const cropPxH = totalRows * EXPORT_H
+  const scaleX = cropPxW / img.naturalWidth
+  const scaleY = cropPxH / img.naturalHeight
   const scale = Math.min(scaleX, scaleY)
   const drawW = img.naturalWidth * scale
   const drawH = img.naturalHeight * scale
-
-  // Draw centered in total block area
   ctx.drawImage(img, -drawW / 2, -drawH / 2, drawW, drawH)
 
   ctx.restore()
