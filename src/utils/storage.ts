@@ -242,7 +242,6 @@ export async function saveProfile(name: string, blocks: ImageBlock[], gridRows: 
     })
   } catch (err) {
     console.error('Failed to save profile:', err)
-    alert('Failed to save profile. Check console for details.')
     throw err
   }
 }

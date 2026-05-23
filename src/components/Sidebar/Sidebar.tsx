@@ -4,9 +4,18 @@ import { loadImageFiles } from '@/utils/imageUtils'
 import { exportAllCells } from '@/utils/exportUtils'
 import { saveProfile, listProfiles, loadProfile, deleteProfile, type Profile } from '@/utils/storage'
 import type { ImageBlock } from '@/store/types'
+import Modal, { type ModalType } from '../Modal/Modal'
 
 interface Props {
   onLowRes?: (names: string[]) => void
+}
+
+interface ModalState {
+  type: ModalType
+  title?: string
+  message: string
+  onConfirm: (value?: string) => void
+  placeholder?: string
 }
 
 export default function Sidebar({ onLowRes }: Props) {
@@ -14,6 +23,7 @@ export default function Sidebar({ onLowRes }: Props) {
   const [exporting, setExporting] = useState(false)
   const [profiles, setProfiles] = useState<Profile[]>([])
   const [showProfiles, setShowProfiles] = useState(false)
+  const [modal, setModal] = useState<ModalState | null>(null)
 
   const images = useStore((s) => s.images)
   const blocks = useStore((s) => s.blocks)
@@ -36,12 +46,29 @@ export default function Sidebar({ onLowRes }: Props) {
     }
   }, [showProfiles])
 
-  async function handleSaveProfile() {
-    const name = prompt('Profile name:')
-    if (!name) return
-    await saveProfile(name, blocks, gridRows)
-    const updated = await listProfiles()
-    setProfiles(updated)
+  function handleSaveProfile() {
+    setModal({
+      type: 'prompt',
+      title: 'Save Profile',
+      message: 'Enter a name for this profile:',
+      placeholder: 'Profile name',
+      onConfirm: async (name) => {
+        setModal(null)
+        if (!name) return
+        try {
+          await saveProfile(name, blocks, gridRows)
+          const updated = await listProfiles()
+          setProfiles(updated)
+        } catch (err) {
+          setModal({
+            type: 'alert',
+            title: 'Error',
+            message: 'Failed to save profile. Check console for details.',
+            onConfirm: () => setModal(null),
+          })
+        }
+      },
+    })
   }
 
   async function handleLoadProfile(id: number) {
@@ -52,12 +79,18 @@ export default function Sidebar({ onLowRes }: Props) {
     }
   }
 
-  async function handleDeleteProfile(id: number) {
-    if (confirm('Delete profile?')) {
-      await deleteProfile(id)
-      const updated = await listProfiles()
-      setProfiles(updated)
-    }
+  function handleDeleteProfile(id: number) {
+    setModal({
+      type: 'confirm',
+      title: 'Delete Profile',
+      message: 'Are you sure you want to delete this profile?',
+      onConfirm: async () => {
+        setModal(null)
+        await deleteProfile(id)
+        const updated = await listProfiles()
+        setProfiles(updated)
+      },
+    })
   }
 
   function findFreeCellInBlocks(currentBlocks: ImageBlock[], rows: number): { col: number; row: number } {
@@ -282,7 +315,21 @@ export default function Sidebar({ onLowRes }: Props) {
 
       {/* actions */}
       <div style={{ padding: '8px 10px 12px', display: 'flex', flexDirection: 'column', gap: 5 }}>
-        <button className="ig-btn" style={{ width: '100%', justifyContent: 'flex-start' }} onClick={() => { if (confirm('Start new profile?')) clearCanvas() }}>
+        <button
+          className="ig-btn"
+          style={{ width: '100%', justifyContent: 'flex-start' }}
+          onClick={() => {
+            setModal({
+              type: 'confirm',
+              title: 'New Profile',
+              message: 'Start a new profile? This will clear the current canvas.',
+              onConfirm: () => {
+                setModal(null)
+                clearCanvas()
+              },
+            })
+          }}
+        >
           <span>📄</span> New profile
         </button>
 
@@ -341,7 +388,17 @@ export default function Sidebar({ onLowRes }: Props) {
         <button
           className="ig-btn ig-btn-danger"
           style={{ width: '100%', justifyContent: 'flex-start' }}
-          onClick={() => { if (confirm('Clear canvas?')) clearCanvas() }}
+          onClick={() => {
+            setModal({
+              type: 'confirm',
+              title: 'Clear Canvas',
+              message: 'Remove all blocks from the canvas?',
+              onConfirm: () => {
+                setModal(null)
+                clearCanvas()
+              },
+            })
+          }}
         >
           <span>✕</span> Clear canvas
         </button>
@@ -349,7 +406,17 @@ export default function Sidebar({ onLowRes }: Props) {
         <button
           className="ig-btn ig-btn-danger"
           style={{ width: '100%', justifyContent: 'flex-start', opacity: images.length === 0 ? 0.4 : 1 }}
-          onClick={() => { if (confirm('Clear all images from memory? This cannot be undone.')) clearImages() }}
+          onClick={() => {
+            setModal({
+              type: 'confirm',
+              title: 'Clear Images',
+              message: 'Clear all images from memory? This cannot be undone.',
+              onConfirm: () => {
+                setModal(null)
+                clearImages()
+              },
+            })
+          }}
           disabled={images.length === 0}
         >
           <span>🗑</span> Clear images
@@ -362,6 +429,17 @@ export default function Sidebar({ onLowRes }: Props) {
         Arrows — move block<br/>
         Ctrl+Z/Y — undo/redo
       </div>
+
+      {modal && (
+        <Modal
+          type={modal.type}
+          title={modal.title}
+          message={modal.message}
+          placeholder={modal.placeholder}
+          onConfirm={modal.onConfirm}
+          onCancel={() => setModal(null)}
+        />
+      )}
     </aside>
   )
 }

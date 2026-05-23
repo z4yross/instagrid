@@ -33,7 +33,6 @@ function renderCell(
 
   // V24: 1010px crop + 35px bars each side = 1080px
   const CROP_W = 1010
-  const BAR_W = 35
 
   // T65: Scale pan values from grid coordinates to export coordinates
   // Assume typical grid cell is ~400px wide (will be close enough for most viewports)
