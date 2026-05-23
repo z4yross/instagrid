@@ -35,6 +35,7 @@ export interface AppState {
   blocks: ImageBlock[]
   gridRows: number
   selectedBlockIds: string[]
+  lastSelectedId: string | null
   showGuides: boolean
   visibleRows: number
   isLoading: boolean

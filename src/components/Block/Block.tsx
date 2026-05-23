@@ -18,7 +18,9 @@ export default function Block({ block, cellW, cellH, isDragging }: Props) {
     data: { block },
   })
 
+  const blocks = useStore((s) => s.blocks)
   const selectedBlockIds = useStore((s) => s.selectedBlockIds)
+  const lastSelectedId = useStore((s) => s.lastSelectedId)
   const setSelectedBlocks = useStore((s) => s.setSelectedBlocks)
   const toggleBlockSelection = useStore((s) => s.toggleBlockSelection)
   const images = useStore((s) => s.images)
@@ -56,9 +58,29 @@ export default function Block({ block, cellW, cellH, isDragging }: Props) {
       style={style}
       onClick={(e) => {
         e.stopPropagation()
-        if (e.shiftKey) {
+
+        // V12: Windows-style multi-select
+        if (e.ctrlKey || e.metaKey) {
+          // Ctrl+click: toggle individual
           toggleBlockSelection(block.id)
+        } else if (e.shiftKey) {
+          // Shift+click: range selection
+          if (!lastSelectedId) {
+            setSelectedBlocks([block.id])
+          } else {
+            const lastIndex = blocks.findIndex((b) => b.id === lastSelectedId)
+            const currentIndex = blocks.findIndex((b) => b.id === block.id)
+            if (lastIndex === -1 || currentIndex === -1) {
+              setSelectedBlocks([block.id])
+            } else {
+              const start = Math.min(lastIndex, currentIndex)
+              const end = Math.max(lastIndex, currentIndex)
+              const rangeIds = blocks.slice(start, end + 1).map((b) => b.id)
+              setSelectedBlocks(rangeIds)
+            }
+          }
         } else {
+          // Regular click: select single
           setSelectedBlocks([block.id])
         }
       }}

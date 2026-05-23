@@ -17,6 +17,7 @@ const useStore = create<AppState>()(
         blocks: [],
         gridRows: 3,
         selectedBlockIds: [],
+        lastSelectedId: null,
         showGuides: true,
         visibleRows: 3,
         isLoading: true,
@@ -93,13 +94,14 @@ const useStore = create<AppState>()(
           }
         }),
 
-      setSelectedBlocks: (ids) => set({ selectedBlockIds: ids }),
+      setSelectedBlocks: (ids) => set({ selectedBlockIds: ids, lastSelectedId: ids[ids.length - 1] || null }),
 
       toggleBlockSelection: (id) =>
         set((s) => ({
           selectedBlockIds: s.selectedBlockIds.includes(id)
             ? s.selectedBlockIds.filter((bid) => bid !== id)
             : [...s.selectedBlockIds, id],
+          lastSelectedId: id,
         })),
 
       setGridRows: (rows) => set({ gridRows: Math.max(rows, 3) }),
