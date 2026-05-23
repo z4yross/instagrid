@@ -282,6 +282,10 @@ export default function Sidebar({ onLowRes }: Props) {
 
       {/* actions */}
       <div style={{ padding: '8px 10px 12px', display: 'flex', flexDirection: 'column', gap: 5 }}>
+        <button className="ig-btn" style={{ width: '100%', justifyContent: 'flex-start' }} onClick={() => { if (confirm('Start new profile?')) clearCanvas() }}>
+          <span>📄</span> New profile
+        </button>
+
         <button className="ig-btn" style={{ width: '100%', justifyContent: 'flex-start' }} onClick={handleSaveProfile}>
           <span>💾</span> Save profile
         </button>

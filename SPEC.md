@@ -140,7 +140,7 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | T61 | x | Save/load profiles: store multiple named profiles in IDB (blocks + gridRows + timestamp). Switch between profiles via UI | V15, V22 |
 | T62 | x | Export bars from image content: extend/blur edge pixels instead of solid barsColor. Match IG carousel style | V24 |
 | T63 | x | Fix save profile: debug IDB transaction, ensure profiles persist correctly | B32 |
-| T64 | . | Add "New profile" button: clears canvas to start fresh (same as clear canvas) | — |
+| T64 | x | Add "New profile" button: clears canvas to start fresh (same as clear canvas) | — |
 
 ---
 
