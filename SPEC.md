@@ -62,6 +62,7 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | V20 | Grid zoom adds/removes visible rows (not CSS scale). Grid stays centered. No pan controls. |
 | V21 | Grid rows shrink when zooming in. If trailing rows empty, gridRows reduced to match highest block + 1 row min. |
 | V22 | IndexedDB: images persist via IndexedDB (not localStorage). Blocks/gridRows in localStorage. No quota issues. |
+| V23 | Loading state shown during IndexedDB image restore. User sees indicator until images loaded. |
 
 ---
 
@@ -116,6 +117,7 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | T39 | x | Zoom in removes trailing empty rows: shrink gridRows to content when reducing visibleRows | V21, B13 |
 | T40 | x | Design-focused color scheme: refined palette, stronger visual identity | B14 |
 | T41 | x | IndexedDB for image persistence: store images in IDB, blocks/gridRows in localStorage | V22, B15 |
+| T42 | . | Loading state during IndexedDB restore: show spinner/skeleton until images loaded | V23, B16 |
 
 ---
 
@@ -138,4 +140,5 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | B13 | 2026-05-23 | Zoom in doesn't remove trailing empty rows, keeps large gridRows | setVisibleRows only expands gridRows, never shrinks. Inverse of B10 → V21, T39 |
 | B14 | 2026-05-23 | Color scheme after T37 still not design-focused enough | Need palette with stronger design identity, refined visual language → T40 |
 | B15 | 2026-05-23 | Images still lost on reload despite T33 fix | localStorage quota (5-10MB) insufficient for image data URLs. V18 warns but doesn't solve persistence → V22, T41 |
+| B16 | 2026-05-23 | No loading indicator on page reload, images pop in after IndexedDB delay | T41 async IDB load lacks visual feedback. User sees empty grid then sudden image load → V23, T42 |
 
