@@ -63,9 +63,9 @@ export default function RightToolbar() {
         right: 0,
         width: 64,
         height: '100vh',
-        background: 'linear-gradient(135deg, #1a0f2e 0%, #2d1b4e 50%, #1a0f2e 100%)',
-        borderLeft: '2px solid rgba(139, 92, 246, 0.3)',
-        boxShadow: '-2px 0 20px rgba(139, 92, 246, 0.2), inset 1px 0 0 rgba(139, 92, 246, 0.2)',
+        background: 'linear-gradient(135deg, #1a0a2e 0%, #2d1850 50%, #1a0a2e 100%)',
+        borderLeft: '2px solid rgba(124, 58, 237, 0.4)',
+        boxShadow: '-2px 0 20px rgba(124, 58, 237, 0.25), inset 1px 0 0 rgba(124, 58, 237, 0.2)',
         display: 'flex',
         flexDirection: 'column',
         padding: '12px 8px',
@@ -83,7 +83,7 @@ export default function RightToolbar() {
           background: 'var(--color-accent)',
           borderRadius: 4,
           border: '1px solid var(--color-accent)',
-          boxShadow: '0 0 12px rgba(255, 107, 53, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.2)',
+          boxShadow: '0 0 12px rgba(124, 58, 237, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.2)',
         }}>
           {selectedBlocks.length}
         </div>

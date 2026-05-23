@@ -7,14 +7,14 @@
   --color-bg-hover:    #2a2a2a;
   --color-border:      #444444;
   --color-border-subtle: #222222;
-  --color-border-accent: rgba(139,92,246,0.6);
+  --color-border-accent: rgba(124,58,237,0.6);
   --color-text-primary:  #ffffff;
   --color-text-secondary: #e0e0e0;
   --color-text-muted:  #888888;
-  --color-accent:      #8b5cf6;
-  --color-accent-glow: rgba(139,92,246,0.6);
-  --color-accent-soft: rgba(139,92,246,0.18);
-  --color-accent-hover:#a78bfa;
+  --color-accent:      #7c3aed;
+  --color-accent-glow: rgba(124,58,237,0.6);
+  --color-accent-soft: rgba(124,58,237,0.18);
+  --color-accent-hover:#8b5cf6;
   --color-danger:      #ff4444;
   --color-warning:     #ffaa00;
 }
@@ -89,13 +89,13 @@ body {
   background: var(--color-accent);
   border-color: var(--color-accent);
   color: #fff;
-  box-shadow: 0 0 16px rgba(255, 107, 53, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  box-shadow: 0 0 16px rgba(124, 58, 237, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 .ig-btn-accent:hover {
   background: var(--color-accent-hover);
   border-color: var(--color-accent-hover);
   color: #fff;
-  box-shadow: 0 0 24px rgba(255, 107, 53, 0.7), 0 4px 12px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  box-shadow: 0 0 24px rgba(124, 58, 237, 0.7), 0 4px 12px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255, 255, 255, 0.3);
   transform: translateY(-1px);
 }
 

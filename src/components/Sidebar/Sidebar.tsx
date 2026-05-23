@@ -143,19 +143,19 @@ export default function Sidebar({ onLowRes }: Props) {
     <aside style={{
       width: 210,
       flexShrink: 0,
-      borderRight: '2px solid rgba(139, 92, 246, 0.3)',
+      borderRight: '2px solid rgba(124, 58, 237, 0.4)',
       display: 'flex',
       flexDirection: 'column',
       gap: 0,
-      background: 'linear-gradient(135deg, #1a0f2e 0%, #2d1b4e 50%, #1a0f2e 100%)',
-      boxShadow: '2px 0 20px rgba(139, 92, 246, 0.2), inset -1px 0 0 rgba(139, 92, 246, 0.2)',
+      background: 'linear-gradient(135deg, #1a0a2e 0%, #2d1850 50%, #1a0a2e 100%)',
+      boxShadow: '2px 0 20px rgba(124, 58, 237, 0.25), inset -1px 0 0 rgba(124, 58, 237, 0.2)',
       overflowY: 'auto',
     }}>
       {/* header */}
       <div style={{
         padding: '14px 14px 10px',
-        borderBottom: '1px solid rgba(139, 92, 246, 0.2)',
-        background: 'rgba(139, 92, 246, 0.08)',
+        borderBottom: '1px solid rgba(124, 58, 237, 0.2)',
+        background: 'rgba(124, 58, 237, 0.08)',
       }}>
         <div style={{ fontSize: 15, fontWeight: 700, letterSpacing: '-0.3px', color: 'var(--color-text-primary)' }}>
           insta<span style={{ color: 'var(--color-accent)' }}>grid</span>
@@ -246,7 +246,7 @@ export default function Sidebar({ onLowRes }: Props) {
                 }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.transform = 'scale(1.05)'
-                  e.currentTarget.style.boxShadow = '0 4px 12px rgba(255,107,53,0.4)'
+                  e.currentTarget.style.boxShadow = '0 4px 12px rgba(124,58,237,0.4)'
                   const deleteBtn = e.currentTarget.querySelector('[data-delete-btn]') as HTMLElement
                   if (deleteBtn) deleteBtn.style.opacity = '1'
                 }}

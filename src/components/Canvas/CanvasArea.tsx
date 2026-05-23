@@ -407,8 +407,8 @@ export default function CanvasArea({ onLowRes }: Props) {
 															background: `
                           linear-gradient(
                             145deg,
-                            rgba(255, 107, 53, 0.32),
-                            rgba(200, 60, 20, 0.18)
+                            rgba(124, 58, 237, 0.32),
+                            rgba(100, 40, 200, 0.18)
                           ),
                           rgba(15, 15, 28, 0.92)
                         `,
@@ -471,8 +471,8 @@ export default function CanvasArea({ onLowRes }: Props) {
 										background: `
                 linear-gradient(
                   145deg,
-                  rgba(255, 107, 53, 0.32),
-                  rgba(200, 60, 20, 0.18)
+                  rgba(124, 58, 237, 0.32),
+                  rgba(100, 40, 200, 0.18)
                 ),
                 rgba(15, 15, 28, 0.92)
               `,

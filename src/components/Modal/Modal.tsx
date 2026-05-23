@@ -68,7 +68,7 @@ export default function Modal({
           background: '#ffffff',
           border: '1px solid var(--color-border)',
           borderRadius: 8,
-          boxShadow: '0 8px 32px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 107, 53, 0.2)',
+          boxShadow: '0 8px 32px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(124, 58, 237, 0.2)',
           minWidth: 320,
           maxWidth: 480,
           padding: 20,
@@ -118,7 +118,7 @@ export default function Modal({
             }}
             onFocus={(e) => {
               e.target.style.borderColor = 'var(--color-accent)'
-              e.target.style.boxShadow = '0 0 0 3px rgba(255, 107, 53, 0.1)'
+              e.target.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
             }}
             onBlur={(e) => {
               e.target.style.borderColor = '#cccccc'
