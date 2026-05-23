@@ -63,8 +63,10 @@ export default function RightToolbar() {
         right: 0,
         width: 64,
         height: '100vh',
-        background: '#ffffff',
-        borderLeft: '1px solid var(--color-border)',
+        background: 'rgba(0, 0, 0, 0.6)',
+        backdropFilter: 'blur(12px) saturate(150%)',
+        WebkitBackdropFilter: 'blur(12px) saturate(150%)',
+        borderLeft: '1px solid rgba(255, 255, 255, 0.1)',
         display: 'flex',
         flexDirection: 'column',
         padding: '12px 8px',
@@ -79,10 +81,12 @@ export default function RightToolbar() {
           color: '#ffffff',
           textAlign: 'center',
           padding: '6px 0',
-          background: 'var(--color-accent)',
+          background: 'rgba(255, 107, 53, 0.9)',
+          backdropFilter: 'blur(8px)',
+          WebkitBackdropFilter: 'blur(8px)',
           borderRadius: 4,
-          border: '1px solid var(--color-accent)',
-          boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
+          border: '1px solid rgba(255, 107, 53, 0.5)',
+          boxShadow: '0 0 12px rgba(255, 107, 53, 0.4)',
         }}>
           {selectedBlocks.length}
         </div>
@@ -141,34 +145,36 @@ function IconBtn({ children, onClick, disabled, title, danger }: {
         justifyContent: 'center',
         fontSize: 16,
         fontWeight: 700,
-        background: disabled ? '#f0f0f0' : danger ? '#ff4444' : 'transparent',
-        border: `2px solid ${disabled ? '#cccccc' : danger ? '#ff4444' : '#000000'}`,
-        color: disabled ? '#888888' : danger ? '#ffffff' : '#000000',
+        background: disabled ? 'rgba(255, 255, 255, 0.05)' : danger ? 'rgba(255, 68, 68, 0.9)' : 'rgba(255, 255, 255, 0.1)',
+        backdropFilter: 'blur(8px)',
+        WebkitBackdropFilter: 'blur(8px)',
+        border: `1px solid ${disabled ? 'rgba(255, 255, 255, 0.05)' : danger ? 'rgba(255, 68, 68, 0.5)' : 'rgba(255, 255, 255, 0.2)'}`,
+        color: disabled ? '#555555' : danger ? '#ffffff' : '#ffffff',
         borderRadius: 8,
         cursor: disabled ? 'not-allowed' : 'pointer',
-        transition: 'all 0.15s',
-        opacity: disabled ? 0.5 : 1,
-        boxShadow: 'none',
+        transition: 'all 0.2s',
+        opacity: disabled ? 0.4 : 1,
+        boxShadow: danger ? '0 0 12px rgba(255, 68, 68, 0.3)' : 'none',
       }}
       onMouseEnter={(e) => {
         if (!disabled) {
           if (danger) {
-            e.currentTarget.style.background = '#ff6666'
-            e.currentTarget.style.borderColor = '#ff6666'
+            e.currentTarget.style.background = 'rgba(255, 102, 102, 0.95)'
+            e.currentTarget.style.boxShadow = '0 0 16px rgba(255, 68, 68, 0.5)'
           } else {
-            e.currentTarget.style.background = '#000000'
-            e.currentTarget.style.color = '#ffffff'
+            e.currentTarget.style.background = 'rgba(255, 255, 255, 0.2)'
+            e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.3)'
           }
         }
       }}
       onMouseLeave={(e) => {
         if (!disabled) {
           if (danger) {
-            e.currentTarget.style.background = '#ff4444'
-            e.currentTarget.style.borderColor = '#ff4444'
+            e.currentTarget.style.background = 'rgba(255, 68, 68, 0.9)'
+            e.currentTarget.style.boxShadow = '0 0 12px rgba(255, 68, 68, 0.3)'
           } else {
-            e.currentTarget.style.background = 'transparent'
-            e.currentTarget.style.color = '#000000'
+            e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)'
+            e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.2)'
           }
         }
       }}

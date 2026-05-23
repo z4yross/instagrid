@@ -51,10 +51,12 @@ body {
   font-weight: 600;
   border-radius: 7px;
   cursor: pointer;
-  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
-  border: 2px solid #000000;
-  background: transparent;
-  color: #000000;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: #ffffff;
   white-space: nowrap;
   user-select: none;
   position: relative;
@@ -70,11 +72,11 @@ body {
   transition: opacity 0.2s;
 }
 .ig-btn:hover {
-  background: #000000;
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.3);
   color: #ffffff;
-  border-color: #000000;
   transform: translateY(-1px);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 .ig-btn:hover::before { opacity: 1; }
 .ig-btn:active {
@@ -83,29 +85,34 @@ body {
 }
 
 .ig-btn-accent {
-  background: var(--color-accent);
-  border-color: var(--color-accent);
+  background: rgba(255, 107, 53, 0.9);
+  border-color: rgba(255, 107, 53, 0.5);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   color: #fff;
-  box-shadow: 0 0 12px var(--color-accent-glow);
+  box-shadow: 0 0 16px rgba(255, 107, 53, 0.4);
 }
 .ig-btn-accent:hover {
-  background: var(--color-accent-hover);
-  border-color: var(--color-accent-hover);
+  background: rgba(255, 133, 89, 0.95);
+  border-color: rgba(255, 133, 89, 0.6);
   color: #fff;
-  box-shadow: 0 0 20px var(--color-accent-glow), 0 2px 8px rgba(0,0,0,0.2);
+  box-shadow: 0 0 24px rgba(255, 107, 53, 0.6), 0 4px 12px rgba(0,0,0,0.2);
   transform: translateY(-1px);
 }
 
 .ig-btn-danger {
-  background: var(--color-danger);
-  border-color: var(--color-danger);
+  background: rgba(255, 68, 68, 0.9);
+  border-color: rgba(255, 68, 68, 0.5);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   color: #fff;
+  box-shadow: 0 0 12px rgba(255, 68, 68, 0.3);
 }
 .ig-btn-danger:hover {
-  background: #ff6666;
-  border-color: #ff6666;
+  background: rgba(255, 102, 102, 0.95);
+  border-color: rgba(255, 102, 102, 0.6);
   color: #fff;
-  box-shadow: 0 2px 8px rgba(255,68,68,0.3);
+  box-shadow: 0 0 20px rgba(255, 68, 68, 0.5), 0 4px 12px rgba(0,0,0,0.2);
 }
 
 .ig-btn:disabled {

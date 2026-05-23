@@ -143,23 +143,25 @@ export default function Sidebar({ onLowRes }: Props) {
     <aside style={{
       width: 210,
       flexShrink: 0,
-      borderRight: '1px solid var(--color-border)',
+      borderRight: '1px solid rgba(255, 255, 255, 0.1)',
       display: 'flex',
       flexDirection: 'column',
       gap: 0,
-      background: '#ffffff',
+      background: 'rgba(0, 0, 0, 0.6)',
+      backdropFilter: 'blur(12px) saturate(150%)',
+      WebkitBackdropFilter: 'blur(12px) saturate(150%)',
       overflowY: 'auto',
     }}>
       {/* header */}
       <div style={{
         padding: '14px 14px 10px',
-        borderBottom: '1px solid var(--color-border)',
-        background: '#ffffff',
+        borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+        background: 'rgba(255, 255, 255, 0.05)',
       }}>
-        <div style={{ fontSize: 15, fontWeight: 700, letterSpacing: '-0.3px', color: '#000000' }}>
+        <div style={{ fontSize: 15, fontWeight: 700, letterSpacing: '-0.3px', color: 'var(--color-text-primary)' }}>
           insta<span style={{ color: 'var(--color-accent)' }}>grid</span>
         </div>
-        <div style={{ fontSize: 10, color: '#666666', marginTop: 2 }}>feed planner</div>
+        <div style={{ fontSize: 10, color: 'var(--color-text-muted)', marginTop: 2 }}>feed planner</div>
       </div>
 
       {/* upload */}
@@ -191,7 +193,7 @@ export default function Sidebar({ onLowRes }: Props) {
       {/* thumbnails */}
       {isLoading ? (
         <div style={{ padding: '0 10px 8px' }}>
-          <div style={{ fontSize: 10, fontWeight: 600, color: '#666666', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 6 }}>
+          <div style={{ fontSize: 10, fontWeight: 600, color: 'var(--color-text-muted)', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 6 }}>
             Loading{imageCount > 0 ? ` ${imageCount} image${imageCount !== 1 ? 's' : ''}` : ''}...
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 3 }}>
@@ -201,8 +203,8 @@ export default function Sidebar({ onLowRes }: Props) {
                 style={{
                   aspectRatio: '3/4',
                   borderRadius: 5,
-                  background: '#f0f0f0',
-                  border: '1px solid #cccccc',
+                  background: 'var(--color-bg-elevated)',
+                  border: '1px solid var(--color-border)',
                   animation: 'pulse 1.5s ease-in-out infinite',
                   animationDelay: `${i * 0.1}s`,
                 }}
@@ -213,7 +215,7 @@ export default function Sidebar({ onLowRes }: Props) {
         </div>
       ) : images.length > 0 ? (
         <div style={{ padding: '0 10px 8px' }}>
-          <div style={{ fontSize: 10, fontWeight: 600, color: '#666666', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 6 }}>
+          <div style={{ fontSize: 10, fontWeight: 600, color: 'var(--color-text-muted)', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 6 }}>
             {images.length} image{images.length !== 1 ? 's' : ''}
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 3 }}>
@@ -300,9 +302,9 @@ export default function Sidebar({ onLowRes }: Props) {
           margin: '0 10px 8px',
           padding: '18px 10px',
           borderRadius: 8,
-          border: '1px dashed #cccccc',
+          border: '1px dashed var(--color-border)',
           textAlign: 'center',
-          color: '#666666',
+          color: 'var(--color-text-muted)',
           fontSize: 11,
           lineHeight: 1.5,
         }}>
@@ -343,9 +345,9 @@ export default function Sidebar({ onLowRes }: Props) {
         </button>
 
         {showProfiles && (
-          <div style={{ maxHeight: 150, overflowY: 'auto', background: '#f9f9f9', borderRadius: 6, padding: 4, border: '1px solid #e0e0e0' }}>
+          <div style={{ maxHeight: 150, overflowY: 'auto', background: 'var(--color-bg-base)', borderRadius: 6, padding: 4 }}>
             {profiles.length === 0 ? (
-              <div style={{ padding: 8, fontSize: 10, color: '#666666', textAlign: 'center' }}>No profiles saved</div>
+              <div style={{ padding: 8, fontSize: 10, color: 'var(--color-text-muted)', textAlign: 'center' }}>No profiles saved</div>
             ) : (
               profiles.map((p) => (
                 <div key={p.id} style={{ display: 'flex', gap: 4, padding: 4 }}>
