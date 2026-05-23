@@ -20,6 +20,7 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | C8 | ZIP: JSZip |
 | C9 | Grid: 3 cols, cells 3:4 ratio (1080×1350px export) |
 | C10 | Upload order: right-to-left, top-to-bottom (Instagram order) |
+| C11 | Git commits: conventional format (type: description), < 100 chars total |
 
 ---
 
@@ -112,7 +113,7 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | T37 | x | Increase app contrast: lighter surfaces, accent borders, visual hierarchy | B12 |
 | T38 | x | Remove preview feed panel (PreviewPanel, onPreview button) | — |
 | T39 | x | Zoom in removes trailing empty rows: shrink gridRows to content when reducing visibleRows | V21, B13 |
-| T40 | . | Design-focused color scheme: refined palette, stronger visual identity | B14 |
+| T40 | x | Design-focused color scheme: refined palette, stronger visual identity | B14 |
 
 ---
 
