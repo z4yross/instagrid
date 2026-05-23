@@ -1,20 +1,26 @@
 import { create } from 'zustand'
+import { subscribeWithSelector } from 'zustand/middleware'
 import { temporal } from 'zundo'
 import type { AppState, ImageBlock, UploadedImage } from './types'
+import { loadState, saveState } from '@/utils/storage'
 
 function ensureGridRows(blocks: ImageBlock[], current: number): number {
   const maxRow = blocks.reduce((m, b) => Math.max(m, b.row + b.rowSpan), 0)
   return Math.max(current, maxRow + 1, 3)
 }
 
+// Load persisted state
+const persisted = loadState()
+
 const useStore = create<AppState>()(
-  temporal(
-    (set, _get) => ({
-      images: [],
-      blocks: [],
-      gridRows: 3,
-      selectedBlockId: null,
-      showGuides: true,
+  subscribeWithSelector(
+    temporal(
+      (set, _get) => ({
+        images: persisted?.images ?? [],
+        blocks: persisted?.blocks ?? [],
+        gridRows: persisted?.gridRows ?? 3,
+        selectedBlockId: null,
+        showGuides: true,
 
       addImage: (img: UploadedImage) =>
         set((s) => ({ images: [...s.images, img] })),
@@ -61,6 +67,14 @@ const useStore = create<AppState>()(
       }),
     }
   )
+  )
+)
+
+// V15: persist state on mutation (debounced 500ms)
+useStore.subscribe(
+  (state) => ({ images: state.images, blocks: state.blocks, gridRows: state.gridRows }),
+  (state) => saveState(state),
+  { equalityFn: (a, b) => a === b }
 )
 
 export default useStore
