@@ -143,19 +143,19 @@ export default function Sidebar({ onLowRes }: Props) {
     <aside style={{
       width: 210,
       flexShrink: 0,
-      borderRight: '2px solid rgba(124, 58, 237, 0.4)',
+      borderRight: '2px solid rgba(255, 255, 255, 0.15)',
       display: 'flex',
       flexDirection: 'column',
       gap: 0,
-      background: 'linear-gradient(135deg, #1a0a2e 0%, #2d1850 50%, #1a0a2e 100%)',
-      boxShadow: '2px 0 20px rgba(124, 58, 237, 0.25), inset -1px 0 0 rgba(124, 58, 237, 0.2)',
+      background: 'linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #0a0a0a 100%)',
+      boxShadow: '2px 0 20px rgba(0, 0, 0, 0.8), inset -1px 0 0 rgba(255, 255, 255, 0.08)',
       overflowY: 'auto',
     }}>
       {/* header */}
       <div style={{
         padding: '14px 14px 10px',
-        borderBottom: '1px solid rgba(124, 58, 237, 0.2)',
-        background: 'rgba(124, 58, 237, 0.08)',
+        borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+        background: 'rgba(255, 255, 255, 0.03)',
       }}>
         <div style={{ fontSize: 15, fontWeight: 700, letterSpacing: '-0.3px', color: 'var(--color-text-primary)' }}>
           insta<span style={{ color: 'var(--color-accent)' }}>grid</span>
@@ -173,7 +173,7 @@ export default function Sidebar({ onLowRes }: Props) {
           ＋ Upload images
         </button>
         <button
-          className="ig-btn"
+          className="ig-btn ig-btn-filled"
           style={{ width: '100%', padding: '7px', fontSize: 11 }}
           onClick={addPlaceholder}
         >
@@ -246,7 +246,7 @@ export default function Sidebar({ onLowRes }: Props) {
                 }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.transform = 'scale(1.05)'
-                  e.currentTarget.style.boxShadow = '0 4px 12px rgba(124,58,237,0.4)'
+                  e.currentTarget.style.boxShadow = '0 4px 12px rgba(255,255,255,0.15)'
                   const deleteBtn = e.currentTarget.querySelector('[data-delete-btn]') as HTMLElement
                   if (deleteBtn) deleteBtn.style.opacity = '1'
                 }}
@@ -318,7 +318,7 @@ export default function Sidebar({ onLowRes }: Props) {
       {/* actions */}
       <div style={{ padding: '8px 10px 12px', display: 'flex', flexDirection: 'column', gap: 5 }}>
         <button
-          className="ig-btn"
+          className="ig-btn ig-btn-filled"
           style={{ width: '100%', justifyContent: 'flex-start' }}
           onClick={() => {
             setModal({
