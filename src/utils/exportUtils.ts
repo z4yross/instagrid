@@ -31,24 +31,45 @@ function renderCell(
   const { transform } = block
   const { panX, panY, zoom, rotation } = transform
 
+  // V24: 1010px crop + 35px bars each side = 1080px
+  const CROP_W = 1010
+  const BAR_W = 35
+
   // bars background
   ctx.fillStyle = block.barsColor
   ctx.fillRect(0, 0, EXPORT_W, EXPORT_H)
 
   ctx.save()
-  ctx.translate(EXPORT_W / 2, EXPORT_H / 2)
+
+  // Clip to 1010px center region
+  ctx.beginPath()
+  ctx.rect(BAR_W, 0, CROP_W, EXPORT_H)
+  ctx.clip()
+
+  // Translate to center of 1010px crop region
+  ctx.translate(BAR_W + CROP_W / 2, EXPORT_H / 2)
+
+  // Apply transforms
   ctx.rotate((rotation * Math.PI) / 180)
   ctx.scale(zoom, zoom)
-  ctx.translate(panX - (relCol * EXPORT_W), panY - (relRow * EXPORT_H))
 
-  // contain: fit whole image in total area
-  const totalPxW = totalCols * EXPORT_W
+  // Calculate offset for this cell within the block
+  const cellOffsetX = relCol * CROP_W
+  const cellOffsetY = relRow * EXPORT_H
+
+  // Translate by pan and cell offset
+  ctx.translate(panX - cellOffsetX, panY - cellOffsetY)
+
+  // contain: fit image in total block area
+  const totalPxW = totalCols * CROP_W
   const totalPxH = totalRows * EXPORT_H
   const scaleX = totalPxW / img.naturalWidth
   const scaleY = totalPxH / img.naturalHeight
   const scale = Math.min(scaleX, scaleY)
   const drawW = img.naturalWidth * scale
   const drawH = img.naturalHeight * scale
+
+  // Draw centered in total block area
   ctx.drawImage(img, -drawW / 2, -drawH / 2, drawW, drawH)
 
   ctx.restore()

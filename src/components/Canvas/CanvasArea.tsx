@@ -1,256 +1,468 @@
-import { useRef, useState, useCallback, useEffect } from 'react'
-import { DndContext, DragOverlay, PointerSensor, useSensor, useSensors } from '@dnd-kit/core'
-import type { DragEndEvent, DragStartEvent } from '@dnd-kit/core'
-import { useStore } from '@/store/useStore'
-import { cellPixelSize, hasCollision, COLS } from '@/utils/gridUtils'
-import GridCanvas from './GridCanvas'
-import DropZone from './DropZone'
-import Block from '../Block/Block'
-import type { ImageBlock } from '@/store/types'
+import type { ImageBlock } from "@/store/types";
+import { useStore } from "@/store/useStore";
+import { cellPixelSize, COLS, hasCollision } from "@/utils/gridUtils";
+import type { DragEndEvent, DragStartEvent } from "@dnd-kit/core";
+import {
+	DndContext,
+	DragOverlay,
+	PointerSensor,
+	useSensor,
+	useSensors,
+} from "@dnd-kit/core";
+import { useCallback, useEffect, useRef, useState } from "react";
+import Block from "../Block/Block";
+import DropZone from "./DropZone";
+import GridCanvas from "./GridCanvas";
 
 interface Props {
-  onLowRes?: (names: string[]) => void
+	onLowRes?: (names: string[]) => void;
 }
 
 export default function CanvasArea({ onLowRes }: Props) {
-  const containerRef = useRef<HTMLDivElement>(null)
-  const [dims, setDims] = useState({ w: 0, h: 0 })
-  const [activeId, setActiveId] = useState<string | null>(null)
-  const initialOffsetRef = useRef({ x: 0, y: 0 })
+	const containerRef = useRef<HTMLDivElement>(null);
+	const [dims, setDims] = useState({ w: 0, h: 0 });
+	const [activeId, setActiveId] = useState<string | null>(null);
+	const initialOffsetRef = useRef({ x: 0, y: 0 });
 
-  const blocks = useStore((s) => s.blocks)
-  const selectedBlockIds = useStore((s) => s.selectedBlockIds)
-  const visibleRows = useStore((s) => s.visibleRows)
-  const updateBlock = useStore((s) => s.updateBlock)
-  const setSelectedBlocks = useStore((s) => s.setSelectedBlocks)
-  const setVisibleRows = useStore((s) => s.setVisibleRows)
+	const blocks = useStore((s) => s.blocks);
+	const selectedBlockIds = useStore((s) => s.selectedBlockIds);
+	const visibleRows = useStore((s) => s.visibleRows);
+	const updateBlock = useStore((s) => s.updateBlock);
+	const setSelectedBlocks = useStore((s) => s.setSelectedBlocks);
+	const setVisibleRows = useStore((s) => s.setVisibleRows);
 
-  useEffect(() => {
-    const el = containerRef.current
-    if (!el) return
-    const ro = new ResizeObserver(([entry]) => {
-      setDims({ w: entry.contentRect.width, h: entry.contentRect.height })
-    })
-    ro.observe(el)
-    return () => ro.disconnect()
-  }, [])
+	const isGroupDragging =
+		activeId !== null &&
+		selectedBlockIds.includes(activeId) &&
+		selectedBlockIds.length > 1;
 
-  const { w: cellW, h: cellH } = cellPixelSize(dims.w || 600, visibleRows, dims.h || 0)
+	useEffect(() => {
+		const el = containerRef.current;
+		if (!el) return;
+		const ro = new ResizeObserver(([entry]) => {
+			setDims({
+				w: entry.contentRect.width,
+				h: entry.contentRect.height,
+			});
+		});
+		ro.observe(el);
+		return () => ro.disconnect();
+	}, []);
 
-  const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 4 } }))
+	const { w: cellW, h: cellH } = cellPixelSize(
+		dims.w || 600,
+		visibleRows,
+		dims.h || 0
+	);
 
-  const getCellSize = useCallback(() => cellPixelSize(
-    containerRef.current?.clientWidth ?? 600,
-    visibleRows,
-    containerRef.current?.clientHeight ?? 0
-  ), [visibleRows])
+	const sensors = useSensors(
+		useSensor(PointerSensor, { activationConstraint: { distance: 4 } })
+	);
 
-  function snapToGrid(pixelX: number, pixelY: number): { col: number; row: number } {
-    const { w: cW, h: cH } = getCellSize()
-    const col = Math.max(0, Math.min(COLS - 1, Math.round(pixelX / cW)))
-    const row = Math.max(0, Math.round(pixelY / cH))
-    return { col, row }
-  }
+	const getCellSize = useCallback(
+		() =>
+			cellPixelSize(
+				containerRef.current?.clientWidth ?? 600,
+				visibleRows,
+				containerRef.current?.clientHeight ?? 0
+			),
+		[visibleRows]
+	);
 
-  function onDragStart(e: DragStartEvent) {
-    setActiveId(e.active.id as string)
+	function snapToGrid(
+		pixelX: number,
+		pixelY: number
+	): { col: number; row: number } {
+		const { w: cW, h: cH } = getCellSize();
+		const col = Math.max(0, Math.min(COLS - 1, Math.round(pixelX / cW)));
+		const row = Math.max(0, Math.round(pixelY / cH));
+		return { col, row };
+	}
 
-    if (e.activatorEvent && 'clientX' in e.activatorEvent && e.active.rect.current.initial) {
-      const rect = e.active.rect.current.initial
-      const event = e.activatorEvent as PointerEvent
-      initialOffsetRef.current = {
-        x: event.clientX - rect.left,
-        y: event.clientY - rect.top,
-      }
-    }
-  }
+	function onDragStart(e: DragStartEvent) {
+		setActiveId(e.active.id as string);
 
-  function onDragEnd(e: DragEndEvent) {
-    setActiveId(null)
-    const { active, delta } = e
-    const draggedBlock = blocks.find((b) => b.id === active.id) as ImageBlock | undefined
-    if (!draggedBlock) return
+		if (
+			e.activatorEvent &&
+			"clientX" in e.activatorEvent &&
+			e.active.rect.current.initial
+		) {
+			const rect = e.active.rect.current.initial;
+			const event = e.activatorEvent as PointerEvent;
+			initialOffsetRef.current = {
+				x: event.clientX - rect.left,
+				y: event.clientY - rect.top,
+			};
+		}
+	}
 
-    const { w: cW, h: cH } = getCellSize()
+	function onDragEnd(e: DragEndEvent) {
+		setActiveId(null);
 
-    // V12: if part of group, move all selected blocks
-    const isGroupDrag = selectedBlockIds.includes(draggedBlock.id) && selectedBlockIds.length > 1
+		const { active, delta } = e;
+		const draggedBlock = blocks.find((b) => b.id === active.id) as
+			| ImageBlock
+			| undefined;
+		if (!draggedBlock) return;
 
-    if (isGroupDrag) {
-      const deltaCol = Math.round(delta.x / cW)
-      const deltaRow = Math.round(delta.y / cH)
+		const { w: cW, h: cH } = getCellSize();
 
-      const selectedBlocks = blocks.filter((b) => selectedBlockIds.includes(b.id))
+		// V12: if part of group, move all selected blocks
+		const isGroupDrag =
+			selectedBlockIds.includes(draggedBlock.id) &&
+			selectedBlockIds.length > 1;
 
-      // B7: prevent border collision merge by ensuring all blocks move uniformly
-      // If any block would hit a border, clamp the entire group's delta
-      let clampedDeltaCol = deltaCol
-      let clampedDeltaRow = deltaRow
+		if (isGroupDrag) {
+			const deltaCol = Math.round(delta.x / cW);
+			const deltaRow = Math.round(delta.y / cH);
 
-      for (const b of selectedBlocks) {
-        const maxCol = COLS - b.colSpan
-        const proposedCol = b.col + deltaCol
-        if (proposedCol < 0) clampedDeltaCol = Math.max(clampedDeltaCol, -b.col)
-        if (proposedCol > maxCol) clampedDeltaCol = Math.min(clampedDeltaCol, maxCol - b.col)
+			const selectedBlocks = blocks.filter((b) =>
+				selectedBlockIds.includes(b.id)
+			);
 
-        const proposedRow = b.row + deltaRow
-        if (proposedRow < 0) clampedDeltaRow = Math.max(clampedDeltaRow, -b.row)
-      }
+			// B7: prevent border collision merge by ensuring all blocks move uniformly
+			// If any block would hit a border, clamp the entire group's delta
+			let clampedDeltaCol = deltaCol;
+			let clampedDeltaRow = deltaRow;
 
-      // check if all blocks can move with clamped delta
-      const canMove = selectedBlocks.every((b) => {
-        const newCol = b.col + clampedDeltaCol
-        const newRow = b.row + clampedDeltaRow
-        return !hasCollision(
-          blocks.filter((bl) => !selectedBlockIds.includes(bl.id)),
-          newCol,
-          newRow,
-          b.colSpan,
-          b.rowSpan
-        )
-      })
+			for (const b of selectedBlocks) {
+				const maxCol = COLS - b.colSpan;
+				const proposedCol = b.col + deltaCol;
+				if (proposedCol < 0)
+					clampedDeltaCol = Math.max(clampedDeltaCol, -b.col);
+				if (proposedCol > maxCol)
+					clampedDeltaCol = Math.min(clampedDeltaCol, maxCol - b.col);
 
-      if (canMove) {
-        selectedBlocks.forEach((b) => {
-          updateBlock(b.id, { col: b.col + clampedDeltaCol, row: b.row + clampedDeltaRow })
-        })
-      }
-    } else {
-      const newPixelX = draggedBlock.col * cW + delta.x
-      const newPixelY = draggedBlock.row * cH + delta.y
-      const { col, row } = snapToGrid(newPixelX, newPixelY)
+				const proposedRow = b.row + deltaRow;
+				if (proposedRow < 0)
+					clampedDeltaRow = Math.max(clampedDeltaRow, -b.row);
+			}
 
-      const clampedCol = Math.min(col, COLS - draggedBlock.colSpan)
-      const clampedRow = Math.max(0, row)
+			// check if all blocks can move with clamped delta
+			const canMove = selectedBlocks.every((b) => {
+				const newCol = b.col + clampedDeltaCol;
+				const newRow = b.row + clampedDeltaRow;
+				return !hasCollision(
+					blocks.filter((bl) => !selectedBlockIds.includes(bl.id)),
+					newCol,
+					newRow,
+					b.colSpan,
+					b.rowSpan
+				);
+			});
 
-      if (hasCollision(blocks, clampedCol, clampedRow, draggedBlock.colSpan, draggedBlock.rowSpan, draggedBlock.id)) return
+			if (canMove) {
+				selectedBlocks.forEach((b) => {
+					updateBlock(b.id, {
+						col: b.col + clampedDeltaCol,
+						row: b.row + clampedDeltaRow,
+					});
+				});
+			}
+		} else {
+			const newPixelX = draggedBlock.col * cW + delta.x;
+			const newPixelY = draggedBlock.row * cH + delta.y;
+			const { col, row } = snapToGrid(newPixelX, newPixelY);
 
-      updateBlock(draggedBlock.id, { col: clampedCol, row: clampedRow })
-    }
-  }
+			const clampedCol = Math.min(col, COLS - draggedBlock.colSpan);
+			const clampedRow = Math.max(0, row);
 
-  return (
-    <div
-      ref={containerRef}
-      style={{ flex: 1, position: 'relative', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}
-      onClick={() => setSelectedBlocks([])}
-    >
-      {/* V20: row-based zoom controls */}
-      <div
-        style={{
-          position: 'absolute',
-          bottom: 16,
-          left: 16,
-          zIndex: 50,
-          display: 'flex',
-          gap: 4,
-          background: 'var(--color-bg-surface)',
-          border: '1px solid var(--color-border)',
-          borderRadius: 8,
-          padding: 4,
-          boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
-        }}
-      >
-        <button
-          onClick={(e) => { e.stopPropagation(); setVisibleRows(visibleRows + 1) }}
-          disabled={visibleRows >= 10}
-          style={{
-            padding: '6px 10px',
-            fontSize: 12,
-            background: 'var(--color-bg-elevated)',
-            border: '1px solid var(--color-border)',
-            borderRadius: 6,
-            cursor: visibleRows >= 10 ? 'not-allowed' : 'pointer',
-            color: 'var(--color-text-primary)',
-            opacity: visibleRows >= 10 ? 0.5 : 1,
-          }}
-        >−</button>
-        <span style={{ padding: '6px 10px', fontSize: 11, color: 'var(--color-text-secondary)', minWidth: 60, textAlign: 'center' }}>
-          {visibleRows} {visibleRows === 1 ? 'row' : 'rows'}
-        </span>
-        <button
-          onClick={(e) => { e.stopPropagation(); setVisibleRows(visibleRows - 1) }}
-          disabled={visibleRows <= 1}
-          style={{
-            padding: '6px 10px',
-            fontSize: 12,
-            background: 'var(--color-bg-elevated)',
-            border: '1px solid var(--color-border)',
-            borderRadius: 6,
-            cursor: visibleRows <= 1 ? 'not-allowed' : 'pointer',
-            color: 'var(--color-text-primary)',
-            opacity: visibleRows <= 1 ? 0.5 : 1,
-          }}
-        >+</button>
-        <button
-          onClick={(e) => { e.stopPropagation(); setVisibleRows(3) }}
-          style={{
-            padding: '6px 10px',
-            fontSize: 11,
-            background: 'var(--color-bg-elevated)',
-            border: '1px solid var(--color-border)',
-            borderRadius: 6,
-            cursor: 'pointer',
-            color: 'var(--color-text-secondary)',
-          }}
-        >Reset</button>
-      </div>
+			if (
+				hasCollision(
+					blocks,
+					clampedCol,
+					clampedRow,
+					draggedBlock.colSpan,
+					draggedBlock.rowSpan,
+					draggedBlock.id
+				)
+			)
+				return;
 
-      <DndContext sensors={sensors} onDragStart={onDragStart} onDragEnd={onDragEnd}>
-        <DropZone onLowRes={onLowRes}>
-          <GridCanvas cellW={cellW} cellH={cellH}>
-            {blocks.map((block) => (
-              <Block
-                key={block.id}
-                block={block}
-                cellW={cellW}
-                cellH={cellH}
-                isDragging={activeId === block.id}
-              />
-            ))}
-          </GridCanvas>
-        </DropZone>
+			updateBlock(draggedBlock.id, { col: clampedCol, row: clampedRow });
+		}
+	}
 
-        {/* V19: group drag overlay */}
-        <DragOverlay style={{ pointerEvents: 'none' }}>
-          {activeId ? (
-            <div style={{
-              transform: `translate(${-initialOffsetRef.current.x}px, ${-initialOffsetRef.current.y}px)`,
-              pointerEvents: 'none',
-            }}>
-              {selectedBlockIds.includes(activeId) && selectedBlockIds.length > 1 ? (
-                <div style={{ position: 'relative' }}>
-                  {blocks.filter((b) => selectedBlockIds.includes(b.id)).map((block) => {
-                    const relativeCol = block.col - blocks.find((b) => b.id === activeId)!.col
-                    const relativeRow = block.row - blocks.find((b) => b.id === activeId)!.row
-                    return (
-                      <div
-                        key={block.id}
-                        style={{
-                          position: 'absolute',
-                          left: relativeCol * cellW,
-                          top: relativeRow * cellH,
-                          width: block.colSpan * cellW,
-                          height: block.rowSpan * cellH,
-                          opacity: 0.8,
-                        }}
-                      >
-                        <Block block={block} cellW={cellW} cellH={cellH} />
-                      </div>
-                    )
-                  })}
-                </div>
-              ) : (
-                <Block
-                  block={blocks.find((b) => b.id === activeId)!}
-                  cellW={cellW}
-                  cellH={cellH}
-                />
-              )}
-            </div>
-          ) : null}
-        </DragOverlay>
-      </DndContext>
-    </div>
-  )
+	return (
+		<div
+			ref={containerRef}
+			style={{
+				flex: 1,
+				position: "relative",
+				overflow: "hidden",
+				display: "flex",
+				flexDirection: "column",
+			}}
+			onClick={() => setSelectedBlocks([])}
+		>
+			{/* V20: row-based zoom controls */}
+			<div
+				style={{
+					position: "absolute",
+					bottom: 16,
+					left: 16,
+					zIndex: 50,
+					display: "flex",
+					gap: 4,
+					background: "var(--color-bg-surface)",
+					border: "1px solid var(--color-border)",
+					borderRadius: 8,
+					padding: 4,
+					boxShadow: "0 4px 12px rgba(0,0,0,0.3)",
+				}}
+			>
+				<button
+					onClick={(e) => {
+						e.stopPropagation();
+						setVisibleRows(visibleRows + 1);
+					}}
+					disabled={visibleRows >= 10}
+					style={{
+						padding: "6px 10px",
+						fontSize: 12,
+						background: "var(--color-bg-elevated)",
+						border: "1px solid var(--color-border)",
+						borderRadius: 6,
+						cursor: visibleRows >= 10 ? "not-allowed" : "pointer",
+						color: "var(--color-text-primary)",
+						opacity: visibleRows >= 10 ? 0.5 : 1,
+					}}
+				>
+					−
+				</button>
+				<span
+					style={{
+						padding: "6px 10px",
+						fontSize: 11,
+						color: "var(--color-text-secondary)",
+						minWidth: 60,
+						textAlign: "center",
+					}}
+				>
+					{visibleRows} {visibleRows === 1 ? "row" : "rows"}
+				</span>
+				<button
+					onClick={(e) => {
+						e.stopPropagation();
+						setVisibleRows(visibleRows - 1);
+					}}
+					disabled={visibleRows <= 1}
+					style={{
+						padding: "6px 10px",
+						fontSize: 12,
+						background: "var(--color-bg-elevated)",
+						border: "1px solid var(--color-border)",
+						borderRadius: 6,
+						cursor: visibleRows <= 1 ? "not-allowed" : "pointer",
+						color: "var(--color-text-primary)",
+						opacity: visibleRows <= 1 ? 0.5 : 1,
+					}}
+				>
+					+
+				</button>
+				<button
+					onClick={(e) => {
+						e.stopPropagation();
+						setVisibleRows(3);
+					}}
+					style={{
+						padding: "6px 10px",
+						fontSize: 11,
+						background: "var(--color-bg-elevated)",
+						border: "1px solid var(--color-border)",
+						borderRadius: 6,
+						cursor: "pointer",
+						color: "var(--color-text-secondary)",
+					}}
+				>
+					Reset
+				</button>
+			</div>
+
+			<DndContext
+				sensors={sensors}
+				onDragStart={onDragStart}
+				onDragEnd={onDragEnd}
+			>
+				<DropZone onLowRes={onLowRes}>
+					<GridCanvas cellW={cellW} cellH={cellH}>
+						{blocks.map((block) => (
+							<Block
+								key={block.id}
+								block={block}
+								cellW={cellW}
+								cellH={cellH}
+								isDragging={
+									isGroupDragging
+										? selectedBlockIds.includes(block.id)
+										: activeId === block.id
+								}
+							/>
+						))}
+					</GridCanvas>
+				</DropZone>
+
+				{/* V19: group drag overlay */}
+				<DragOverlay style={{ pointerEvents: "none" }}>
+					{activeId ? (
+						<div style={{ pointerEvents: "none" }}>
+							{selectedBlockIds.includes(activeId) &&
+							selectedBlockIds.length > 1 ? (
+								<div
+									style={{
+										position: "relative",
+									}}
+								>
+									{blocks
+										.filter((b) =>
+											selectedBlockIds.includes(b.id)
+										)
+										.map((block) => {
+											const activeBlock = blocks.find(
+												(b) => b.id === activeId
+											)!;
+
+											const relativeCol =
+												block.col - activeBlock.col;
+
+											const relativeRow =
+												block.row - activeBlock.row;
+
+											return (
+												<div
+													key={block.id}
+													style={{
+														position: "absolute",
+														left:
+															relativeCol * cellW,
+														top:
+															relativeRow * cellH,
+														width:
+															block.colSpan *
+															cellW,
+														height:
+															block.rowSpan *
+															cellH,
+													}}
+												>
+													<div
+														style={{
+															width: "100%",
+															height: "100%",
+
+															background: `
+                          linear-gradient(
+                            145deg,
+                            rgba(139, 92, 246, 0.32),
+                            rgba(91, 33, 182, 0.18)
+                          ),
+                          rgba(15, 15, 28, 0.92)
+                        `,
+
+															// border: "1px solid rgba(168, 85, 247, 0.45)",
+
+															borderRadius: 0,
+
+															opacity: 0.96,
+
+															boxShadow: `
+                          0 18px 40px rgba(0,0,0,0.45),
+                          0 0 24px rgba(139,92,246,0.18),
+                          inset 0 1px 0 rgba(255,255,255,0.06)
+                        `,
+
+															backdropFilter:
+																"blur(10px)",
+
+															position:
+																"relative",
+															overflow: "hidden",
+														}}
+													>
+														<div
+															style={{
+																position:
+																	"absolute",
+																inset: 0,
+
+																background: `
+                            linear-gradient(
+                              135deg,
+                              rgba(255,255,255,0.08),
+                              transparent 40%
+                            )
+                          `,
+
+																borderRadius: 0,
+															}}
+														/>
+													</div>
+												</div>
+											);
+										})}
+								</div>
+							) : (
+								<div
+									style={{
+										width:
+											blocks.find(
+												(b) => b.id === activeId
+											)!.colSpan * cellW,
+
+										height:
+											blocks.find(
+												(b) => b.id === activeId
+											)!.rowSpan * cellH,
+
+										background: `
+                linear-gradient(
+                  145deg,
+                  rgba(139, 92, 246, 0.32),
+                  rgba(91, 33, 182, 0.18)
+                ),
+                rgba(15, 15, 28, 0.92)
+              `,
+
+										// border: "1px solid rgba(168, 85, 247, 0.45)",
+
+										borderRadius: 0,
+
+										opacity: 0.96,
+
+										boxShadow: `
+                0 18px 40px rgba(0,0,0,0.45),
+                0 0 24px rgba(139,92,246,0.18),
+                inset 0 1px 0 rgba(255,255,255,0.06)
+              `,
+
+										backdropFilter: "blur(10px)",
+
+										position: "relative",
+										overflow: "hidden",
+									}}
+								>
+									<div
+										style={{
+											position: "absolute",
+											inset: 0,
+
+											background: `
+                  linear-gradient(
+                    135deg,
+                    rgba(255,255,255,0.08),
+                    transparent 40%
+                  )
+                `,
+
+											borderRadius: 0,
+										}}
+									/>
+								</div>
+							)}
+						</div>
+					) : null}
+				</DragOverlay>
+			</DndContext>
+		</div>
+	);
 }

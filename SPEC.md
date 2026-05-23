@@ -63,6 +63,7 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | V21 | Grid rows shrink when zooming in. If trailing rows empty, gridRows reduced to match highest block + 1 row min. |
 | V22 | IndexedDB: images persist via IndexedDB (not localStorage). Blocks/gridRows in localStorage. No quota issues. |
 | V23 | Loading state: skeleton placeholders in sidebar thumbnails + grid blocks during IDB restore. No fullscreen overlay. Skeleton count matches actual image count from IDB. |
+| V24 | Export crops visible image portion per cell with transforms applied. Not contain full image. Each 1080×1350 shows only what's visible in that grid cell (like Instagram carousel: 1010px crop + 35px bars each side). |
 
 ---
 
@@ -130,6 +131,11 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | T52 | x | Delete single image from thumbnail: X button on hover, remove image from IDB + all blocks using that imageId | V22 |
 | T53 | x | Fix DragOverlay cursor offset: track initial grab position, apply offset to DragOverlay transform | B26 |
 | T54 | x | Fix Shift+click range selection: sort blocks by grid position (row*COLS+col) before slicing range | V12, B27 |
+| T55 | x | Fix export: crop visible image portion per cell (not contain). Apply transforms, slice by cell bounds, render 1010px crop + 35px bars each side = 1080px | V3, V24, B28 |
+| T56 | . | Verify export resolution: check if images exported at full 1080x1350 or scaled down | V3, B29 |
+| T57 | . | Copy/paste block: Ctrl+C selected block, Ctrl+V paste at first free cell | — |
+| T58 | . | Mirror vertical/horizontal: add flip-x and flip-y transform controls to toolbar | — |
+| T59 | . | Fix color picker position: open to left not right to avoid viewport overflow | B30 |
 
 ---
 
@@ -164,4 +170,7 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | B25 | 2026-05-23 | Drag shows duplicate block visual (but places correctly) | DragOverlay or block rendering issue creates visual duplicate during drag → T51 |
 | B26 | 2026-05-23 | DragOverlay offset down-right from cursor during drag | DragOverlay doesn't account for initial grab offset. Positions from top-left of block not cursor → T53 |
 | B27 | 2026-05-23 | Shift+click range selection skips intermediate blocks | Range selection uses blocks array order (creation order) not visual grid order. Need sort by row*COLS+col → T54 |
+| B28 | 2026-05-23 | Export not applying image transforms, crops wrong | renderCell uses contain (full image per cell) not crop (visible portion per cell). Should slice image by cell bounds like IG carousel: 1010px crop + 35px bars → V24, T55 |
+| B29 | 2026-05-23 | Exported images low resolution | Export quality or scaling issue? Need verify actual resolution vs expected → T56 |
+| B30 | 2026-05-23 | Color picker opens to right, overflows viewport | Picker should open to left for better positioning → T59 |
 
