@@ -149,8 +149,8 @@ export default function Sidebar({ onLowRes }: Props) {
       gap: 0,
       background: `
         linear-gradient(180deg, #0a0a0a 0%, #1a1a1a 50%, #0a0a0a 100%),
-        repeating-linear-gradient(0deg, transparent, transparent 1px, rgba(255,255,255,0.12) 1px, rgba(255,255,255,0.12) 2px),
-        repeating-linear-gradient(90deg, transparent, transparent 1px, rgba(255,255,255,0.12) 1px, rgba(255,255,255,0.12) 2px)
+        repeating-linear-gradient(0deg, transparent, transparent 1px, rgba(255,255,255,0.25) 1px, rgba(255,255,255,0.25) 2px),
+        repeating-linear-gradient(90deg, transparent, transparent 1px, rgba(255,255,255,0.25) 1px, rgba(255,255,255,0.25) 2px)
       `,
       boxShadow: 'inset -8px 0 12px rgba(0, 0, 0, 0.4)',
       overflowY: 'auto',
