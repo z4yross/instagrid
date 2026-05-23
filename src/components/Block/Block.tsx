@@ -69,14 +69,18 @@ export default function Block({ block, cellW, cellH, isDragging }: Props) {
           if (!lastSelectedId) {
             setSelectedBlocks([block.id])
           } else {
-            const lastIndex = blocks.findIndex((b) => b.id === lastSelectedId)
-            const currentIndex = blocks.findIndex((b) => b.id === block.id)
+            // B27: sort by grid position (visual order) not array order
+            const sortedBlocks = [...blocks].sort((a, b) =>
+              (a.row * COLS + a.col) - (b.row * COLS + b.col)
+            )
+            const lastIndex = sortedBlocks.findIndex((b) => b.id === lastSelectedId)
+            const currentIndex = sortedBlocks.findIndex((b) => b.id === block.id)
             if (lastIndex === -1 || currentIndex === -1) {
               setSelectedBlocks([block.id])
             } else {
               const start = Math.min(lastIndex, currentIndex)
               const end = Math.max(lastIndex, currentIndex)
-              const rangeIds = blocks.slice(start, end + 1).map((b) => b.id)
+              const rangeIds = sortedBlocks.slice(start, end + 1).map((b) => b.id)
               setSelectedBlocks(rangeIds)
             }
           }

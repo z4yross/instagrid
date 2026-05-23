@@ -122,11 +122,14 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | T44 | x | Fix export numbering: right-to-left scan in cellUploadNumber (reverse col loop) | V4, B18 |
 | T45 | x | Ctrl+click toggle selection, Shift+click range selection (Windows-style multi-select) | V12, B19 |
 | T46 | x | Replace fullscreen loading with skeleton placeholders in sidebar + grid | V23, B20 |
-| T47 | . | Fix drag from sidebar blocked after clear canvas - investigate drop zone / handlers | B21 |
+| T47 | x | Click sidebar thumbnail to add image back to grid (after remove/clear) | B21 |
 | T48 | x | Add "Clear images" button to sidebar - clears images from memory + IDB | B22 |
 | T49 | x | Add grid skeletons + IDB image count query for precise skeleton rendering | V23, B23 |
 | T50 | x | Fix batch upload stacking - debug T43, verify local blocks tracking works | B24 |
 | T51 | x | Fix drag duplicate visual - check DragOverlay, ensure single block rendered | B25 |
+| T52 | x | Delete single image from thumbnail: X button on hover, remove image from IDB + all blocks using that imageId | V22 |
+| T53 | x | Fix DragOverlay cursor offset: track initial grab position, apply offset to DragOverlay transform | B26 |
+| T54 | x | Fix Shift+click range selection: sort blocks by grid position (row*COLS+col) before slicing range | V12, B27 |
 
 ---
 
@@ -159,4 +162,6 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | B23 | 2026-05-23 | Grid skeletons missing, only sidebar has loading placeholders | T46 added sidebar skeletons but grid still empty during load → V23 updated, T49 |
 | B24 | 2026-05-23 | Batch upload still stacks all images in first cell | T43 supposedly fixed but user reports images still overlap. handleFiles broken? → T50 |
 | B25 | 2026-05-23 | Drag shows duplicate block visual (but places correctly) | DragOverlay or block rendering issue creates visual duplicate during drag → T51 |
+| B26 | 2026-05-23 | DragOverlay offset down-right from cursor during drag | DragOverlay doesn't account for initial grab offset. Positions from top-left of block not cursor → T53 |
+| B27 | 2026-05-23 | Shift+click range selection skips intermediate blocks | Range selection uses blocks array order (creation order) not visual grid order. Need sort by row*COLS+col → T54 |
 
