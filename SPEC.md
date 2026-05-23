@@ -80,3 +80,26 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 
 | id | date | cause | fix |
 |----|------|-------|-----|
+| B1 | 2026-05-23 | Export numbering right-to-left top-to-bottom instead of left-to-right bottom-to-top | Fixed cellUploadNumber formula |
+| B2 | 2026-05-23 | Cell mode edits not reflected in grid view | Cell overrides not applied in block render |
+| B3 | 2026-05-23 | Bars mode in cell mode: image positioning uses relative pixels, hard to see bars color | Geometry issues with multi-cell blocks in cell mode |
+
+---
+
+## §V2 — Version 2 Requirements
+
+| id | status | requirement |
+|----|--------|-------------|
+| V2.1 | . | Remove fillMode (zoom/bars) — single mode: contain with bars |
+| V2.2 | . | Remove cell edit mode (double-click behavior) |
+| V2.3 | . | Group selection: select multiple blocks, move/transform as group |
+| V2.4 | . | Auto-flow: images snap to first available position, with placeholder blocks for gaps |
+| V2.5 | . | Placeholders: solid color or gradient from adjacent images |
+| V2.6 | . | Grid zoom/pan: zoom in/out entire grid, pan view |
+| V2.7 | . | Arrow keys pan image (not just block position) |
+| V2.8 | . | Right sidebar toolbar: always visible, options enabled/disabled by context |
+| V2.9 | . | Pan direction rotation: when image rotates, arrow key directions rotate too |
+| V2.10 | . | localStorage: persist state to not lose changes on reload |
+| V2.11 | . | Group zoom: in group selection, zoom out images as group to add bars to whole group |
+| V2.12 | . | Custom color picker for bars (replace default browser picker) |
+| V2.13 | . | Style improvements: better visual polish
