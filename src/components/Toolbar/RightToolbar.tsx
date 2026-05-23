@@ -63,7 +63,7 @@ export default function RightToolbar() {
         right: 0,
         width: 64,
         height: '100vh',
-        background: 'linear-gradient(180deg, #0d0d0d 0%, #000000 100%)',
+        background: '#ffffff',
         borderLeft: '1px solid var(--color-border)',
         display: 'flex',
         flexDirection: 'column',
@@ -74,15 +74,15 @@ export default function RightToolbar() {
     >
       {selectedBlocks.length > 1 && (
         <div style={{
-          fontSize: 9,
-          fontWeight: 600,
-          color: '#000000',
+          fontSize: 10,
+          fontWeight: 700,
+          color: '#ffffff',
           textAlign: 'center',
-          padding: '4px 0',
-          background: '#ffffff',
+          padding: '6px 0',
+          background: 'var(--color-accent)',
           borderRadius: 4,
           border: '1px solid var(--color-accent)',
-          boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+          boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
         }}>
           {selectedBlocks.length}
         </div>
@@ -140,18 +140,38 @@ function IconBtn({ children, onClick, disabled, title, danger }: {
         alignItems: 'center',
         justifyContent: 'center',
         fontSize: 16,
-        fontWeight: 500,
-        background: disabled ? '#e0e0e0' : danger ? 'rgba(248,113,113,0.1)' : '#ffffff',
-        border: `1px solid ${disabled ? '#cccccc' : danger ? 'rgba(248,113,113,0.3)' : 'var(--color-border)'}`,
-        color: disabled ? '#888888' : danger ? 'var(--color-danger)' : '#000000',
+        fontWeight: 700,
+        background: disabled ? '#f0f0f0' : danger ? '#ff4444' : 'transparent',
+        border: `2px solid ${disabled ? '#cccccc' : danger ? '#ff4444' : '#000000'}`,
+        color: disabled ? '#888888' : danger ? '#ffffff' : '#000000',
         borderRadius: 8,
         cursor: disabled ? 'not-allowed' : 'pointer',
         transition: 'all 0.15s',
         opacity: disabled ? 0.5 : 1,
-        boxShadow: disabled ? 'none' : '0 2px 4px rgba(0,0,0,0.1)',
+        boxShadow: 'none',
       }}
-      onMouseEnter={(e) => !disabled && (e.currentTarget.style.background = danger ? 'rgba(248,113,113,0.18)' : '#f5f5f5')}
-      onMouseLeave={(e) => !disabled && (e.currentTarget.style.background = danger ? 'rgba(248,113,113,0.1)' : '#ffffff')}
+      onMouseEnter={(e) => {
+        if (!disabled) {
+          if (danger) {
+            e.currentTarget.style.background = '#ff6666'
+            e.currentTarget.style.borderColor = '#ff6666'
+          } else {
+            e.currentTarget.style.background = '#000000'
+            e.currentTarget.style.color = '#ffffff'
+          }
+        }
+      }}
+      onMouseLeave={(e) => {
+        if (!disabled) {
+          if (danger) {
+            e.currentTarget.style.background = '#ff4444'
+            e.currentTarget.style.borderColor = '#ff4444'
+          } else {
+            e.currentTarget.style.background = 'transparent'
+            e.currentTarget.style.color = '#000000'
+          }
+        }
+      }}
     >
       {children}
     </button>

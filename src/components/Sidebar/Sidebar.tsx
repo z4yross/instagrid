@@ -147,7 +147,7 @@ export default function Sidebar({ onLowRes }: Props) {
       display: 'flex',
       flexDirection: 'column',
       gap: 0,
-      background: 'linear-gradient(180deg, #0d0d0d 0%, #000000 100%)',
+      background: '#ffffff',
       overflowY: 'auto',
     }}>
       {/* header */}
@@ -191,7 +191,7 @@ export default function Sidebar({ onLowRes }: Props) {
       {/* thumbnails */}
       {isLoading ? (
         <div style={{ padding: '0 10px 8px' }}>
-          <div style={{ fontSize: 10, fontWeight: 600, color: 'var(--color-text-muted)', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 6 }}>
+          <div style={{ fontSize: 10, fontWeight: 600, color: '#666666', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 6 }}>
             Loading{imageCount > 0 ? ` ${imageCount} image${imageCount !== 1 ? 's' : ''}` : ''}...
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 3 }}>
@@ -201,8 +201,8 @@ export default function Sidebar({ onLowRes }: Props) {
                 style={{
                   aspectRatio: '3/4',
                   borderRadius: 5,
-                  background: 'var(--color-bg-elevated)',
-                  border: '1px solid var(--color-border)',
+                  background: '#f0f0f0',
+                  border: '1px solid #cccccc',
                   animation: 'pulse 1.5s ease-in-out infinite',
                   animationDelay: `${i * 0.1}s`,
                 }}
@@ -213,7 +213,7 @@ export default function Sidebar({ onLowRes }: Props) {
         </div>
       ) : images.length > 0 ? (
         <div style={{ padding: '0 10px 8px' }}>
-          <div style={{ fontSize: 10, fontWeight: 600, color: 'var(--color-text-muted)', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 6 }}>
+          <div style={{ fontSize: 10, fontWeight: 600, color: '#666666', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 6 }}>
             {images.length} image{images.length !== 1 ? 's' : ''}
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 3 }}>
@@ -239,20 +239,19 @@ export default function Sidebar({ onLowRes }: Props) {
                   aspectRatio: '3/4',
                   borderRadius: 5,
                   overflow: 'hidden',
-                  border: '1px solid var(--color-border)',
-                  boxShadow: '0 2px 6px rgba(0,0,0,0.4)',
+                  boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
                   cursor: 'pointer',
                   transition: 'transform 0.15s, box-shadow 0.15s',
                 }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.transform = 'scale(1.05)'
-                  e.currentTarget.style.boxShadow = '0 4px 12px rgba(255,107,53,0.3)'
+                  e.currentTarget.style.boxShadow = '0 4px 12px rgba(255,107,53,0.4)'
                   const deleteBtn = e.currentTarget.querySelector('[data-delete-btn]') as HTMLElement
                   if (deleteBtn) deleteBtn.style.opacity = '1'
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.transform = 'scale(1)'
-                  e.currentTarget.style.boxShadow = '0 2px 6px rgba(0,0,0,0.4)'
+                  e.currentTarget.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)'
                   const deleteBtn = e.currentTarget.querySelector('[data-delete-btn]') as HTMLElement
                   if (deleteBtn) deleteBtn.style.opacity = '0'
                 }}
@@ -301,9 +300,9 @@ export default function Sidebar({ onLowRes }: Props) {
           margin: '0 10px 8px',
           padding: '18px 10px',
           borderRadius: 8,
-          border: '1px dashed var(--color-border)',
+          border: '1px dashed #cccccc',
           textAlign: 'center',
-          color: 'var(--color-text-muted)',
+          color: '#666666',
           fontSize: 11,
           lineHeight: 1.5,
         }}>
@@ -344,7 +343,7 @@ export default function Sidebar({ onLowRes }: Props) {
         </button>
 
         {showProfiles && (
-          <div style={{ maxHeight: 150, overflowY: 'auto', background: '#ffffff', borderRadius: 6, padding: 4, border: '1px solid var(--color-border)' }}>
+          <div style={{ maxHeight: 150, overflowY: 'auto', background: '#f9f9f9', borderRadius: 6, padding: 4, border: '1px solid #e0e0e0' }}>
             {profiles.length === 0 ? (
               <div style={{ padding: 8, fontSize: 10, color: '#666666', textAlign: 'center' }}>No profiles saved</div>
             ) : (
