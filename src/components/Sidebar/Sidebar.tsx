@@ -16,6 +16,7 @@ export default function Sidebar({ onLowRes }: Props) {
   const blocks = useStore((s) => s.blocks)
   const gridRows = useStore((s) => s.gridRows)
   const showGuides = useStore((s) => s.showGuides)
+  const isLoading = useStore((s) => s.isLoading)
   const addImage = useStore((s) => s.addImage)
   const addBlock = useStore((s) => s.addBlock)
   const addPlaceholder = useStore((s) => s.addPlaceholder)
@@ -116,7 +117,29 @@ export default function Sidebar({ onLowRes }: Props) {
       </div>
 
       {/* thumbnails */}
-      {images.length > 0 ? (
+      {isLoading ? (
+        <div style={{ padding: '0 10px 8px' }}>
+          <div style={{ fontSize: 10, fontWeight: 600, color: 'var(--color-text-muted)', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 6 }}>
+            Loading...
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 3 }}>
+            {Array.from({ length: 6 }).map((_, i) => (
+              <div
+                key={i}
+                style={{
+                  aspectRatio: '3/4',
+                  borderRadius: 5,
+                  background: 'var(--color-bg-elevated)',
+                  border: '1px solid var(--color-border)',
+                  animation: 'pulse 1.5s ease-in-out infinite',
+                  animationDelay: `${i * 0.1}s`,
+                }}
+              />
+            ))}
+          </div>
+          <style>{`@keyframes pulse { 0%, 100% { opacity: 0.6; } 50% { opacity: 1; } }`}</style>
+        </div>
+      ) : images.length > 0 ? (
         <div style={{ padding: '0 10px 8px' }}>
           <div style={{ fontSize: 10, fontWeight: 600, color: 'var(--color-text-muted)', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 6 }}>
             {images.length} image{images.length !== 1 ? 's' : ''}

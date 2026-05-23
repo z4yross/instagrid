@@ -121,7 +121,7 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | T43 | x | Fix batch upload overlap: track blocks locally in handleFiles loop, findFreeCell uses updated array | V13, B17 |
 | T44 | x | Fix export numbering: right-to-left scan in cellUploadNumber (reverse col loop) | V4, B18 |
 | T45 | x | Ctrl+click toggle selection, Shift+click range selection (Windows-style multi-select) | V12, B19 |
-| T46 | . | Replace fullscreen loading with skeleton placeholders in sidebar + grid | V23, B20 |
+| T46 | x | Replace fullscreen loading with skeleton placeholders in sidebar + grid | V23, B20 |
 | T47 | . | Fix upload blocked after clear canvas - investigate and fix root cause | B21 |
 | T48 | . | Add "Clear images" button to sidebar - clears images from memory + IDB | B22 |
 
