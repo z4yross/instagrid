@@ -107,6 +107,9 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | T33 | x | localStorage: catch QuotaExceededError, log + warn user, graceful degradation | V18, B4 |
 | T34 | x | Export numbering: skip empty/placeholder cells, only number cells with images | V4, B9 |
 | T35 | x | Grid zoom: ensure gridRows >= visibleRows to show empty cells on zoom out | B10 |
+| T36 | x | Reduce grid gradient opacity, make subtle (0.04 → 0.015 alpha) | B11 |
+| T37 | x | Increase app contrast: lighter surfaces, accent borders, visual hierarchy | B12 |
+| T38 | x | Remove preview feed panel (PreviewPanel, onPreview button) | — |
 
 ---
 
@@ -124,4 +127,6 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | B8 | 2026-05-23 | Grid zoom should add/remove rows and center grid, not scale with pan | Current zoom uses CSS transform, should modify visible row count → V20, T32 |
 | B9 | 2026-05-23 | Export numbering counts empty/placeholder cells, should only number cells with images | cellUploadNumber gives sequential numbers to all cells → V4 updated, T34 |
 | B10 | 2026-05-23 | Zoom out (add rows) doesn't show empty grid cells | gridRows only expands for blocks, should show empty cells when visibleRows > gridRows → T35 |
+| B11 | 2026-05-23 | Grid gradient too obvious, visible oval looks weird | GridCanvas radial-gradient too opaque (0.04 alpha) → T36 |
+| B12 | 2026-05-23 | App too dark, lacks contrast (only upload button has contrast) | Color scheme needs more visual hierarchy, accent highlights → T37 |
 
