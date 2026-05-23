@@ -16,6 +16,7 @@ export default function CanvasArea({ onLowRes }: Props) {
   const containerRef = useRef<HTMLDivElement>(null)
   const [dims, setDims] = useState({ w: 0, h: 0 })
   const [activeId, setActiveId] = useState<string | null>(null)
+  const [grabOffset, setGrabOffset] = useState({ x: 0, y: 0 })
 
   const blocks = useStore((s) => s.blocks)
   const selectedBlockIds = useStore((s) => s.selectedBlockIds)
@@ -53,6 +54,16 @@ export default function CanvasArea({ onLowRes }: Props) {
 
   function onDragStart(e: DragStartEvent) {
     setActiveId(e.active.id as string)
+
+    // B26: calculate grab offset within element
+    if (e.activatorEvent && 'clientX' in e.activatorEvent) {
+      const event = e.activatorEvent as PointerEvent
+      const rect = (e.activatorEvent.target as HTMLElement).getBoundingClientRect()
+      setGrabOffset({
+        x: event.clientX - rect.left,
+        y: event.clientY - rect.top,
+      })
+    }
   }
 
   function onDragEnd(e: DragEndEvent) {
@@ -203,34 +214,38 @@ export default function CanvasArea({ onLowRes }: Props) {
 
         {/* V19: group drag overlay */}
         <DragOverlay>
-          {activeId && selectedBlockIds.includes(activeId) && selectedBlockIds.length > 1 ? (
-            <div style={{ position: 'relative' }}>
-              {blocks.filter((b) => selectedBlockIds.includes(b.id)).map((block) => {
-                const relativeCol = block.col - blocks.find((b) => b.id === activeId)!.col
-                const relativeRow = block.row - blocks.find((b) => b.id === activeId)!.row
-                return (
-                  <div
-                    key={block.id}
-                    style={{
-                      position: 'absolute',
-                      left: relativeCol * cellW,
-                      top: relativeRow * cellH,
-                      width: block.colSpan * cellW,
-                      height: block.rowSpan * cellH,
-                      opacity: 0.8,
-                    }}
-                  >
-                    <Block block={block} cellW={cellW} cellH={cellH} />
-                  </div>
-                )
-              })}
+          {activeId ? (
+            <div style={{ marginLeft: -grabOffset.x, marginTop: -grabOffset.y }}>
+              {selectedBlockIds.includes(activeId) && selectedBlockIds.length > 1 ? (
+                <div style={{ position: 'relative' }}>
+                  {blocks.filter((b) => selectedBlockIds.includes(b.id)).map((block) => {
+                    const relativeCol = block.col - blocks.find((b) => b.id === activeId)!.col
+                    const relativeRow = block.row - blocks.find((b) => b.id === activeId)!.row
+                    return (
+                      <div
+                        key={block.id}
+                        style={{
+                          position: 'absolute',
+                          left: relativeCol * cellW,
+                          top: relativeRow * cellH,
+                          width: block.colSpan * cellW,
+                          height: block.rowSpan * cellH,
+                          opacity: 0.8,
+                        }}
+                      >
+                        <Block block={block} cellW={cellW} cellH={cellH} />
+                      </div>
+                    )
+                  })}
+                </div>
+              ) : (
+                <Block
+                  block={blocks.find((b) => b.id === activeId)!}
+                  cellW={cellW}
+                  cellH={cellH}
+                />
+              )}
             </div>
-          ) : activeId ? (
-            <Block
-              block={blocks.find((b) => b.id === activeId)!}
-              cellW={cellW}
-              cellH={cellH}
-            />
           ) : null}
         </DragOverlay>
       </DndContext>
