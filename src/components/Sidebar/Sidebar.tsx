@@ -19,8 +19,9 @@ export default function Sidebar({ onLowRes, onPreview }: Props) {
   const showGuides = useStore((s) => s.showGuides)
   const addImage = useStore((s) => s.addImage)
   const addBlock = useStore((s) => s.addBlock)
+  const addPlaceholder = useStore((s) => s.addPlaceholder)
   const clearCanvas = useStore((s) => s.clearCanvas)
-  const toggleGuides = useStore((s) => s.toggleGuides)
+  const toggleGuides = useStore ((s) => s.toggleGuides)
 
   function findFreeCell(): { col: number; row: number } {
     for (let r = 0; r < gridRows + 3; r++) {
@@ -85,13 +86,20 @@ export default function Sidebar({ onLowRes, onPreview }: Props) {
       </div>
 
       {/* upload */}
-      <div style={{ padding: '10px 10px 8px' }}>
+      <div style={{ padding: '10px 10px 8px', display: 'flex', flexDirection: 'column', gap: 6 }}>
         <button
           className="ig-btn ig-btn-accent"
           style={{ width: '100%', padding: '8px', fontSize: 12 }}
           onClick={() => fileRef.current?.click()}
         >
           ＋ Upload images
+        </button>
+        <button
+          className="ig-btn"
+          style={{ width: '100%', padding: '7px', fontSize: 11 }}
+          onClick={addPlaceholder}
+        >
+          ＋ Add placeholder
         </button>
         <input
           ref={fileRef}

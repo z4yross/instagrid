@@ -23,9 +23,10 @@ export default function Block({ block, cellW, cellH, isDragging }: Props) {
   const toggleBlockSelection = useStore((s) => s.toggleBlockSelection)
   const images = useStore((s) => s.images)
   const gridRows = useStore((s) => s.gridRows)
-  const image = images.find((i) => i.id === block.imageId)
+  const image = block.imageId ? images.find((i) => i.id === block.imageId) : null
 
   const isSelected = selectedBlockIds.includes(block.id)
+  const isPlaceholder = block.isPlaceholder === true
   const style: React.CSSProperties = {
     position: 'absolute',
     left: block.col * cellW,
@@ -64,12 +65,30 @@ export default function Block({ block, cellW, cellH, isDragging }: Props) {
       {...listeners}
       {...attributes}
     >
-      {image && (
-        <div style={{ position: 'absolute', inset: 0, overflow: 'hidden' }}>
-          <div style={{ position: 'absolute', inset: 0, background: block.barsColor }} />
+      <div style={{ position: 'absolute', inset: 0, overflow: 'hidden' }}>
+        <div style={{ position: 'absolute', inset: 0, background: block.barsColor }} />
+        {!isPlaceholder && image && (
           <img src={image.src} alt="" draggable={false} style={buildImgStyle(block)} />
-        </div>
-      )}
+        )}
+        {isPlaceholder && (
+          <div
+            style={{
+              position: 'absolute',
+              inset: 0,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: 10,
+              color: 'var(--color-text-muted)',
+              fontWeight: 500,
+              letterSpacing: '0.05em',
+              textTransform: 'uppercase',
+            }}
+          >
+            Placeholder
+          </div>
+        )}
+      </div>
 
       <CellBadges block={block} cellW={cellW} cellH={cellH} gridRows={gridRows} />
 

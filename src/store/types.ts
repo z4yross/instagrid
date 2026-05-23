@@ -7,7 +7,8 @@ export interface CellTransform {
 
 export interface ImageBlock {
   id: string
-  imageId: string
+  imageId?: string
+  isPlaceholder?: boolean
   /** grid col (0-2) */
   col: number
   /** grid row (0+) */
@@ -41,6 +42,7 @@ export interface AppState {
 
   addImage: (img: UploadedImage) => void
   addBlock: (block: ImageBlock) => void
+  addPlaceholder: () => void
   updateBlock: (id: string, patch: Partial<ImageBlock>) => void
   updateBlocks: (ids: string[], patch: Partial<ImageBlock>) => void
   removeBlock: (id: string) => void

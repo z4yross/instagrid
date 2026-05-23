@@ -34,6 +34,33 @@ const useStore = create<AppState>()(
           return { blocks, gridRows: ensureGridRows(blocks, s.gridRows) }
         }),
 
+      addPlaceholder: () =>
+        set((s) => {
+          // find first free cell
+          for (let r = 0; r < s.gridRows + 3; r++) {
+            for (let c = 0; c < 3; c++) {
+              const occupied = s.blocks.some(
+                (b) => c >= b.col && c < b.col + b.colSpan && r >= b.row && r < b.row + b.rowSpan
+              )
+              if (!occupied) {
+                const placeholder: ImageBlock = {
+                  id: crypto.randomUUID(),
+                  isPlaceholder: true,
+                  col: c,
+                  row: r,
+                  colSpan: 1,
+                  rowSpan: 1,
+                  barsColor: '#1a1a24',
+                  transform: { panX: 0, panY: 0, zoom: 1, rotation: 0 },
+                }
+                const blocks = [...s.blocks, placeholder]
+                return { blocks, gridRows: ensureGridRows(blocks, s.gridRows) }
+              }
+            }
+          }
+          return {}
+        }),
+
       updateBlock: (id: string, patch: Partial<ImageBlock>) =>
         set((s) => {
           const blocks = s.blocks.map((b) =>
