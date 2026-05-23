@@ -63,10 +63,9 @@ export default function RightToolbar() {
         right: 0,
         width: 64,
         height: '100vh',
-        background: 'rgba(0, 0, 0, 0.6)',
-        backdropFilter: 'blur(12px) saturate(150%)',
-        WebkitBackdropFilter: 'blur(12px) saturate(150%)',
-        borderLeft: '1px solid rgba(255, 255, 255, 0.1)',
+        background: 'linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 50%, #0f0f0f 100%)',
+        borderLeft: '2px solid rgba(255, 255, 255, 0.15)',
+        boxShadow: '-2px 0 20px rgba(0, 0, 0, 0.5), inset 1px 0 0 rgba(255, 255, 255, 0.1)',
         display: 'flex',
         flexDirection: 'column',
         padding: '12px 8px',
@@ -81,12 +80,10 @@ export default function RightToolbar() {
           color: '#ffffff',
           textAlign: 'center',
           padding: '6px 0',
-          background: 'rgba(255, 107, 53, 0.9)',
-          backdropFilter: 'blur(8px)',
-          WebkitBackdropFilter: 'blur(8px)',
+          background: 'var(--color-accent)',
           borderRadius: 4,
-          border: '1px solid rgba(255, 107, 53, 0.5)',
-          boxShadow: '0 0 12px rgba(255, 107, 53, 0.4)',
+          border: '1px solid var(--color-accent)',
+          boxShadow: '0 0 12px rgba(255, 107, 53, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.2)',
         }}>
           {selectedBlocks.length}
         </div>
@@ -145,36 +142,34 @@ function IconBtn({ children, onClick, disabled, title, danger }: {
         justifyContent: 'center',
         fontSize: 16,
         fontWeight: 700,
-        background: disabled ? 'rgba(255, 255, 255, 0.05)' : danger ? 'rgba(255, 68, 68, 0.9)' : 'rgba(255, 255, 255, 0.1)',
-        backdropFilter: 'blur(8px)',
-        WebkitBackdropFilter: 'blur(8px)',
-        border: `1px solid ${disabled ? 'rgba(255, 255, 255, 0.05)' : danger ? 'rgba(255, 68, 68, 0.5)' : 'rgba(255, 255, 255, 0.2)'}`,
-        color: disabled ? '#555555' : danger ? '#ffffff' : '#ffffff',
+        background: disabled ? 'rgba(255, 255, 255, 0.05)' : danger ? '#ff4444' : 'rgba(255, 255, 255, 0.08)',
+        border: `1px solid ${disabled ? 'rgba(255, 255, 255, 0.1)' : danger ? '#ff4444' : 'rgba(255, 255, 255, 0.25)'}`,
+        color: disabled ? '#555555' : '#ffffff',
         borderRadius: 8,
         cursor: disabled ? 'not-allowed' : 'pointer',
         transition: 'all 0.2s',
         opacity: disabled ? 0.4 : 1,
-        boxShadow: danger ? '0 0 12px rgba(255, 68, 68, 0.3)' : 'none',
+        boxShadow: danger ? '0 0 12px rgba(255, 68, 68, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2)' : 'inset 0 1px 0 rgba(255, 255, 255, 0.1)',
       }}
       onMouseEnter={(e) => {
         if (!disabled) {
           if (danger) {
-            e.currentTarget.style.background = 'rgba(255, 102, 102, 0.95)'
-            e.currentTarget.style.boxShadow = '0 0 16px rgba(255, 68, 68, 0.5)'
+            e.currentTarget.style.background = '#ff6666'
+            e.currentTarget.style.boxShadow = '0 0 16px rgba(255, 68, 68, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.3)'
           } else {
-            e.currentTarget.style.background = 'rgba(255, 255, 255, 0.2)'
-            e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.3)'
+            e.currentTarget.style.background = 'rgba(255, 255, 255, 0.15)'
+            e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.4)'
           }
         }
       }}
       onMouseLeave={(e) => {
         if (!disabled) {
           if (danger) {
-            e.currentTarget.style.background = 'rgba(255, 68, 68, 0.9)'
-            e.currentTarget.style.boxShadow = '0 0 12px rgba(255, 68, 68, 0.3)'
+            e.currentTarget.style.background = '#ff4444'
+            e.currentTarget.style.boxShadow = '0 0 12px rgba(255, 68, 68, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2)'
           } else {
-            e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)'
-            e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.2)'
+            e.currentTarget.style.background = 'rgba(255, 255, 255, 0.08)'
+            e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.25)'
           }
         }
       }}

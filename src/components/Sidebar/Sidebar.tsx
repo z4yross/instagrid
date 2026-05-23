@@ -143,13 +143,12 @@ export default function Sidebar({ onLowRes }: Props) {
     <aside style={{
       width: 210,
       flexShrink: 0,
-      borderRight: '1px solid rgba(255, 255, 255, 0.1)',
+      borderRight: '2px solid rgba(255, 255, 255, 0.15)',
       display: 'flex',
       flexDirection: 'column',
       gap: 0,
-      background: 'rgba(0, 0, 0, 0.6)',
-      backdropFilter: 'blur(12px) saturate(150%)',
-      WebkitBackdropFilter: 'blur(12px) saturate(150%)',
+      background: 'linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 50%, #0f0f0f 100%)',
+      boxShadow: '2px 0 20px rgba(0, 0, 0, 0.5), inset -1px 0 0 rgba(255, 255, 255, 0.1)',
       overflowY: 'auto',
     }}>
       {/* header */}
