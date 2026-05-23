@@ -143,19 +143,19 @@ export default function Sidebar({ onLowRes }: Props) {
     <aside style={{
       width: 210,
       flexShrink: 0,
-      borderRight: '2px solid rgba(255, 255, 255, 0.15)',
+      borderRight: '2px solid rgba(139, 92, 246, 0.3)',
       display: 'flex',
       flexDirection: 'column',
       gap: 0,
-      background: 'linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 50%, #0f0f0f 100%)',
-      boxShadow: '2px 0 20px rgba(0, 0, 0, 0.5), inset -1px 0 0 rgba(255, 255, 255, 0.1)',
+      background: 'linear-gradient(135deg, #1a0f2e 0%, #2d1b4e 50%, #1a0f2e 100%)',
+      boxShadow: '2px 0 20px rgba(139, 92, 246, 0.2), inset -1px 0 0 rgba(139, 92, 246, 0.2)',
       overflowY: 'auto',
     }}>
       {/* header */}
       <div style={{
         padding: '14px 14px 10px',
-        borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
-        background: 'rgba(255, 255, 255, 0.05)',
+        borderBottom: '1px solid rgba(139, 92, 246, 0.2)',
+        background: 'rgba(139, 92, 246, 0.08)',
       }}>
         <div style={{ fontSize: 15, fontWeight: 700, letterSpacing: '-0.3px', color: 'var(--color-text-primary)' }}>
           insta<span style={{ color: 'var(--color-accent)' }}>grid</span>
