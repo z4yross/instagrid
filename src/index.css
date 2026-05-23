@@ -34,9 +34,9 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-::-webkit-scrollbar { width: 5px; height: 5px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: 3px; }
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--color-bg-base); }
+::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: 4px; transition: background 0.2s; }
 ::-webkit-scrollbar-thumb:hover { background: var(--color-text-muted); }
 
 /* ── reusable button base ── */
@@ -44,34 +44,51 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 5px;
-  padding: 6px 11px;
+  gap: 6px;
+  padding: 7px 13px;
   font-size: 12px;
   font-weight: 500;
   border-radius: 7px;
   cursor: pointer;
-  transition: background 0.15s, box-shadow 0.15s, transform 0.1s;
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
   border: 1px solid var(--color-border);
   background: var(--color-bg-elevated);
   color: var(--color-text-primary);
   white-space: nowrap;
   user-select: none;
+  position: relative;
+  overflow: hidden;
+}
+.ig-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.05), transparent);
+  opacity: 0;
+  transition: opacity 0.2s;
 }
 .ig-btn:hover {
   background: var(--color-bg-hover);
-  border-color: var(--color-border);
+  border-color: var(--color-text-muted);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
 }
-.ig-btn:active { transform: scale(0.97); }
+.ig-btn:hover::before { opacity: 1; }
+.ig-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+}
 
 .ig-btn-accent {
   background: var(--color-accent);
   border-color: transparent;
   color: #fff;
-  box-shadow: 0 0 14px var(--color-accent-glow);
+  box-shadow: 0 0 16px var(--color-accent-glow), 0 2px 4px rgba(0,0,0,0.2);
 }
 .ig-btn-accent:hover {
   background: var(--color-accent-hover);
-  box-shadow: 0 0 22px var(--color-accent-glow);
+  box-shadow: 0 0 24px var(--color-accent-glow), 0 4px 12px rgba(0,0,0,0.3);
+  transform: translateY(-2px);
 }
 
 .ig-btn-danger {
@@ -79,5 +96,13 @@ body {
   border-color: rgba(248,113,113,0.3);
 }
 .ig-btn-danger:hover {
-  background: rgba(248,113,113,0.08);
+  background: rgba(248,113,113,0.12);
+  border-color: rgba(248,113,113,0.5);
+}
+
+.ig-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: none !important;
 }
