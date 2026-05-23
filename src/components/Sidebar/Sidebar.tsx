@@ -149,8 +149,8 @@ export default function Sidebar({ onLowRes }: Props) {
       gap: 0,
       background: `
         linear-gradient(180deg, #0a0a0a 0%, #1a1a1a 50%, #0a0a0a 100%),
-        repeating-linear-gradient(0deg, transparent, transparent 1px, rgba(255,255,255,0.015) 1px, rgba(255,255,255,0.015) 2px),
-        repeating-linear-gradient(90deg, transparent, transparent 1px, rgba(255,255,255,0.015) 1px, rgba(255,255,255,0.015) 2px)
+        repeating-linear-gradient(0deg, transparent, transparent 1px, rgba(255,255,255,0.04) 1px, rgba(255,255,255,0.04) 2px),
+        repeating-linear-gradient(90deg, transparent, transparent 1px, rgba(255,255,255,0.04) 1px, rgba(255,255,255,0.04) 2px)
       `,
       boxShadow: 'inset -8px 0 12px rgba(0, 0, 0, 0.4)',
       overflowY: 'auto',
@@ -159,8 +159,19 @@ export default function Sidebar({ onLowRes }: Props) {
       <div style={{
         padding: '14px 14px 10px',
       }}>
-        <div style={{ fontSize: 20, fontWeight: 700, letterSpacing: '-0.5px', color: 'var(--color-text-primary)' }}>
+        <div style={{ fontSize: 20, fontWeight: 700, letterSpacing: '-0.5px', color: 'var(--color-text-primary)', display: 'flex', alignItems: 'center', gap: 6 }}>
           insta<span style={{ color: 'var(--color-accent)' }}>grid</span>
+          <svg width="18" height="18" viewBox="0 0 18 18" style={{ opacity: 0.8 }}>
+            <rect x="1" y="1" width="4" height="4" fill="var(--color-accent)" />
+            <rect x="7" y="1" width="4" height="4" fill="var(--color-accent)" opacity="0.6" />
+            <rect x="13" y="1" width="4" height="4" fill="var(--color-accent)" opacity="0.3" />
+            <rect x="1" y="7" width="4" height="4" fill="var(--color-accent)" opacity="0.6" />
+            <rect x="7" y="7" width="4" height="4" fill="var(--color-accent)" />
+            <rect x="13" y="7" width="4" height="4" fill="var(--color-accent)" opacity="0.6" />
+            <rect x="1" y="13" width="4" height="4" fill="var(--color-accent)" opacity="0.3" />
+            <rect x="7" y="13" width="4" height="4" fill="var(--color-accent)" opacity="0.6" />
+            <rect x="13" y="13" width="4" height="4" fill="var(--color-accent)" />
+          </svg>
         </div>
         <div style={{ fontSize: 11, color: 'var(--color-text-muted)', marginTop: 3, letterSpacing: '0.5px' }}>feed planner</div>
       </div>
