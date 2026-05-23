@@ -27,9 +27,13 @@ export default function CanvasArea({ onLowRes }: Props) {
 	const blocks = useStore((s) => s.blocks);
 	const selectedBlockIds = useStore((s) => s.selectedBlockIds);
 	const visibleRows = useStore((s) => s.visibleRows);
+	const gridRows = useStore((s) => s.gridRows);
 	const updateBlock = useStore((s) => s.updateBlock);
+	const addBlock = useStore((s) => s.addBlock);
 	const setSelectedBlocks = useStore((s) => s.setSelectedBlocks);
 	const setVisibleRows = useStore((s) => s.setVisibleRows);
+
+	const copiedBlocksRef = useRef<ImageBlock[]>([]);
 
 	const isGroupDragging =
 		activeId !== null &&
@@ -48,6 +52,50 @@ export default function CanvasArea({ onLowRes }: Props) {
 		ro.observe(el);
 		return () => ro.disconnect();
 	}, []);
+
+	// T57: copy/paste blocks
+	useEffect(() => {
+		function handleKeyDown(e: KeyboardEvent) {
+			if ((e.ctrlKey || e.metaKey) && e.key === 'c' && selectedBlockIds.length > 0) {
+				e.preventDefault();
+				copiedBlocksRef.current = blocks.filter((b) => selectedBlockIds.includes(b.id));
+			} else if ((e.ctrlKey || e.metaKey) && e.key === 'v' && copiedBlocksRef.current.length > 0) {
+				e.preventDefault();
+				// Find first free cell
+				let freeCol = 0;
+				let freeRow = 0;
+				outer: for (let r = 0; r < gridRows + 3; r++) {
+					for (let c = 0; c < COLS; c++) {
+						const occupied = blocks.some(
+							(b) => c >= b.col && c < b.col + b.colSpan && r >= b.row && r < b.row + b.rowSpan
+						);
+						if (!occupied) {
+							freeCol = c;
+							freeRow = r;
+							break outer;
+						}
+					}
+				}
+
+				// Paste blocks with offset
+				const newIds: string[] = [];
+				copiedBlocksRef.current.forEach((copied) => {
+					const newBlock: ImageBlock = {
+						...copied,
+						id: crypto.randomUUID(),
+						col: freeCol,
+						row: freeRow,
+					};
+					addBlock(newBlock);
+					newIds.push(newBlock.id);
+				});
+				setSelectedBlocks(newIds);
+			}
+		}
+
+		window.addEventListener('keydown', handleKeyDown);
+		return () => window.removeEventListener('keydown', handleKeyDown);
+	}, [blocks, selectedBlockIds, gridRows, addBlock, setSelectedBlocks]);
 
 	const { w: cellW, h: cellH } = cellPixelSize(
 		dims.w || 600,
