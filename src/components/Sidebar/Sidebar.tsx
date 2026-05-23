@@ -147,7 +147,11 @@ export default function Sidebar({ onLowRes }: Props) {
       display: 'flex',
       flexDirection: 'column',
       gap: 0,
-      background: 'linear-gradient(180deg, #0a0a0a 0%, #1a1a1a 50%, #0a0a0a 100%)',
+      background: `
+        linear-gradient(180deg, #0a0a0a 0%, #1a1a1a 50%, #0a0a0a 100%),
+        repeating-linear-gradient(0deg, transparent, transparent 1px, rgba(255,255,255,0.015) 1px, rgba(255,255,255,0.015) 2px),
+        repeating-linear-gradient(90deg, transparent, transparent 1px, rgba(255,255,255,0.015) 1px, rgba(255,255,255,0.015) 2px)
+      `,
       boxShadow: 'inset -8px 0 12px rgba(0, 0, 0, 0.4)',
       overflowY: 'auto',
     }}>
@@ -155,10 +159,10 @@ export default function Sidebar({ onLowRes }: Props) {
       <div style={{
         padding: '14px 14px 10px',
       }}>
-        <div style={{ fontSize: 15, fontWeight: 700, letterSpacing: '-0.3px', color: 'var(--color-text-primary)' }}>
+        <div style={{ fontSize: 20, fontWeight: 700, letterSpacing: '-0.5px', color: 'var(--color-text-primary)' }}>
           insta<span style={{ color: 'var(--color-accent)' }}>grid</span>
         </div>
-        <div style={{ fontSize: 10, color: 'var(--color-text-muted)', marginTop: 2 }}>feed planner</div>
+        <div style={{ fontSize: 11, color: 'var(--color-text-muted)', marginTop: 3, letterSpacing: '0.5px' }}>feed planner</div>
       </div>
 
       {/* upload */}
@@ -330,15 +334,15 @@ export default function Sidebar({ onLowRes }: Props) {
             })
           }}
         >
-          <span>📄</span> New profile
+New profile
         </button>
 
         <button className="ig-btn" style={{ width: '100%', justifyContent: 'flex-start' }} onClick={handleSaveProfile}>
-          <span>💾</span> Save profile
+Save profile
         </button>
 
         <button className="ig-btn" style={{ width: '100%', justifyContent: 'flex-start' }} onClick={() => setShowProfiles(!showProfiles)}>
-          <span>📁</span> {showProfiles ? 'Hide' : 'Load'} profiles
+{showProfiles ? 'Hide' : 'Load'} profiles
         </button>
 
         {showProfiles && (
@@ -371,8 +375,7 @@ export default function Sidebar({ onLowRes }: Props) {
         <div style={{ height: 1, background: 'var(--color-border)', margin: '4px 0' }} />
 
         <button className="ig-btn" style={{ width: '100%', justifyContent: 'flex-start' }} onClick={toggleGuides}>
-          <span style={{ opacity: 0.6 }}>▦</span>
-          {showGuides ? 'Hide guides' : 'Show guides'}
+{showGuides ? 'Hide guides' : 'Show guides'}
         </button>
 
         <button
@@ -381,8 +384,7 @@ export default function Sidebar({ onLowRes }: Props) {
           onClick={doExport}
           disabled={exporting || blocks.length === 0}
         >
-          <span>⬇</span>
-          {exporting ? 'Exporting…' : 'Export ZIP'}
+{exporting ? 'Exporting…' : 'Export ZIP'}
         </button>
 
         <button
@@ -400,7 +402,7 @@ export default function Sidebar({ onLowRes }: Props) {
             })
           }}
         >
-          <span>✕</span> Clear canvas
+Clear canvas
         </button>
 
         <button
@@ -419,7 +421,7 @@ export default function Sidebar({ onLowRes }: Props) {
           }}
           disabled={images.length === 0}
         >
-          <span>🗑</span> Clear images
+Clear images
         </button>
       </div>
 

@@ -63,7 +63,11 @@ export default function RightToolbar() {
         right: 0,
         width: 64,
         height: '100vh',
-        background: 'linear-gradient(180deg, #0a0a0a 0%, #1a1a1a 50%, #0a0a0a 100%)',
+        background: `
+          linear-gradient(180deg, #0a0a0a 0%, #1a1a1a 50%, #0a0a0a 100%),
+          repeating-linear-gradient(0deg, transparent, transparent 1px, rgba(255,255,255,0.015) 1px, rgba(255,255,255,0.015) 2px),
+          repeating-linear-gradient(90deg, transparent, transparent 1px, rgba(255,255,255,0.015) 1px, rgba(255,255,255,0.015) 2px)
+        `,
         borderLeft: 'none',
         boxShadow: 'inset 8px 0 12px rgba(0, 0, 0, 0.4)',
         display: 'flex',
@@ -143,7 +147,7 @@ function IconBtn({ children, onClick, disabled, title, danger }: {
         fontSize: 16,
         fontWeight: 700,
         background: disabled ? 'transparent' : danger ? 'transparent' : 'rgba(255, 255, 255, 0.08)',
-        border: danger ? '1px dashed #ff4444' : 'none',
+        border: danger ? '1px dashed rgba(255, 255, 255, 0.3)' : 'none',
         color: disabled ? '#555555' : danger ? '#ff4444' : '#ffffff',
         borderRadius: 8,
         cursor: disabled ? 'not-allowed' : 'pointer',
@@ -155,7 +159,7 @@ function IconBtn({ children, onClick, disabled, title, danger }: {
         if (!disabled) {
           if (danger) {
             e.currentTarget.style.background = 'rgba(255, 68, 68, 0.08)'
-            e.currentTarget.style.borderColor = '#ff6666'
+            e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.5)'
             e.currentTarget.style.color = '#ff6666'
           } else {
             e.currentTarget.style.background = 'rgba(255, 255, 255, 0.15)'
@@ -166,7 +170,7 @@ function IconBtn({ children, onClick, disabled, title, danger }: {
         if (!disabled) {
           if (danger) {
             e.currentTarget.style.background = 'transparent'
-            e.currentTarget.style.borderColor = '#ff4444'
+            e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.3)'
             e.currentTarget.style.color = '#ff4444'
           } else {
             e.currentTarget.style.background = 'rgba(255, 255, 255, 0.08)'

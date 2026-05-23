@@ -107,13 +107,13 @@ body {
 
 .ig-btn-danger {
   background: transparent;
-  border: 1px dashed #ff4444;
+  border: 1px dashed rgba(255, 255, 255, 0.3);
   color: #ff4444;
   box-shadow: none;
 }
 .ig-btn-danger:hover {
   background: rgba(255, 68, 68, 0.08);
-  border: 1px dashed #ff6666;
+  border: 1px dashed rgba(255, 255, 255, 0.5);
   color: #ff6666;
   box-shadow: 0 2px 8px rgba(255, 68, 68, 0.2);
 }
@@ -127,6 +127,6 @@ body {
 
 .ig-btn-danger:disabled {
   background: transparent;
-  border: 1px dashed rgba(255, 68, 68, 0.4);
+  border: 1px dashed rgba(255, 255, 255, 0.2);
   color: rgba(255, 68, 68, 0.4);
 }
