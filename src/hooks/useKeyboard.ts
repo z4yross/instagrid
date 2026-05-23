@@ -1,6 +1,5 @@
 import { useEffect } from 'react'
 import { useStore } from '@/store/useStore'
-import { hasCollision, COLS } from '@/utils/gridUtils'
 
 export default function useKeyboard() {
   const { undo, redo } = useStore.temporal.getState()
@@ -29,19 +28,45 @@ export default function useKeyboard() {
         return
       }
 
-      // arrow keys — move selected block 1 cell
+      // V16: arrow keys pan image, direction rotates with image rotation
       if (selectedBlockId && ['ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.key)) {
         e.preventDefault()
         const block = blocks.find(b => b.id === selectedBlockId)
         if (!block) return
-        let { col, row } = block
-        if (e.key === 'ArrowUp')    row = Math.max(0, row - 1)
-        if (e.key === 'ArrowDown')  row = row + 1
-        if (e.key === 'ArrowLeft')  col = Math.max(0, col - 1)
-        if (e.key === 'ArrowRight') col = Math.min(COLS - block.colSpan, col + 1)
-        if (!hasCollision(blocks, col, row, block.colSpan, block.rowSpan, block.id)) {
-          updateBlock(block.id, { col, row })
+
+        const PAN_STEP = 10
+        let dx = 0
+        let dy = 0
+
+        // base direction (rotation = 0)
+        if (e.key === 'ArrowLeft')  dx = -PAN_STEP
+        if (e.key === 'ArrowRight') dx = PAN_STEP
+        if (e.key === 'ArrowUp')    dy = -PAN_STEP
+        if (e.key === 'ArrowDown')  dy = PAN_STEP
+
+        // rotate direction by image rotation
+        const rot = block.transform.rotation
+        let rotatedDx = dx
+        let rotatedDy = dy
+
+        if (rot === 90) {
+          rotatedDx = dy
+          rotatedDy = -dx
+        } else if (rot === 180) {
+          rotatedDx = -dx
+          rotatedDy = -dy
+        } else if (rot === 270) {
+          rotatedDx = -dy
+          rotatedDy = dx
         }
+
+        updateBlock(block.id, {
+          transform: {
+            ...block.transform,
+            panX: block.transform.panX + rotatedDx,
+            panY: block.transform.panY + rotatedDy,
+          },
+        })
       }
     }
 

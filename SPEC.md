@@ -88,7 +88,7 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | T20 | x | localStorage: persist/restore state on mutation (debounced 500ms) | V15 |
 | T21 | x | Right sidebar toolbar: always visible, context-aware enable/disable | — |
 | T22 | x | Custom color picker component for bars (replace `<input type="color">`) | — |
-| T23 | . | Arrow keys pan image: ←→↑↓ modify transform.panX/panY, rotated by transform.rotation | V16 |
+| T23 | x | Arrow keys pan image: ←→↑↓ modify transform.panX/panY, rotated by transform.rotation | V16 |
 | T24 | . | Group selection: Shift+click blocks, render selection box, move/transform as group | V12 |
 | T25 | . | Auto-flow: on upload/move, snap block to first free position (left→right, top→bottom) | V13 |
 | T26 | . | Placeholder blocks: add/remove, render solid color or gradient from adjacent images | V14 |
