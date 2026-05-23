@@ -62,7 +62,7 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | V20 | Grid zoom adds/removes visible rows (not CSS scale). Grid stays centered. No pan controls. |
 | V21 | Grid rows shrink when zooming in. If trailing rows empty, gridRows reduced to match highest block + 1 row min. |
 | V22 | IndexedDB: images persist via IndexedDB (not localStorage). Blocks/gridRows in localStorage. No quota issues. |
-| V23 | Loading state: skeleton placeholders in sidebar thumbnails + grid blocks during IDB restore. No fullscreen overlay. |
+| V23 | Loading state: skeleton placeholders in sidebar thumbnails + grid blocks during IDB restore. No fullscreen overlay. Skeleton count matches actual image count from IDB. |
 
 ---
 
@@ -122,8 +122,11 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | T44 | x | Fix export numbering: right-to-left scan in cellUploadNumber (reverse col loop) | V4, B18 |
 | T45 | x | Ctrl+click toggle selection, Shift+click range selection (Windows-style multi-select) | V12, B19 |
 | T46 | x | Replace fullscreen loading with skeleton placeholders in sidebar + grid | V23, B20 |
-| T47 | . | Fix upload blocked after clear canvas - investigate and fix root cause | B21 |
+| T47 | . | Fix drag from sidebar blocked after clear canvas - investigate drop zone / handlers | B21 |
 | T48 | x | Add "Clear images" button to sidebar - clears images from memory + IDB | B22 |
+| T49 | . | Add grid skeletons + IDB image count query for precise skeleton rendering | V23, B23 |
+| T50 | . | Fix batch upload stacking - debug T43, verify local blocks tracking works | B24 |
+| T51 | . | Fix drag duplicate visual - check DragOverlay, ensure single block rendered | B25 |
 
 ---
 
@@ -151,6 +154,9 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | B18 | 2026-05-23 | Export numbering left-to-right, should be right-to-left for Instagram upload order | cellUploadNumber scans left-to-right but IG displays first upload on right. V4 wrong → V4 updated, T44 |
 | B19 | 2026-05-23 | Group selection only Shift+click, missing Ctrl+click for Windows-style toggle | Block.tsx only checks shiftKey. Need ctrlKey/metaKey for individual add/remove, shiftKey for range → V12 updated, T45 |
 | B20 | 2026-05-23 | Loading state fullscreen overlay blocks entire UI | T42 shows fullscreen spinner. Should be skeleton placeholders in sidebar + grid only → V23 updated, T46 |
-| B21 | 2026-05-23 | After clear canvas, can't upload new images (upload blocked somehow) | clearCanvas clears blocks but something prevents re-upload. Need investigation → T47 |
+| B21 | 2026-05-23 | After clear canvas, can't re-add images from sidebar (drag blocked) | clearCanvas clears blocks but images in sidebar can't be dragged to grid again → T47 |
 | B22 | 2026-05-23 | No button to clear images from memory/IDB | Images persist forever. Need "Clear images" button separate from "Clear canvas" → T48 |
+| B23 | 2026-05-23 | Grid skeletons missing, only sidebar has loading placeholders | T46 added sidebar skeletons but grid still empty during load → V23 updated, T49 |
+| B24 | 2026-05-23 | Batch upload still stacks all images in first cell | T43 supposedly fixed but user reports images still overlap. handleFiles broken? → T50 |
+| B25 | 2026-05-23 | Drag shows duplicate block visual (but places correctly) | DragOverlay or block rendering issue creates visual duplicate during drag → T51 |
 
