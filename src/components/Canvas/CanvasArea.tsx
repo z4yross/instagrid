@@ -1,5 +1,5 @@
 import { useRef, useState, useCallback, useEffect } from 'react'
-import { DndContext, PointerSensor, useSensor, useSensors } from '@dnd-kit/core'
+import { DndContext, DragOverlay, PointerSensor, useSensor, useSensors } from '@dnd-kit/core'
 import type { DragEndEvent, DragStartEvent } from '@dnd-kit/core'
 import { useStore } from '@/store/useStore'
 import { cellPixelSize, hasCollision, COLS } from '@/utils/gridUtils'
@@ -186,6 +186,39 @@ export default function CanvasArea({ onLowRes }: Props) {
             ))}
           </GridCanvas>
         </DropZone>
+
+        {/* V19: group drag overlay */}
+        <DragOverlay>
+          {activeId && selectedBlockIds.includes(activeId) && selectedBlockIds.length > 1 ? (
+            <div style={{ position: 'relative' }}>
+              {blocks.filter((b) => selectedBlockIds.includes(b.id)).map((block) => {
+                const relativeCol = block.col - blocks.find((b) => b.id === activeId)!.col
+                const relativeRow = block.row - blocks.find((b) => b.id === activeId)!.row
+                return (
+                  <div
+                    key={block.id}
+                    style={{
+                      position: 'absolute',
+                      left: relativeCol * cellW,
+                      top: relativeRow * cellH,
+                      width: block.colSpan * cellW,
+                      height: block.rowSpan * cellH,
+                      opacity: 0.8,
+                    }}
+                  >
+                    <Block block={block} cellW={cellW} cellH={cellH} />
+                  </div>
+                )
+              })}
+            </div>
+          ) : activeId ? (
+            <Block
+              block={blocks.find((b) => b.id === activeId)!}
+              cellW={cellW}
+              cellH={cellH}
+            />
+          ) : null}
+        </DragOverlay>
       </DndContext>
     </div>
   )
