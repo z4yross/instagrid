@@ -149,6 +149,7 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | T70 | x | Fix export cell X offset: use EXPORT_W (1080) not CROP_W (1010) for cellOffsetX | V24, B37 |
 | T71 | x | Fix export for multi-row blocks: verify Y offset and image scaling use correct dimensions (crop vs full canvas) | V24, B38 |
 | T72 | x | Design refresh: black/white color scheme with orange accents (remove purple), remove keyboard hint labels from sidebar | — |
+| T73 | . | Increase B/W contrast: use pure black (#000) and pure white (#fff) for dramatic contrast, keep gradients | — |
 
 ---
 
