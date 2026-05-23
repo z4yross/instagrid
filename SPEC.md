@@ -43,7 +43,7 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | V1 | Blocks never overlap. Any drop/resize that causes collision rejected or snapped to nearest free zone. |
 | V2 | Block position always snapped to grid cell boundary. No fractional cell positions. |
 | V3 | Export cell size always exactly 1080×1350px regardless of canvas display size. |
-| V4 | Export numbering = left-to-right per row, bottom-to-top. Only non-empty cells (with images) numbered, starting from 1. |
+| V4 | Export numbering = right-to-left per row, bottom-to-top (Instagram upload order). Only non-empty cells (with images) numbered, starting from 1. |
 | V5 | Undo/redo only covers canvas state mutations (block add/move/resize/delete, transform). Not file uploads. |
 | V6 | Low-res warning shown if source image width < 1080px. Non-blocking. |
 | V7 | Grid rows grow dynamically — minimum 3 rows always visible, adds rows as blocks fill bottom. |
@@ -119,6 +119,7 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | T41 | x | IndexedDB for image persistence: store images in IDB, blocks/gridRows in localStorage | V22, B15 |
 | T42 | . | Loading state during IndexedDB restore: show spinner/skeleton until images loaded | V23, B16 |
 | T43 | . | Fix batch upload overlap: track blocks locally in handleFiles loop, findFreeCell uses updated array | V13, B17 |
+| T44 | . | Fix export numbering: right-to-left scan in cellUploadNumber (reverse col loop) | V4, B18 |
 
 ---
 
@@ -143,4 +144,5 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | B15 | 2026-05-23 | Images still lost on reload despite T33 fix | localStorage quota (5-10MB) insufficient for image data URLs. V18 warns but doesn't solve persistence → V22, T41 |
 | B16 | 2026-05-23 | No loading indicator on page reload, images pop in after IndexedDB delay | T41 async IDB load lacks visual feedback. User sees empty grid then sudden image load → V23, T42 |
 | B17 | 2026-05-23 | Multiple images uploaded together overlap at same position | findFreeCell reads stale blocks state. Loop doesn't track newly added blocks, all find same position → V13, T43 |
+| B18 | 2026-05-23 | Export numbering left-to-right, should be right-to-left for Instagram upload order | cellUploadNumber scans left-to-right but IG displays first upload on right. V4 wrong → V4 updated, T44 |
 
