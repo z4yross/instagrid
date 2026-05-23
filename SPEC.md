@@ -144,7 +144,7 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | T65 | x | Fix export to match grid exactly: verify transform math, coordinate systems, scaling factors | V24, B33 |
 | T66 | x | Export bars: extend image naturally (not blur). Draw image scaled to full 1080px, crop center 1010px. Black bars if image smaller than full width | V24, B34 |
 | T67 | x | Fix profiles store creation: delete old DB, force v2 creation on init | B35 |
-| T68 | . | Replace browser dialogs (alert/confirm/prompt) with custom modal components | — |
+| T68 | x | Replace browser dialogs (alert/confirm/prompt) with custom modal components | — |
 
 ---
 
