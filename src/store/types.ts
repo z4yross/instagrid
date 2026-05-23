@@ -37,6 +37,7 @@ export interface AppState {
   selectedBlockIds: string[]
   showGuides: boolean
   visibleRows: number
+  isLoading: boolean
 
   addImage: (img: UploadedImage) => void
   addBlock: (block: ImageBlock) => void

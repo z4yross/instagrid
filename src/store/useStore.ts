@@ -19,6 +19,7 @@ const useStore = create<AppState>()(
         selectedBlockIds: [],
         showGuides: true,
         visibleRows: 3,
+        isLoading: true,
 
       addImage: (img: UploadedImage) =>
         set((s) => ({ images: [...s.images, img] })),
@@ -152,7 +153,10 @@ loadState().then((persisted) => {
       images: persisted.images,
       blocks: persisted.blocks,
       gridRows: persisted.gridRows,
+      isLoading: false,
     })
+  } else {
+    useStore.setState({ isLoading: false })
   }
 })
 
