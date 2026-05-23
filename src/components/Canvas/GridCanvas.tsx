@@ -27,7 +27,7 @@ export default function GridCanvas({ cellW, cellH, children }: Props) {
         position: 'relative',
         width: gridW,
         height: totalHeight,
-        background: 'radial-gradient(ellipse at 30% 20%, rgba(168,85,247,0.015) 0%, transparent 60%), var(--color-bg-surface)',
+        background: 'radial-gradient(ellipse at 30% 20%, rgba(255,107,53,0.02) 0%, transparent 60%), var(--color-bg-surface)',
         flexShrink: 0,
         margin: '0 auto',
         boxShadow: '0 0 0 1px var(--color-border)',

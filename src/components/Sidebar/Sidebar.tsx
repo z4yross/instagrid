@@ -154,7 +154,7 @@ export default function Sidebar({ onLowRes }: Props) {
       <div style={{
         padding: '14px 14px 10px',
         borderBottom: '1px solid var(--color-border)',
-        background: 'linear-gradient(135deg, rgba(168,85,247,0.08) 0%, transparent 60%)',
+        background: 'linear-gradient(135deg, rgba(255,107,53,0.08) 0%, transparent 60%)',
       }}>
         <div style={{ fontSize: 15, fontWeight: 700, letterSpacing: '-0.3px', color: 'var(--color-text-primary)' }}>
           insta<span style={{ color: 'var(--color-accent)' }}>grid</span>
@@ -246,7 +246,7 @@ export default function Sidebar({ onLowRes }: Props) {
                 }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.transform = 'scale(1.05)'
-                  e.currentTarget.style.boxShadow = '0 4px 12px rgba(168,85,247,0.3)'
+                  e.currentTarget.style.boxShadow = '0 4px 12px rgba(255,107,53,0.3)'
                   const deleteBtn = e.currentTarget.querySelector('[data-delete-btn]') as HTMLElement
                   if (deleteBtn) deleteBtn.style.opacity = '1'
                 }}
@@ -423,13 +423,6 @@ export default function Sidebar({ onLowRes }: Props) {
         >
           <span>🗑</span> Clear images
         </button>
-      </div>
-
-      {/* keyboard hint */}
-      <div style={{ padding: '6px 10px 10px', fontSize: 10, color: 'var(--color-text-muted)', lineHeight: 1.7 }}>
-        Del — delete block<br/>
-        Arrows — move block<br/>
-        Ctrl+Z/Y — undo/redo
       </div>
 
       {modal && (

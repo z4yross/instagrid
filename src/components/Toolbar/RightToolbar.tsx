@@ -79,7 +79,7 @@ export default function RightToolbar() {
           color: 'var(--color-accent)',
           textAlign: 'center',
           padding: '4px 0',
-          background: 'rgba(168,85,247,0.1)',
+          background: 'rgba(255,107,53,0.1)',
           borderRadius: 4,
         }}>
           {selectedBlocks.length}
