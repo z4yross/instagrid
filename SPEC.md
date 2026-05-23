@@ -123,7 +123,7 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | T45 | x | Ctrl+click toggle selection, Shift+click range selection (Windows-style multi-select) | V12, B19 |
 | T46 | x | Replace fullscreen loading with skeleton placeholders in sidebar + grid | V23, B20 |
 | T47 | . | Fix upload blocked after clear canvas - investigate and fix root cause | B21 |
-| T48 | . | Add "Clear images" button to sidebar - clears images from memory + IDB | B22 |
+| T48 | x | Add "Clear images" button to sidebar - clears images from memory + IDB | B22 |
 
 ---
 

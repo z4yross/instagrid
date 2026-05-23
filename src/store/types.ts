@@ -53,4 +53,5 @@ export interface AppState {
   toggleGuides: () => void
   setVisibleRows: (rows: number) => void
   clearCanvas: () => void
+  clearImages: () => void
 }

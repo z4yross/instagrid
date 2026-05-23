@@ -74,6 +74,22 @@ async function saveImagesToIDB(images: UploadedImage[]): Promise<void> {
   }
 }
 
+export async function clearImagesFromIDB(): Promise<void> {
+  try {
+    const db = await openDB()
+    const tx = db.transaction(STORE_NAME, 'readwrite')
+    const store = tx.objectStore(STORE_NAME)
+    store.clear()
+
+    return new Promise((resolve, reject) => {
+      tx.oncomplete = () => resolve()
+      tx.onerror = () => reject(tx.error)
+    })
+  } catch (err) {
+    console.error('Failed to clear images from IndexedDB:', err)
+  }
+}
+
 export async function loadState(): Promise<PersistedState | null> {
   try {
     // Load blocks + gridRows from localStorage

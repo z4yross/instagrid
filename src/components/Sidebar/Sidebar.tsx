@@ -21,6 +21,7 @@ export default function Sidebar({ onLowRes }: Props) {
   const addBlock = useStore((s) => s.addBlock)
   const addPlaceholder = useStore((s) => s.addPlaceholder)
   const clearCanvas = useStore((s) => s.clearCanvas)
+  const clearImages = useStore((s) => s.clearImages)
   const toggleGuides = useStore ((s) => s.toggleGuides)
 
   function findFreeCellInBlocks(currentBlocks: ImageBlock[], rows: number): { col: number; row: number } {
@@ -200,6 +201,15 @@ export default function Sidebar({ onLowRes }: Props) {
           onClick={() => { if (confirm('Clear canvas?')) clearCanvas() }}
         >
           <span>✕</span> Clear canvas
+        </button>
+
+        <button
+          className="ig-btn ig-btn-danger"
+          style={{ width: '100%', justifyContent: 'flex-start', opacity: images.length === 0 ? 0.4 : 1 }}
+          onClick={() => { if (confirm('Clear all images from memory? This cannot be undone.')) clearImages() }}
+          disabled={images.length === 0}
+        >
+          <span>🗑</span> Clear images
         </button>
       </div>
 

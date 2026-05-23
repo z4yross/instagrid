@@ -2,7 +2,7 @@ import { create } from 'zustand'
 import { subscribeWithSelector } from 'zustand/middleware'
 import { temporal } from 'zundo'
 import type { AppState, ImageBlock, UploadedImage } from './types'
-import { loadState, saveState } from '@/utils/storage'
+import { loadState, saveState, clearImagesFromIDB } from '@/utils/storage'
 
 function ensureGridRows(blocks: ImageBlock[], current: number): number {
   const maxRow = blocks.reduce((m, b) => Math.max(m, b.row + b.rowSpan), 0)
@@ -129,6 +129,11 @@ const useStore = create<AppState>()(
 
       clearCanvas: () =>
         set({ blocks: [], gridRows: 3, selectedBlockIds: [] }),
+
+      clearImages: () => {
+        clearImagesFromIDB()
+        set({ images: [] })
+      },
     }),
     {
       // V5: undo/redo only covers canvas mutations, not image uploads
