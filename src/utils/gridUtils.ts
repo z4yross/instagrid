@@ -2,7 +2,7 @@ import type { ImageBlock } from '@/store/types'
 
 export const COLS = 3
 /**
- * Instagram upload order: left-to-right per row, bottom-to-top.
+ * Instagram upload order: right-to-left per row, bottom-to-top.
  * V4: Only non-empty cells (with images) are numbered.
  */
 export function cellUploadNumber(
@@ -13,9 +13,9 @@ export function cellUploadNumber(
   totalCols = COLS
 ): number {
   let count = 0
-  // scan bottom-to-top, left-to-right
+  // scan bottom-to-top, right-to-left
   for (let r = gridRows - 1; r >= 0; r--) {
-    for (let c = 0; c < totalCols; c++) {
+    for (let c = totalCols - 1; c >= 0; c--) {
       const block = blocks.find(
         (b) => c >= b.col && c < b.col + b.colSpan && r >= b.row && r < b.row + b.rowSpan
       )

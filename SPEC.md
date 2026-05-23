@@ -119,7 +119,7 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | T41 | x | IndexedDB for image persistence: store images in IDB, blocks/gridRows in localStorage | V22, B15 |
 | T42 | x | Loading state during IndexedDB restore: show spinner/skeleton until images loaded | V23, B16 |
 | T43 | x | Fix batch upload overlap: track blocks locally in handleFiles loop, findFreeCell uses updated array | V13, B17 |
-| T44 | . | Fix export numbering: right-to-left scan in cellUploadNumber (reverse col loop) | V4, B18 |
+| T44 | x | Fix export numbering: right-to-left scan in cellUploadNumber (reverse col loop) | V4, B18 |
 
 ---
 
