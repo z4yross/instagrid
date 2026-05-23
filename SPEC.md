@@ -64,6 +64,7 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | V22 | IndexedDB: images persist via IndexedDB (not localStorage). Blocks/gridRows in localStorage. No quota issues. |
 | V23 | Loading state: skeleton placeholders in sidebar thumbnails + grid blocks during IDB restore. No fullscreen overlay. Skeleton count matches actual image count from IDB. |
 | V24 | Export crops visible image portion per cell with transforms applied. Not contain full image. Each 1080×1350 shows only what's visible in that grid cell (like Instagram carousel: 1010px crop + 35px bars each side). |
+| V25 | UI components fit containers. Width/height calculations include padding + gaps. No overflow. |
 
 ---
 
@@ -152,6 +153,7 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | T73 | x | Increase B/W contrast: use pure black (#000) and pure white (#fff) for dramatic contrast, remove all blue/purple gradients, replace with black/white/orange gradients | — |
 | T74 | x | Add white backgrounds to strategic UI elements (buttons, panels, modals) for true B/W contrast, not just black everywhere | — |
 | T75 | x | Context-aware +/- zoom: if block selected zoom image (transform.zoom), else zoom grid (visibleRows) | V16,V20,V5 |
+| T76 | . | ColorPicker: reduce preset grid to 10 columns (fits 220px container exactly) | V25 |
 
 ---
 
@@ -197,4 +199,5 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | B36 | 2026-05-23 | Export crop shows wrong portion of image compared to grid display | T65/T66 used hardcoded 400px reference for pan scaling. Actual grid cell size varies by viewport. Need pass real cell size or store transforms as viewport-independent values → T69 |
 | B37 | 2026-05-23 | Export multi-cell X offset wrong (zoom/panY correct, panX offset wrong) | cellOffsetX uses CROP_W (1010) but each export cell is EXPORT_W (1080) wide. Cells overlap/gap incorrectly → T70 |
 | B38 | 2026-05-23 | Multi-row block export: panY misaligned | When block spans multiple rows, Y offset breaks. May need image scaling to use crop area dimensions not full canvas. T70 fix for X may have revealed Y coordinate system inconsistency → T71 |
+| B39 | 2026-05-23 | ColorPicker preset grid overflow: 11 cols * (16px + 4px gap) + 24px padding = 240px, container only 220px | V25, T76 |
 
