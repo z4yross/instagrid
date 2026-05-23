@@ -108,7 +108,13 @@ const useStore = create<AppState>()(
 
       toggleGuides: () => set((s) => ({ showGuides: !s.showGuides })),
 
-      setVisibleRows: (rows) => set({ visibleRows: Math.max(1, Math.min(10, rows)) }),
+      setVisibleRows: (rows) =>
+        set((s) => {
+          const newVisible = Math.max(1, Math.min(10, rows))
+          // B10: ensure gridRows >= visibleRows to show empty cells
+          const newGridRows = Math.max(s.gridRows, newVisible)
+          return { visibleRows: newVisible, gridRows: newGridRows }
+        }),
 
       clearCanvas: () =>
         set({ blocks: [], gridRows: 3, selectedBlockIds: [] }),

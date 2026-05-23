@@ -106,6 +106,7 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | T32 | x | Grid zoom: replace CSS scale with visible row count adjustment, center grid | V20, B8 |
 | T33 | x | localStorage: catch QuotaExceededError, log + warn user, graceful degradation | V18, B4 |
 | T34 | x | Export numbering: skip empty/placeholder cells, only number cells with images | V4, B9 |
+| T35 | x | Grid zoom: ensure gridRows >= visibleRows to show empty cells on zoom out | B10 |
 
 ---
 
@@ -122,4 +123,5 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | B7 | 2026-05-23 | Group drag border collision merges blocks instead of wrapping to adjacent row | Collision detection doesn't handle row wrapping → T31 |
 | B8 | 2026-05-23 | Grid zoom should add/remove rows and center grid, not scale with pan | Current zoom uses CSS transform, should modify visible row count → V20, T32 |
 | B9 | 2026-05-23 | Export numbering counts empty/placeholder cells, should only number cells with images | cellUploadNumber gives sequential numbers to all cells → V4 updated, T34 |
+| B10 | 2026-05-23 | Zoom out (add rows) doesn't show empty grid cells | gridRows only expands for blocks, should show empty cells when visibleRows > gridRows → T35 |
 
