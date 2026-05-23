@@ -42,6 +42,8 @@ export interface AppState {
   visibleRows: number
   isLoading: boolean
   imageCount: number
+  gridCellW: number
+  gridCellH: number
 
   addImage: (img: UploadedImage) => void
   addBlock: (block: ImageBlock) => void
@@ -55,6 +57,7 @@ export interface AppState {
   setGridRows: (rows: number) => void
   toggleGuides: () => void
   setVisibleRows: (rows: number) => void
+  setGridCellSize: (w: number, h: number) => void
   clearCanvas: () => void
   clearImages: () => void
   removeImage: (id: string) => void

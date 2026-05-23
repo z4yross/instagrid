@@ -22,6 +22,8 @@ const useStore = create<AppState>()(
         visibleRows: 3,
         isLoading: true,
         imageCount: 0,
+        gridCellW: 400,
+        gridCellH: 533,
 
       addImage: (img: UploadedImage) =>
         set((s) => ({ images: [...s.images, img] })),
@@ -127,6 +129,8 @@ const useStore = create<AppState>()(
 
           return { visibleRows: newVisible, gridRows: newGridRows }
         }),
+
+      setGridCellSize: (w, h) => set({ gridCellW: w, gridCellH: h }),
 
       clearCanvas: () =>
         set({ blocks: [], gridRows: 3, selectedBlockIds: [] }),

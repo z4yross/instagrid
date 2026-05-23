@@ -32,6 +32,7 @@ export default function CanvasArea({ onLowRes }: Props) {
 	const addBlock = useStore((s) => s.addBlock);
 	const setSelectedBlocks = useStore((s) => s.setSelectedBlocks);
 	const setVisibleRows = useStore((s) => s.setVisibleRows);
+	const setGridCellSize = useStore((s) => s.setGridCellSize);
 
 	const copiedBlocksRef = useRef<ImageBlock[]>([]);
 
@@ -102,6 +103,11 @@ export default function CanvasArea({ onLowRes }: Props) {
 		visibleRows,
 		dims.h || 0
 	);
+
+	// T69: Update store with current grid cell size for export
+	useEffect(() => {
+		setGridCellSize(cellW, cellH);
+	}, [cellW, cellH, setGridCellSize]);
 
 	const sensors = useSensors(
 		useSensor(PointerSensor, { activationConstraint: { distance: 4 } })

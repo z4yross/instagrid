@@ -31,6 +31,8 @@ export default function Sidebar({ onLowRes }: Props) {
   const showGuides = useStore((s) => s.showGuides)
   const isLoading = useStore((s) => s.isLoading)
   const imageCount = useStore((s) => s.imageCount)
+  const gridCellW = useStore((s) => s.gridCellW)
+  const gridCellH = useStore((s) => s.gridCellH)
   const addImage = useStore((s) => s.addImage)
   const addBlock = useStore((s) => s.addBlock)
   const addPlaceholder = useStore((s) => s.addPlaceholder)
@@ -133,7 +135,7 @@ export default function Sidebar({ onLowRes }: Props) {
   async function doExport() {
     if (exporting) return
     setExporting(true)
-    try { await exportAllCells(blocks, images, gridRows) }
+    try { await exportAllCells(blocks, images, gridRows, gridCellW, gridCellH) }
     finally { setExporting(false) }
   }
 

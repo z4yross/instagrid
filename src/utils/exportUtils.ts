@@ -18,7 +18,9 @@ function renderCell(
   img: HTMLImageElement,
   block: ImageBlock,
   relCol: number,
-  relRow: number
+  relRow: number,
+  gridCellW: number,
+  gridCellH: number
 ): Promise<Blob> {
   const canvas = document.createElement('canvas')
   canvas.width = EXPORT_W
@@ -34,12 +36,10 @@ function renderCell(
   // V24: 1010px crop + 35px bars each side = 1080px
   const CROP_W = 1010
 
-  // T65: Scale pan values from grid coordinates to export coordinates
-  // Assume typical grid cell is ~400px wide (will be close enough for most viewports)
-  const REFERENCE_CELL_W = 400
-  const REFERENCE_CELL_H = REFERENCE_CELL_W * 4 / 3
-  const panScaleX = CROP_W / REFERENCE_CELL_W
-  const panScaleY = EXPORT_H / REFERENCE_CELL_H
+  // T69: Scale pan values from grid coordinates to export coordinates
+  // Use actual grid cell size from current viewport
+  const panScaleX = CROP_W / gridCellW
+  const panScaleY = EXPORT_H / gridCellH
   const scaledPanX = panX * panScaleX
   const scaledPanY = panY * panScaleY
 
@@ -81,7 +81,9 @@ function renderCell(
 export async function exportAllCells(
   blocks: ImageBlock[],
   images: UploadedImage[],
-  gridRows: number
+  gridRows: number,
+  gridCellW: number,
+  gridCellH: number
 ): Promise<void> {
   const zip = new JSZip()
 
@@ -99,7 +101,7 @@ export async function exportAllCells(
       const relCol = col - block.col
       const relRow = row - block.row
       const num = cellUploadNumber(col, row, gridRows, blocks, COLS)
-      const blob = await renderCell(htmlImg, block, relCol, relRow)
+      const blob = await renderCell(htmlImg, block, relCol, relRow, gridCellW, gridCellH)
       if (num > 0) {
         zip.file(`${String(num).padStart(2, '0')}.jpg`, blob)
       }
@@ -121,10 +123,12 @@ export async function exportSingleCell(
   absCol: number,
   absRow: number,
   gridRows: number,
-  blocks: ImageBlock[]
+  blocks: ImageBlock[],
+  gridCellW: number,
+  gridCellH: number
 ): Promise<void> {
   const htmlImg = await loadHTMLImage(image.src)
-  const blob = await renderCell(htmlImg, block, absCol - block.col, absRow - block.row)
+  const blob = await renderCell(htmlImg, block, absCol - block.col, absRow - block.row, gridCellW, gridCellH)
   const num = cellUploadNumber(absCol, absRow, gridRows, blocks, COLS)
   const url = URL.createObjectURL(blob)
   const a = document.createElement('a')
