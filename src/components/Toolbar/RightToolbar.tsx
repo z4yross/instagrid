@@ -143,7 +143,7 @@ function IconBtn({ children, onClick, disabled, title, danger }: {
         fontSize: 16,
         fontWeight: 700,
         background: disabled ? 'rgba(255, 255, 255, 0.05)' : danger ? '#ff4444' : 'rgba(255, 255, 255, 0.08)',
-        border: `1px solid ${disabled ? 'rgba(255, 255, 255, 0.1)' : danger ? '#ff4444' : 'rgba(255, 255, 255, 0.25)'}`,
+        border: 'none',
         color: disabled ? '#555555' : '#ffffff',
         borderRadius: 8,
         cursor: disabled ? 'not-allowed' : 'pointer',
@@ -158,7 +158,6 @@ function IconBtn({ children, onClick, disabled, title, danger }: {
             e.currentTarget.style.boxShadow = '0 0 16px rgba(255, 68, 68, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.3)'
           } else {
             e.currentTarget.style.background = 'rgba(255, 255, 255, 0.15)'
-            e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.4)'
           }
         }
       }}
@@ -169,7 +168,6 @@ function IconBtn({ children, onClick, disabled, title, danger }: {
             e.currentTarget.style.boxShadow = '0 0 12px rgba(255, 68, 68, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2)'
           } else {
             e.currentTarget.style.background = 'rgba(255, 255, 255, 0.08)'
-            e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.25)'
           }
         }
       }}
