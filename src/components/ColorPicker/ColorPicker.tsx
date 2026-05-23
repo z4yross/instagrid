@@ -46,35 +46,34 @@ export default function ColorPicker({ value, onChange, disabled }: Props) {
       <button
         onClick={() => !disabled && setIsOpen(!isOpen)}
         disabled={disabled}
+        title={value.toUpperCase()}
         style={{
           display: 'flex',
           alignItems: 'center',
-          gap: 8,
-          padding: '6px 10px',
+          justifyContent: 'center',
+          padding: 8,
           background: disabled ? 'var(--color-bg-base)' : 'var(--color-bg-elevated)',
           border: `1px solid ${disabled ? 'var(--color-border-subtle)' : 'var(--color-border)'}`,
           borderRadius: 6,
           cursor: disabled ? 'not-allowed' : 'pointer',
           transition: 'background 0.12s, border-color 0.12s',
           opacity: disabled ? 0.5 : 1,
-          width: '100%',
+          width: 48,
+          height: 48,
         }}
         onMouseEnter={(e) => !disabled && (e.currentTarget.style.background = 'var(--color-bg-hover)')}
         onMouseLeave={(e) => !disabled && (e.currentTarget.style.background = 'var(--color-bg-elevated)')}
       >
         <div
           style={{
-            width: 24,
-            height: 24,
-            borderRadius: 4,
+            width: 32,
+            height: 32,
+            borderRadius: 6,
             background: value,
             border: '1px solid rgba(255,255,255,0.1)',
             boxShadow: 'inset 0 0 0 1px rgba(0,0,0,0.2)',
           }}
         />
-        <span style={{ fontSize: 11, color: 'var(--color-text-secondary)', fontFamily: 'monospace' }}>
-          {value.toUpperCase()}
-        </span>
       </button>
 
       {isOpen && (

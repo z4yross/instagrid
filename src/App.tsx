@@ -15,7 +15,7 @@ export default function App() {
     <div style={{ display: 'flex', height: '100%', overflow: 'hidden', background: 'var(--color-bg-base)' }}>
       <Sidebar onLowRes={setLowResWarning} onPreview={() => setShowPreview(true)} />
 
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', marginRight: 240 }}>
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', marginRight: 64 }}>
         {lowResWarning.length > 0 && (
           <div style={{
             padding: '6px 12px',
