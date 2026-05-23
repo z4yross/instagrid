@@ -122,6 +122,7 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | T44 | x | Fix export numbering: right-to-left scan in cellUploadNumber (reverse col loop) | V4, B18 |
 | T45 | . | Ctrl+click toggle selection, Shift+click range selection (Windows-style multi-select) | V12, B19 |
 | T46 | . | Replace fullscreen loading with skeleton placeholders in sidebar + grid | V23, B20 |
+| T47 | . | clearCanvas also clears images array and IDB. Add separate "Clear all" button if needed | B21 |
 
 ---
 
@@ -149,4 +150,5 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | B18 | 2026-05-23 | Export numbering left-to-right, should be right-to-left for Instagram upload order | cellUploadNumber scans left-to-right but IG displays first upload on right. V4 wrong → V4 updated, T44 |
 | B19 | 2026-05-23 | Group selection only Shift+click, missing Ctrl+click for Windows-style toggle | Block.tsx only checks shiftKey. Need ctrlKey/metaKey for individual add/remove, shiftKey for range → V12 updated, T45 |
 | B20 | 2026-05-23 | Loading state fullscreen overlay blocks entire UI | T42 shows fullscreen spinner. Should be skeleton placeholders in sidebar + grid only → V23 updated, T46 |
+| B21 | 2026-05-23 | Clear canvas only clears blocks, leaves images in memory. Can't upload new images after clear | clearCanvas doesn't reset images array or IDB. Orphaned images prevent new uploads → T47 |
 
