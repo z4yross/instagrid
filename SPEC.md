@@ -42,13 +42,20 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | V1 | Blocks never overlap. Any drop/resize that causes collision rejected or snapped to nearest free zone. |
 | V2 | Block position always snapped to grid cell boundary. No fractional cell positions. |
 | V3 | Export cell size always exactly 1080×1350px regardless of canvas display size. |
-| V4 | Export numbering = right-to-left per row, top-to-bottom. Cell (col=2,row=0) = 01, (col=1,row=0) = 02, (col=0,row=0) = 03, etc. |
-| V5 | Undo/redo only covers canvas state mutations (block add/move/resize/delete, fill mode, pan/zoom). Not file uploads. |
+| V4 | Export numbering = left-to-right per row, bottom-to-top. Cell (col=0,row=last) = 01, (col=1,row=last) = 02, etc. |
+| V5 | Undo/redo only covers canvas state mutations (block add/move/resize/delete, transform). Not file uploads. |
 | V6 | Low-res warning shown if source image width < 1080px. Non-blocking. |
 | V7 | Grid rows grow dynamically — minimum 3 rows always visible, adds rows as blocks fill bottom. |
-| V8 | Block image fill: zoom mode = cover (no empty space), bars mode = contain + solid color bars. |
-| V9 | Single-cell export available per cell (right-click or per-cell button). Uses same Canvas pipeline as batch export. |
-| V10 | Cell-mode edits (per-cell pan/zoom/rotate/reorder) stored per-cell, independent of block-level transforms. |
+| ~~V8~~ | ~~fillMode removed — single mode: contain with bars~~ DEPRECATED v2 |
+| ~~V9~~ | ~~Single-cell export~~ DEPRECATED v2 |
+| ~~V10~~ | ~~Cell-mode edits~~ DEPRECATED v2 |
+| V11 | Images always render with objectFit:contain + bars color background. No zoom/cover mode. |
+| V12 | Group selection: multiple blocks selected, move/transform together, no overlap with non-selected. |
+| V13 | Auto-flow: on upload/move, blocks snap to first available position (top-left priority). |
+| V14 | Placeholders: empty cells can hold solid color or gradient (from adjacent images). |
+| V15 | localStorage: state persists on every mutation. Restore on load. |
+| V16 | Arrow keys: pan image (not block position). Direction rotates with image rotation. |
+| V17 | Grid zoom: viewport zoom 50%-200%, pan via drag. Does not affect export size. |
 
 ---
 
@@ -62,9 +69,9 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | T4 | x | Image upload: drag-drop onto canvas + file picker, multi-file, JPG/PNG/WEBP, low-res warning | I.fs,V6 |
 | T5 | x | Block component: renders image in assigned cells, drag via @dnd-kit, snap-to-grid on drop | C5,V1,V2 |
 | T6 | x | Block resize: drag corner/edge handles, snap to cell boundary, update block span | C5,V1,V2 |
-| T7 | x | Fill mode — zoom (cover + pan) and bars (contain + color picker), toggle per block, real-time | V8 |
-| T8 | x | Block toolbar: pan/zoom image, rotate 90°/180°/270°, fill mode toggle, delete | C9 |
-| T9 | x | Cell mode: double-click block → per-cell view, individual pan/zoom/rotate, drag reorder cells | V10 |
+| ~~T7~~ | ~~x~~ | ~~Fill mode~~ DEPRECATED v2 | ~~V8~~ |
+| ~~T8~~ | ~~x~~ | ~~Block toolbar with fillMode toggle~~ DEPRECATED v2 | ~~C9~~ |
+| ~~T9~~ | ~~x~~ | ~~Cell mode~~ DEPRECATED v2 | ~~V10~~ |
 | T10 | x | Upload order indicator: number badge on each cell (Instagram order per V4) | V4 |
 | T11 | x | Preview panel: right-side or modal, live Instagram profile simulation, shows upload numbers | V4 |
 | T12 | x | Export pipeline: OffscreenCanvas renders each cell at 1080×1350, names by upload order, bundles ZIP | I.canvas,I.zip,V3,V4 |
@@ -73,6 +80,20 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | T15 | x | Sidebar: thumbnail list of uploaded images, upload button, "Export all" + "Clear canvas" actions | — |
 | T16 | x | Grid guide toggle button in toolbar | V7 |
 | T17 | x | Dark mode global styles, app layout (sidebar + canvas + optional preview panel) | C3 |
+
+### v2 Tasks
+
+| T18 | . | Remove fillMode from types/store/components — single mode: contain + bars | V11 |
+| T19 | . | Remove cell mode: double-click, CellModeOverlay, cellOverrides, cellOrder | V11 |
+| T20 | . | localStorage: persist/restore state on mutation (debounced 500ms) | V15 |
+| T21 | . | Right sidebar toolbar: always visible, context-aware enable/disable | — |
+| T22 | . | Custom color picker component for bars (replace `<input type="color">`) | — |
+| T23 | . | Arrow keys pan image: ←→↑↓ modify transform.panX/panY, rotated by transform.rotation | V16 |
+| T24 | . | Group selection: Shift+click blocks, render selection box, move/transform as group | V12 |
+| T25 | . | Auto-flow: on upload/move, snap block to first free position (left→right, top→bottom) | V13 |
+| T26 | . | Placeholder blocks: add/remove, render solid color or gradient from adjacent images | V14 |
+| T27 | . | Grid zoom/pan: zoom controls (50%-200%), pan via canvas drag, preserve cell sizes | V17 |
+| T28 | . | Style improvements: polish buttons, hover states, transitions | — |
 
 ---
 
@@ -84,22 +105,3 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | B2 | 2026-05-23 | Cell mode edits not reflected in grid view | Cell overrides not applied in block render |
 | B3 | 2026-05-23 | Bars mode in cell mode: image positioning uses relative pixels, hard to see bars color | Geometry issues with multi-cell blocks in cell mode |
 
----
-
-## §V2 — Version 2 Requirements
-
-| id | status | requirement |
-|----|--------|-------------|
-| V2.1 | . | Remove fillMode (zoom/bars) — single mode: contain with bars |
-| V2.2 | . | Remove cell edit mode (double-click behavior) |
-| V2.3 | . | Group selection: select multiple blocks, move/transform as group |
-| V2.4 | . | Auto-flow: images snap to first available position, with placeholder blocks for gaps |
-| V2.5 | . | Placeholders: solid color or gradient from adjacent images |
-| V2.6 | . | Grid zoom/pan: zoom in/out entire grid, pan view |
-| V2.7 | . | Arrow keys pan image (not just block position) |
-| V2.8 | . | Right sidebar toolbar: always visible, options enabled/disabled by context |
-| V2.9 | . | Pan direction rotation: when image rotates, arrow key directions rotate too |
-| V2.10 | . | localStorage: persist state to not lose changes on reload |
-| V2.11 | . | Group zoom: in group selection, zoom out images as group to add bars to whole group |
-| V2.12 | . | Custom color picker for bars (replace default browser picker) |
-| V2.13 | . | Style improvements: better visual polish
