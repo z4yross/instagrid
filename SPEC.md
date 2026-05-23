@@ -141,6 +141,10 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | T62 | x | Export bars from image content: extend/blur edge pixels instead of solid barsColor. Match IG carousel style | V24 |
 | T63 | x | Fix save profile: debug IDB transaction, ensure profiles persist correctly | B32 |
 | T64 | x | Add "New profile" button: clears canvas to start fresh (same as clear canvas) | — |
+| T65 | . | Fix export to match grid exactly: verify transform math, coordinate systems, scaling factors | V24, B33 |
+| T66 | . | Export bars: extend image naturally (not blur). Draw image scaled to full 1080px, crop center 1010px. Black bars if image smaller than full width | V24, B34 |
+| T67 | x | Fix profiles store creation: delete old DB, force v2 creation on init | B35 |
+| T68 | . | Replace browser dialogs (alert/confirm/prompt) with custom modal components | — |
 
 ---
 
@@ -180,4 +184,7 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | B30 | 2026-05-23 | Color picker opens to right, overflows viewport | Picker should open to left for better positioning → T59 |
 | B31 | 2026-05-23 | Exported images still incorrect after T55 | Need debug actual export output vs expected. Transform application or crop logic issue → T60 |
 | B32 | 2026-05-23 | Save profile doesn't work | Need debug why saveProfile not persisting. Check IDB transaction or version upgrade → T63 |
+| B33 | 2026-05-23 | Export still doesn't match grid display | Transform order fix (T60) not sufficient. Need verify exact pixel-perfect match with grid → T65 |
+| B34 | 2026-05-23 | Export bars should extend image not blur | T62 uses blur. Should extend image edges naturally. Black bars only if no image extension possible → T66 |
+| B35 | 2026-05-23 | Profile save broken after reload - profiles store missing | DB upgrade from v1→v2 not creating profiles store. Need force recreate or check existing connections → T67 |
 

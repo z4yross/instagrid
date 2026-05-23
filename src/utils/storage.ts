@@ -2,9 +2,12 @@ import type { ImageBlock, UploadedImage } from '@/store/types'
 
 const STORAGE_KEY = 'insta-grid-state'
 const DB_NAME = 'insta-grid-db'
-const DB_VERSION = 2
+const DB_VERSION = 3  // Bump to force recreation
 const STORE_NAME = 'images'
 const PROFILES_STORE = 'profiles'
+
+// T67: Ensure profiles store exists by deleting old DB if needed
+let dbUpgradeChecked = false
 
 export interface PersistedState {
   images: UploadedImage[]
@@ -19,7 +22,34 @@ interface LocalStorageState {
 }
 
 // IndexedDB helpers
-function openDB(): Promise<IDBDatabase> {
+async function openDB(): Promise<IDBDatabase> {
+  // T67: Check if we need to recreate DB for profiles store
+  if (!dbUpgradeChecked) {
+    dbUpgradeChecked = true
+
+    try {
+      const testOpen = indexedDB.open(DB_NAME)
+      const db = await new Promise<IDBDatabase>((resolve, reject) => {
+        testOpen.onsuccess = () => resolve(testOpen.result)
+        testOpen.onerror = () => reject(testOpen.error)
+      })
+
+      if (!db.objectStoreNames.contains(PROFILES_STORE)) {
+        console.log('Profiles store missing, deleting old DB')
+        db.close()
+        await new Promise<void>((resolve, reject) => {
+          const deleteReq = indexedDB.deleteDatabase(DB_NAME)
+          deleteReq.onsuccess = () => resolve()
+          deleteReq.onerror = () => reject(deleteReq.error)
+        })
+      } else {
+        db.close()
+      }
+    } catch (err) {
+      console.log('DB check failed, will create fresh:', err)
+    }
+  }
+
   return new Promise((resolve, reject) => {
     const request = indexedDB.open(DB_NAME, DB_VERSION)
 
@@ -190,14 +220,6 @@ export interface Profile {
 export async function saveProfile(name: string, blocks: ImageBlock[], gridRows: number): Promise<void> {
   try {
     const db = await openDB()
-
-    // Check if profiles store exists
-    if (!db.objectStoreNames.contains(PROFILES_STORE)) {
-      console.error('Profiles store does not exist. Please refresh the page.')
-      alert('Please refresh the page to enable profile saving.')
-      return
-    }
-
     const tx = db.transaction(PROFILES_STORE, 'readwrite')
     const store = tx.objectStore(PROFILES_STORE)
     const profile: Profile = {
