@@ -36,10 +36,9 @@ function renderCell(
   const zoom = cellOverride.zoom ?? transform.zoom
   const rotation = cellOverride.rotation ?? transform.rotation
 
-  if (block.fillMode === 'bars') {
-    ctx.fillStyle = block.barsColor
-    ctx.fillRect(0, 0, EXPORT_W, EXPORT_H)
-  }
+  // bars background
+  ctx.fillStyle = block.barsColor
+  ctx.fillRect(0, 0, EXPORT_W, EXPORT_H)
 
   ctx.save()
   ctx.translate(EXPORT_W / 2, EXPORT_H / 2)
@@ -47,27 +46,16 @@ function renderCell(
   ctx.scale(zoom, zoom)
   ctx.translate(panX - (relCol * EXPORT_W), panY - (relRow * EXPORT_H))
 
-  if (block.fillMode === 'zoom') {
-    // cover: scale image so it fills totalCols*EXPORT_W x totalRows*EXPORT_H
-    const totalPxW = totalCols * EXPORT_W
-    const totalPxH = totalRows * EXPORT_H
-    const scaleX = totalPxW / img.naturalWidth
-    const scaleY = totalPxH / img.naturalHeight
-    const scale = Math.max(scaleX, scaleY)
-    const drawW = img.naturalWidth * scale
-    const drawH = img.naturalHeight * scale
-    ctx.drawImage(img, -drawW / 2, -drawH / 2, drawW, drawH)
-  } else {
-    // contain: fit whole image in total area
-    const totalPxW = totalCols * EXPORT_W
-    const totalPxH = totalRows * EXPORT_H
-    const scaleX = totalPxW / img.naturalWidth
-    const scaleY = totalPxH / img.naturalHeight
-    const scale = Math.min(scaleX, scaleY)
-    const drawW = img.naturalWidth * scale
-    const drawH = img.naturalHeight * scale
-    ctx.drawImage(img, -drawW / 2, -drawH / 2, drawW, drawH)
-  }
+  // contain: fit whole image in total area
+  const totalPxW = totalCols * EXPORT_W
+  const totalPxH = totalRows * EXPORT_H
+  const scaleX = totalPxW / img.naturalWidth
+  const scaleY = totalPxH / img.naturalHeight
+  const scale = Math.min(scaleX, scaleY)
+  const drawW = img.naturalWidth * scale
+  const drawH = img.naturalHeight * scale
+  ctx.drawImage(img, -drawW / 2, -drawH / 2, drawW, drawH)
+
   ctx.restore()
 
   return new Promise((res, rej) => canvas.toBlob((b) => b ? res(b) : rej(new Error('canvas toBlob failed')), 'image/jpeg', 0.92))

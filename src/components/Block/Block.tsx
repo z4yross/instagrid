@@ -60,9 +60,7 @@ export default function Block({ block, cellW, cellH, isDragging }: Props) {
     >
       {image && (
         <div style={{ position: 'absolute', inset: 0, overflow: 'hidden' }}>
-          {block.fillMode === 'bars' && (
-            <div style={{ position: 'absolute', inset: 0, background: block.barsColor }} />
-          )}
+          <div style={{ position: 'absolute', inset: 0, background: block.barsColor }} />
           <img src={image.src} alt="" draggable={false} style={buildImgStyle(block)} />
         </div>
       )}
@@ -88,7 +86,7 @@ function buildImgStyle(block: ImageBlock): React.CSSProperties {
     transformOrigin: 'center center',
     transform: `rotate(${rotation}deg) translate(${panX}px, ${panY}px) scale(${zoom})`,
   }
-  return { ...base, inset: 0, width: '100%', height: '100%', objectFit: block.fillMode === 'zoom' ? 'cover' : 'contain' }
+  return { ...base, inset: 0, width: '100%', height: '100%', objectFit: 'contain' }
 }
 
 function CellBadges({ block, cellW, cellH, gridRows }: { block: ImageBlock; cellW: number; cellH: number; gridRows: number }) {

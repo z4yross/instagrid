@@ -1,5 +1,3 @@
-export type FillMode = 'zoom' | 'bars'
-
 export interface CellTransform {
   panX: number
   panY: number
@@ -18,7 +16,6 @@ export interface ImageBlock {
   colSpan: number
   /** span in rows (1+) */
   rowSpan: number
-  fillMode: FillMode
   barsColor: string
   /** block-level transform applied to the whole image */
   transform: CellTransform

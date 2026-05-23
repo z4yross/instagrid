@@ -93,7 +93,7 @@ export default function PreviewPanel({ onClose }: Props) {
                       inset: 0,
                       width: '100%',
                       height: '100%',
-                      objectFit: block?.fillMode === 'bars' ? 'contain' : 'cover',
+                      objectFit: 'contain',
                     }}
                   />
                 )}

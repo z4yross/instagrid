@@ -79,9 +79,7 @@ export default function CellModeOverlay({ block, cellW, cellH }: Props) {
       >
         {image && (
           <div style={{ position: 'absolute', inset: 0, overflow: 'hidden' }}>
-            {block.fillMode === 'bars' && (
-              <div style={{ position: 'absolute', inset: 0, background: block.barsColor }} />
-            )}
+            <div style={{ position: 'absolute', inset: 0, background: block.barsColor }} />
             <img
               src={image.src}
               alt=""
@@ -93,7 +91,7 @@ export default function CellModeOverlay({ block, cellW, cellH }: Props) {
                 height: blockH,
                 left: imgLeft,
                 top: imgTop,
-                objectFit: block.fillMode === 'zoom' ? 'cover' : 'contain',
+                objectFit: 'contain',
                 /* transformOrigin in image-space = center of this cell */
                 transformOrigin: `${originX}px ${originY}px`,
                 transform: `rotate(${t.rotation}deg) translate(${t.panX}px, ${t.panY}px) scale(${t.zoom})`,

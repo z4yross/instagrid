@@ -48,7 +48,6 @@ export default function Sidebar({ onLowRes, onPreview }: Props) {
         row: pos.row,
         colSpan: 1,
         rowSpan: 1,
-        fillMode: 'zoom',
         barsColor: '#000000',
         transform: { panX: 0, panY: 0, zoom: 1, rotation: 0 },
         cellOverrides: {},

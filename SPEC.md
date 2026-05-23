@@ -83,7 +83,7 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 
 ### v2 Tasks
 
-| T18 | . | Remove fillMode from types/store/components — single mode: contain + bars | V11 |
+| T18 | x | Remove fillMode from types/store/components — single mode: contain + bars | V11 |
 | T19 | . | Remove cell mode: double-click, CellModeOverlay, cellOverrides, cellOrder | V11 |
 | T20 | . | localStorage: persist/restore state on mutation (debounced 500ms) | V15 |
 | T21 | . | Right sidebar toolbar: always visible, context-aware enable/disable | — |

@@ -25,10 +25,6 @@ export default function BlockToolbar({ block, onClose }: Props) {
     updateBlock(block.id, { transform: { ...block.transform, zoom } })
   }
 
-  function toggleFill() {
-    updateBlock(block.id, { fillMode: block.fillMode === 'zoom' ? 'bars' : 'zoom' })
-  }
-
   function del() {
     removeBlock(block.id)
     setSelectedBlock(null)
@@ -69,28 +65,16 @@ export default function BlockToolbar({ block, onClose }: Props) {
 
       <Sep />
 
-      <Group label="Fill">
-        <Btn
-          onClick={toggleFill}
-          active={true}
-          style={block.fillMode === 'zoom'
-            ? { background: 'var(--color-accent-soft)', color: 'var(--color-accent)', borderColor: 'rgba(168,85,247,0.3)' }
-            : { background: 'rgba(251,191,36,0.08)', color: 'var(--color-warning)', borderColor: 'rgba(251,191,36,0.2)' }
-          }
-        >
-          {block.fillMode === 'zoom' ? 'Zoom' : 'Bars'}
-        </Btn>
-        {block.fillMode === 'bars' && (
-          <label style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 11, color: 'var(--color-text-secondary)' }}>
-            <input
-              type="color"
-              value={block.barsColor}
-              onChange={(e) => updateBlock(block.id, { barsColor: e.target.value })}
-              style={{ width: 24, height: 24, padding: 0, border: 'none', borderRadius: 4, cursor: 'pointer', background: 'none' }}
-            />
-            color
-          </label>
-        )}
+      <Group label="Bars">
+        <label style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 11, color: 'var(--color-text-secondary)' }}>
+          <input
+            type="color"
+            value={block.barsColor}
+            onChange={(e) => updateBlock(block.id, { barsColor: e.target.value })}
+            style={{ width: 24, height: 24, padding: 0, border: 'none', borderRadius: 4, cursor: 'pointer', background: 'none' }}
+          />
+          color
+        </label>
       </Group>
 
       <button
