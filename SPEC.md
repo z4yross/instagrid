@@ -59,6 +59,7 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | V18 | localStorage quota errors caught, logged to console. User warned when storage fails. |
 | V19 | Group drag shows visual preview of all selected blocks, not just dragged block. |
 | V20 | Grid zoom adds/removes visible rows (not CSS scale). Grid stays centered. No pan controls. |
+| V21 | Grid rows shrink when zooming in. If trailing rows empty, gridRows reduced to match highest block + 1 row min. |
 
 ---
 
@@ -110,6 +111,8 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | T36 | x | Reduce grid gradient opacity, make subtle (0.04 → 0.015 alpha) | B11 |
 | T37 | x | Increase app contrast: lighter surfaces, accent borders, visual hierarchy | B12 |
 | T38 | x | Remove preview feed panel (PreviewPanel, onPreview button) | — |
+| T39 | . | Zoom in removes trailing empty rows: shrink gridRows to content when reducing visibleRows | V21, B13 |
+| T40 | . | Design-focused color scheme: refined palette, stronger visual identity | B14 |
 
 ---
 
@@ -129,4 +132,6 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | B10 | 2026-05-23 | Zoom out (add rows) doesn't show empty grid cells | gridRows only expands for blocks, should show empty cells when visibleRows > gridRows → T35 |
 | B11 | 2026-05-23 | Grid gradient too obvious, visible oval looks weird | GridCanvas radial-gradient too opaque (0.04 alpha) → T36 |
 | B12 | 2026-05-23 | App too dark, lacks contrast (only upload button has contrast) | Color scheme needs more visual hierarchy, accent highlights → T37 |
+| B13 | 2026-05-23 | Zoom in doesn't remove trailing empty rows, keeps large gridRows | setVisibleRows only expands gridRows, never shrinks. Inverse of B10 → V21, T39 |
+| B14 | 2026-05-23 | Color scheme after T37 still not design-focused enough | Need palette with stronger design identity, refined visual language → T40 |
 
