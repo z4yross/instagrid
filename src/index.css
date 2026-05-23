@@ -1,18 +1,19 @@
 @import "tailwindcss";
 
 @theme {
-  --color-bg-base:     #0a0a0f;
-  --color-bg-surface:  #111118;
-  --color-bg-elevated: #1a1a24;
-  --color-bg-hover:    #222230;
-  --color-border:      #2a2a3a;
-  --color-border-subtle: #1a1a24;
-  --color-text-primary:  #eeeef5;
-  --color-text-secondary: #8888aa;
-  --color-text-muted:  #44445a;
+  --color-bg-base:     #0e0e16;
+  --color-bg-surface:  #16161f;
+  --color-bg-elevated: #1e1e2a;
+  --color-bg-hover:    #26263a;
+  --color-border:      #2e2e42;
+  --color-border-subtle: #22222e;
+  --color-border-accent: rgba(168,85,247,0.4);
+  --color-text-primary:  #f4f4f8;
+  --color-text-secondary: #9a9ab8;
+  --color-text-muted:  #52526a;
   --color-accent:      #a855f7;
-  --color-accent-glow: rgba(168,85,247,0.35);
-  --color-accent-soft: rgba(168,85,247,0.12);
+  --color-accent-glow: rgba(168,85,247,0.4);
+  --color-accent-soft: rgba(168,85,247,0.15);
   --color-accent-hover:#c084fc;
   --color-danger:      #f87171;
   --color-warning:     #fbbf24;
@@ -58,6 +59,7 @@ body {
   user-select: none;
   position: relative;
   overflow: hidden;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.03);
 }
 .ig-btn::before {
   content: '';
