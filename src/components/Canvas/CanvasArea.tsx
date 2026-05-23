@@ -19,13 +19,10 @@ export default function CanvasArea({ onLowRes }: Props) {
 
   const blocks = useStore((s) => s.blocks)
   const selectedBlockIds = useStore((s) => s.selectedBlockIds)
-  const gridZoom = useStore((s) => s.gridZoom)
-  const gridPanX = useStore((s) => s.gridPanX)
-  const gridPanY = useStore((s) => s.gridPanY)
+  const visibleRows = useStore((s) => s.visibleRows)
   const updateBlock = useStore((s) => s.updateBlock)
   const setSelectedBlocks = useStore((s) => s.setSelectedBlocks)
-  const setGridZoom = useStore((s) => s.setGridZoom)
-  const setGridPan = useStore((s) => s.setGridPan)
+  const setVisibleRows = useStore((s) => s.setVisibleRows)
 
   useEffect(() => {
     const el = containerRef.current
@@ -37,14 +34,15 @@ export default function CanvasArea({ onLowRes }: Props) {
     return () => ro.disconnect()
   }, [])
 
-  const { w: cellW, h: cellH } = cellPixelSize(dims.w || 600, dims.h || 0)
+  const { w: cellW, h: cellH } = cellPixelSize(dims.w || 600, visibleRows, dims.h || 0)
 
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 4 } }))
 
   const getCellSize = useCallback(() => cellPixelSize(
     containerRef.current?.clientWidth ?? 600,
+    visibleRows,
     containerRef.current?.clientHeight ?? 0
-  ), [])
+  ), [visibleRows])
 
   function snapToGrid(pixelX: number, pixelY: number): { col: number; row: number } {
     const { w: cW, h: cH } = getCellSize()
@@ -113,7 +111,7 @@ export default function CanvasArea({ onLowRes }: Props) {
       style={{ flex: 1, position: 'relative', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}
       onClick={() => setSelectedBlocks([])}
     >
-      {/* V17: zoom controls */}
+      {/* V20: row-based zoom controls */}
       <div
         style={{
           position: 'absolute',
@@ -130,36 +128,38 @@ export default function CanvasArea({ onLowRes }: Props) {
         }}
       >
         <button
-          onClick={(e) => { e.stopPropagation(); setGridZoom(gridZoom - 0.1) }}
-          disabled={gridZoom <= 0.5}
+          onClick={(e) => { e.stopPropagation(); setVisibleRows(visibleRows + 1) }}
+          disabled={visibleRows >= 10}
           style={{
             padding: '6px 10px',
             fontSize: 12,
             background: 'var(--color-bg-elevated)',
             border: '1px solid var(--color-border)',
             borderRadius: 6,
-            cursor: 'pointer',
+            cursor: visibleRows >= 10 ? 'not-allowed' : 'pointer',
             color: 'var(--color-text-primary)',
+            opacity: visibleRows >= 10 ? 0.5 : 1,
           }}
         >−</button>
-        <span style={{ padding: '6px 10px', fontSize: 11, color: 'var(--color-text-secondary)', minWidth: 48, textAlign: 'center' }}>
-          {Math.round(gridZoom * 100)}%
+        <span style={{ padding: '6px 10px', fontSize: 11, color: 'var(--color-text-secondary)', minWidth: 60, textAlign: 'center' }}>
+          {visibleRows} {visibleRows === 1 ? 'row' : 'rows'}
         </span>
         <button
-          onClick={(e) => { e.stopPropagation(); setGridZoom(gridZoom + 0.1) }}
-          disabled={gridZoom >= 2}
+          onClick={(e) => { e.stopPropagation(); setVisibleRows(visibleRows - 1) }}
+          disabled={visibleRows <= 1}
           style={{
             padding: '6px 10px',
             fontSize: 12,
             background: 'var(--color-bg-elevated)',
             border: '1px solid var(--color-border)',
             borderRadius: 6,
-            cursor: 'pointer',
+            cursor: visibleRows <= 1 ? 'not-allowed' : 'pointer',
             color: 'var(--color-text-primary)',
+            opacity: visibleRows <= 1 ? 0.5 : 1,
           }}
         >+</button>
         <button
-          onClick={(e) => { e.stopPropagation(); setGridZoom(1); setGridPan(0, 0) }}
+          onClick={(e) => { e.stopPropagation(); setVisibleRows(3) }}
           style={{
             padding: '6px 10px',
             fontSize: 11,
@@ -172,31 +172,21 @@ export default function CanvasArea({ onLowRes }: Props) {
         >Reset</button>
       </div>
 
-      <div style={{ flex: 1, overflow: 'auto', position: 'relative' }}>
-        <div
-          style={{
-            transform: `translate(${gridPanX}px, ${gridPanY}px) scale(${gridZoom})`,
-            transformOrigin: 'top left',
-            transition: 'transform 0.1s ease-out',
-          }}
-        >
-          <DndContext sensors={sensors} onDragStart={onDragStart} onDragEnd={onDragEnd}>
-            <DropZone onLowRes={onLowRes}>
-              <GridCanvas cellW={cellW} cellH={cellH}>
-                {blocks.map((block) => (
-                  <Block
-                    key={block.id}
-                    block={block}
-                    cellW={cellW}
-                    cellH={cellH}
-                    isDragging={activeId === block.id}
-                  />
-                ))}
-              </GridCanvas>
-            </DropZone>
-          </DndContext>
-        </div>
-      </div>
+      <DndContext sensors={sensors} onDragStart={onDragStart} onDragEnd={onDragEnd}>
+        <DropZone onLowRes={onLowRes}>
+          <GridCanvas cellW={cellW} cellH={cellH}>
+            {blocks.map((block) => (
+              <Block
+                key={block.id}
+                block={block}
+                cellW={cellW}
+                cellH={cellH}
+                isDragging={activeId === block.id}
+              />
+            ))}
+          </GridCanvas>
+        </DropZone>
+      </DndContext>
     </div>
   )
 }

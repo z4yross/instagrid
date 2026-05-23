@@ -48,14 +48,17 @@ export function hasCollision(
 }
 
 /**
- * Compute cell pixel size to fit VISIBLE_ROWS rows within availableHeight
+ * V20: Compute cell pixel size to fit visibleRows within availableHeight
  * while never exceeding containerWidth / COLS (whichever is smaller wins).
  */
-const VISIBLE_ROWS = 3
-export function cellPixelSize(containerWidth: number, containerHeight?: number): { w: number; h: number } {
+export function cellPixelSize(
+  containerWidth: number,
+  visibleRows: number,
+  containerHeight?: number
+): { w: number; h: number } {
   const byWidth = containerWidth / COLS
   if (!containerHeight) return { w: byWidth, h: (byWidth * 4) / 3 }
-  const byHeight = (containerHeight / VISIBLE_ROWS) * (3 / 4)
+  const byHeight = (containerHeight / visibleRows) * (3 / 4)
   const w = Math.min(byWidth, byHeight)
   return { w, h: (w * 4) / 3 }
 }
