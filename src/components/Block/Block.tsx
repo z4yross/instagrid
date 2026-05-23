@@ -180,12 +180,14 @@ export default function Block({
 }
 
 function buildImgStyle(block: ImageBlock): React.CSSProperties {
-	const { panX, panY, zoom, rotation } = block.transform;
+	const { panX, panY, zoom, rotation, flipX, flipY } = block.transform;
+	const scaleX = (flipX ? -1 : 1) * zoom;
+	const scaleY = (flipY ? -1 : 1) * zoom;
 	const base: React.CSSProperties = {
 		position: "absolute",
 		pointerEvents: "none",
 		transformOrigin: "center center",
-		transform: `rotate(${rotation}deg) translate(${panX}px, ${panY}px) scale(${zoom})`,
+		transform: `rotate(${rotation}deg) translate(${panX}px, ${panY}px) scale(${scaleX}, ${scaleY})`,
 	};
 	return {
 		...base,

@@ -29,7 +29,7 @@ function renderCell(
   const totalRows = block.rowSpan
 
   const { transform } = block
-  const { panX, panY, zoom, rotation } = transform
+  const { panX, panY, zoom, rotation, flipX, flipY } = transform
 
   // V24: 1010px crop + 35px bars each side = 1080px
   const CROP_W = 1010
@@ -51,7 +51,9 @@ function renderCell(
 
   // Apply transforms
   ctx.rotate((rotation * Math.PI) / 180)
-  ctx.scale(zoom, zoom)
+  const flipScaleX = (flipX ? -1 : 1) * zoom
+  const flipScaleY = (flipY ? -1 : 1) * zoom
+  ctx.scale(flipScaleX, flipScaleY)
 
   // Calculate offset for this cell within the block
   const cellOffsetX = relCol * CROP_W

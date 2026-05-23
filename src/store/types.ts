@@ -3,6 +3,8 @@ export interface CellTransform {
   panY: number
   zoom: number
   rotation: number // 0 | 90 | 180 | 270
+  flipX?: boolean
+  flipY?: boolean
 }
 
 export interface ImageBlock {

@@ -20,6 +20,20 @@ export default function RightToolbar() {
     })
   }
 
+  function flipHorizontal() {
+    if (selectedBlocks.length === 0) return
+    selectedBlocks.forEach((b) => {
+      updateBlock(b.id, { transform: { ...b.transform, flipX: !b.transform.flipX } })
+    })
+  }
+
+  function flipVertical() {
+    if (selectedBlocks.length === 0) return
+    selectedBlocks.forEach((b) => {
+      updateBlock(b.id, { transform: { ...b.transform, flipY: !b.transform.flipY } })
+    })
+  }
+
   function adjustPan(dx: number, dy: number) {
     if (selectedBlocks.length === 0) return
     selectedBlocks.forEach((b) => {
@@ -73,6 +87,8 @@ export default function RightToolbar() {
       )}
 
       <IconBtn onClick={rotate} disabled={disabled} title="Rotate 90°">↻</IconBtn>
+      <IconBtn onClick={flipHorizontal} disabled={disabled} title="Flip horizontal">⇄</IconBtn>
+      <IconBtn onClick={flipVertical} disabled={disabled} title="Flip vertical">⇅</IconBtn>
 
       <div style={{ height: 1, background: 'var(--color-border)', margin: '4px 0' }} />
 

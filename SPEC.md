@@ -134,7 +134,7 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | T55 | x | Fix export: crop visible image portion per cell (not contain). Apply transforms, slice by cell bounds, render 1010px crop + 35px bars each side = 1080px | V3, V24, B28 |
 | T56 | x | Verify export resolution: check if images exported at full 1080x1350 or scaled down | V3, B29 |
 | T57 | x | Copy/paste block: Ctrl+C selected block, Ctrl+V paste at first free cell | — |
-| T58 | . | Mirror vertical/horizontal: add flip-x and flip-y transform controls to toolbar | — |
+| T58 | x | Mirror vertical/horizontal: add flip-x and flip-y transform controls to toolbar | — |
 | T59 | . | Fix color picker position: open to left not right to avoid viewport overflow | B30 |
 
 ---
