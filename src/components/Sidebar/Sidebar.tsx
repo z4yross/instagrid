@@ -22,24 +22,27 @@ export default function Sidebar({ onLowRes }: Props) {
   const clearCanvas = useStore((s) => s.clearCanvas)
   const toggleGuides = useStore ((s) => s.toggleGuides)
 
-  function findFreeCell(): { col: number; row: number } {
-    for (let r = 0; r < gridRows + 3; r++) {
+  function findFreeCellInBlocks(currentBlocks: ImageBlock[], rows: number): { col: number; row: number } {
+    for (let r = 0; r < rows + 3; r++) {
       for (let c = 0; c < 3; c++) {
-        const occupied = blocks.some(
+        const occupied = currentBlocks.some(
           (b) => c >= b.col && c < b.col + b.colSpan && r >= b.row && r < b.row + b.rowSpan
         )
         if (!occupied) return { col: c, row: r }
       }
     }
-    return { col: 0, row: gridRows }
+    return { col: 0, row: rows }
   }
 
   async function handleFiles(files: FileList | File[]) {
     const { loaded, lowRes } = await loadImageFiles(files)
     if (lowRes.length > 0) onLowRes?.(lowRes)
+
+    // V13: track blocks locally to avoid overlap in batch uploads
+    let currentBlocks = blocks
     for (const img of loaded) {
       addImage(img)
-      const pos = findFreeCell()
+      const pos = findFreeCellInBlocks(currentBlocks, gridRows)
       const block: ImageBlock = {
         id: crypto.randomUUID(),
         imageId: img.id,
@@ -51,6 +54,8 @@ export default function Sidebar({ onLowRes }: Props) {
         transform: { panX: 0, panY: 0, zoom: 1, rotation: 0 },
       }
       addBlock(block)
+      // Track locally for next iteration
+      currentBlocks = [...currentBlocks, block]
     }
   }
 
