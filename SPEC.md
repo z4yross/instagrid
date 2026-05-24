@@ -210,8 +210,8 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | T108 | x | Replace drag icon ⤡ with intuitive symbol: use ⊞ (window/drag handle) or ☰ (hamburger) or text "DRAG" | B61 |
 | T109 | x | Replace 🔒 emoji with white lock icon - install lucide-react, use Lock icon component for monochrome white rendering | B62, V45 |
 | T110 | x | Mobile touch pan on image when drag locked - detect touch on img element, track delta, update transform.panX/panY on touchmove, no conflict with resize handles | B63, V46 |
-| T111 | ~ | Reorder toolbar buttons - drag lock second position (after sidebar toggle), most-used controls up front | B64, V47 |
-| T112 | ~ | Change sidebar toggle icon from ‹› arrows to hamburger ☰ (Menu icon from lucide-react) | B65, V47 |
+| T111 | x | Reorder toolbar buttons - drag lock second position (after sidebar toggle), most-used controls up front | B64, V47 |
+| T112 | x | Change sidebar toggle icon from ‹› arrows to hamburger ☰ (Menu icon from lucide-react) | B65, V47 |
 
 ---
 
