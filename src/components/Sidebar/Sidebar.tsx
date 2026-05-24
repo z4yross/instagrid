@@ -199,7 +199,6 @@ export default function Sidebar({ onLowRes, width = 210 }: Props) {
         repeating-linear-gradient(90deg, transparent, transparent 1px, rgba(255,255,255,0.05) 1px, rgba(255,255,255,0.05) 2px)
       `,
       boxShadow: 'inset -8px 0 12px rgba(0, 0, 0, 0.4)',
-      overflowY: 'auto',
     }}>
       {/* header */}
       <div style={{
@@ -248,7 +247,8 @@ export default function Sidebar({ onLowRes, width = 210 }: Props) {
         />
       </div>
 
-      {/* thumbnails */}
+      {/* thumbnails - scrollable section */}
+      <div style={{ flex: 1, overflowY: 'auto', minHeight: 0 }}>
       {isLoading ? (
         <div style={{ padding: '0 10px 8px' }}>
           <div style={{ fontSize: 10, fontWeight: 600, color: 'var(--color-text-muted)', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 6 }}>
@@ -369,9 +369,9 @@ export default function Sidebar({ onLowRes, width = 210 }: Props) {
           Drop images on canvas<br/>or click upload
         </div>
       )}
+      </div>
 
       {/* divider */}
-      <div style={{ flex: 1 }} />
       <div style={{ margin: '0 10px', borderTop: '1px solid var(--color-border)' }} />
 
       {/* actions */}

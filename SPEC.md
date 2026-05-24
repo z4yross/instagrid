@@ -80,6 +80,7 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | V38 | Mobile sidebar performance: opens/closes in under 300ms with smooth CSS slide transition. No mount/unmount lag. |
 | V39 | Touch mode exclusivity: when panMode or resizeMode active, block position dragging disabled. Only mode-specific interaction enabled. |
 | V40 | Touch mode button availability: pan/resize buttons only enabled when at least one block selected (modes require selection). |
+| V41 | Sidebar scroll containment: only thumbnail list section scrolls, header and action buttons stay fixed at top/bottom. |
 
 ---
 
@@ -196,6 +197,7 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | T101 | x | Change pan icon from ✋ to white symbol: use ⟷ or ↔ for consistency with other white text icons | B54, V36 |
 | T102 | x | Fix drag prevention - add check in onDragStart to prevent drag from starting when panMode/resizeMode active (not just onDragEnd) | B55, V39 |
 | T103 | x | Change pan icon to omnidirectional symbol: use ✥ (crosshair) or ⊕ or text "PAN" instead of ↔ | B56, V36 |
+| T104 | x | Fix sidebar scroll containment: remove overflowY from sidebar root, add flex layout with scrollable thumbnails section only | B57, V41 |
 
 ---
 
@@ -259,4 +261,5 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | B54 | 2026-05-24 | Pan icon ✋ renders as color emoji not white text - inconsistent with other toolbar icons | V36 |
 | B55 | 2026-05-24 | Drag still works when pan mode active - blocks show drag overlay and animate, then snap back. Should prevent drag from starting | V39 |
 | B56 | 2026-05-24 | Pan icon ↔ counterintuitive - left-right arrow implies horizontal only, but pan is omnidirectional movement | V36 |
+| B57 | 2026-05-24 | Sidebar entire container scrolls - should only scroll thumbnail section, header/buttons should stay fixed | V41 |
 
