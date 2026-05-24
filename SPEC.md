@@ -158,7 +158,7 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | T76 | x | ColorPicker: reduce preset grid to 10 columns (fits 220px container exactly) | V25 |
 | T77 | x | Smart save: update existing profile without prompt, prompt only for new profile | V26, V15, V22 |
 | T78 | x | Autosave profiles: debounced 2s on blocks/gridRows change, track currentProfileId in store | V27, V15, V22 |
-| T79 | . | Update drag overlay styling to match black/white theme (remove purple gradients) | — |
+| T79 | x | Update drag overlay styling to match black/white theme (remove purple gradients) | — |
 
 ---
 

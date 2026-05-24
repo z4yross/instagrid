@@ -407,22 +407,22 @@ export default function CanvasArea({ onLowRes }: Props) {
 															background: `
                           linear-gradient(
                             145deg,
-                            rgba(124, 58, 237, 0.32),
-                            rgba(100, 40, 200, 0.18)
+                            rgba(255, 255, 255, 0.15),
+                            rgba(255, 255, 255, 0.08)
                           ),
-                          rgba(15, 15, 28, 0.92)
+                          rgba(0, 0, 0, 0.85)
                         `,
 
-															// border: "1px solid rgba(168, 85, 247, 0.45)",
+															border: "1px solid rgba(255, 255, 255, 0.25)",
 
 															borderRadius: 0,
 
 															opacity: 0.96,
 
 															boxShadow: `
-                          0 18px 40px rgba(0,0,0,0.45),
-                          0 0 24px rgba(139,92,246,0.18),
-                          inset 0 1px 0 rgba(255,255,255,0.06)
+                          0 18px 40px rgba(0,0,0,0.6),
+                          0 0 24px rgba(255,255,255,0.1),
+                          inset 0 1px 0 rgba(255,255,255,0.15)
                         `,
 
 															backdropFilter:
@@ -471,22 +471,22 @@ export default function CanvasArea({ onLowRes }: Props) {
 										background: `
                 linear-gradient(
                   145deg,
-                  rgba(124, 58, 237, 0.32),
-                  rgba(100, 40, 200, 0.18)
+                  rgba(255, 255, 255, 0.15),
+                  rgba(255, 255, 255, 0.08)
                 ),
-                rgba(15, 15, 28, 0.92)
+                rgba(0, 0, 0, 0.85)
               `,
 
-										// border: "1px solid rgba(168, 85, 247, 0.45)",
+										border: "1px solid rgba(255, 255, 255, 0.25)",
 
 										borderRadius: 0,
 
 										opacity: 0.96,
 
 										boxShadow: `
-                0 18px 40px rgba(0,0,0,0.45),
-                0 0 24px rgba(139,92,246,0.18),
-                inset 0 1px 0 rgba(255,255,255,0.06)
+                0 18px 40px rgba(0,0,0,0.6),
+                0 0 24px rgba(255,255,255,0.1),
+                inset 0 1px 0 rgba(255,255,255,0.15)
               `,
 
 										backdropFilter: "blur(10px)",
