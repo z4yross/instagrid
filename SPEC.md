@@ -90,6 +90,7 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | V48 | Mobile deselect: regular click on selected block (when only selection) deselects it, restoring scroll. |
 | V49 | Drag lock universal - dragMode controls block position drag on all platforms (mobile and desktop), not platform-specific. |
 | V50 | Mobile resize handles larger touch targets (min 44px), prevent pan/drag interference via event stopPropagation. |
+| V51 | Toolbar button active states visually distinct - active buttons show lighter background + white glow, consistent styling across mobile/desktop toolbars. |
 
 ---
 
@@ -224,6 +225,7 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | T119 | x | Add active state to menu button - pass active={sidebarVisible} to sidebar toggle IconBtn for visual feedback | B72, V47 |
 | T120 | x | Make drag lock universal - remove platform checks, dragMode controls drag on all platforms. Update isDragEnabled, touchAction, pan logic | V49 |
 | T121 | x | Increase resize handle size on mobile (44px min touch target), add stopPropagation to touch/pointer events to prevent pan/drag interference | B73, V50 |
+| T122 | x | Fix RightToolbar IconBtn active state styling - match TopToolbar pattern: rgba white background + white glow when active, remove CSS var dependency | B74, V51 |
 
 ---
 
@@ -304,4 +306,5 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | B71 | 2026-05-24 | Pan STILL not working - critical core feature. Touch listeners might not attach/fire, or only work on img not bars area | V46 |
 | B72 | 2026-05-24 | Sidebar toggle button no visual feedback - doesn't show active state (glow) when sidebar open | V47 |
 | B73 | 2026-05-24 | Resize handles too small on mobile - very hard to grab without triggering pan or drag gestures. Handles need larger touch targets and gesture priority | V50 |
+| B74 | 2026-05-24 | Lock button active state not visible on desktop RightToolbar - button works but no visual feedback when dragMode active. IconBtn active styling used CSS var --color-accent-glow (may not exist) and background didn't change | V51 |
 

@@ -156,17 +156,25 @@ function IconBtn({ children, onClick, disabled, title, danger, active }: {
         justifyContent: 'center',
         fontSize: 16,
         fontWeight: 700,
-        background: disabled ? 'rgba(255, 255, 255, 0.05)' : danger ? 'transparent' : 'linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.06) 100%)',
+        background: disabled
+          ? 'rgba(255, 255, 255, 0.05)'
+          : danger
+          ? 'transparent'
+          : active
+          ? 'rgba(255, 255, 255, 0.2)'
+          : 'linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.06) 100%)',
         border: danger ? '1px dashed rgba(255, 255, 255, 0.3)' : 'none',
         color: disabled ? '#555555' : danger ? '#ff4444' : '#ffffff',
         borderRadius: 8,
         cursor: disabled ? 'not-allowed' : 'pointer',
         transition: 'all 0.2s',
         opacity: disabled ? 0.4 : 1,
-        boxShadow: active
-          ? '0 0 20px var(--color-accent-glow), 0 4px 8px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.15)'
+        boxShadow: disabled
+          ? 'none'
           : danger
           ? 'none'
+          : active
+          ? '0 0 12px rgba(255, 255, 255, 0.3), 0 4px 8px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.15)'
           : '0 4px 8px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.15)',
       }}
       onMouseEnter={(e) => {
@@ -175,11 +183,12 @@ function IconBtn({ children, onClick, disabled, title, danger, active }: {
             e.currentTarget.style.background = 'rgba(255, 68, 68, 0.08)'
             e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.5)'
             e.currentTarget.style.color = '#ff6666'
+          } else if (active) {
+            e.currentTarget.style.background = 'rgba(255, 255, 255, 0.3)'
+            e.currentTarget.style.boxShadow = '0 0 16px rgba(255, 255, 255, 0.4), 0 6px 12px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.2)'
           } else {
             e.currentTarget.style.background = 'linear-gradient(135deg, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0.1) 100%)'
-            e.currentTarget.style.boxShadow = active
-              ? '0 0 24px var(--color-accent-glow), 0 6px 12px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.2)'
-              : '0 6px 12px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.2)'
+            e.currentTarget.style.boxShadow = '0 6px 12px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.2)'
           }
         }
       }}
@@ -189,11 +198,12 @@ function IconBtn({ children, onClick, disabled, title, danger, active }: {
             e.currentTarget.style.background = 'transparent'
             e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.3)'
             e.currentTarget.style.color = '#ff4444'
+          } else if (active) {
+            e.currentTarget.style.background = 'rgba(255, 255, 255, 0.2)'
+            e.currentTarget.style.boxShadow = '0 0 12px rgba(255, 255, 255, 0.3), 0 4px 8px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.15)'
           } else {
             e.currentTarget.style.background = 'linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.06) 100%)'
-            e.currentTarget.style.boxShadow = active
-              ? '0 0 20px var(--color-accent-glow), 0 4px 8px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.15)'
-              : '0 4px 8px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.15)'
+            e.currentTarget.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.15)'
           }
         }
       }}
