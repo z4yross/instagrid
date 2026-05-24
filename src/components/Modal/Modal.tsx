@@ -146,23 +146,22 @@ export default function Modal({
                   style={{
                     padding: '12px 16px',
                     fontSize: 14,
-                    background: 'linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%)',
+                    background: '#ffffff',
                     border: 'none',
                     borderRadius: 6,
-                    color: '#ffffff',
+                    color: '#000000',
                     cursor: 'pointer',
                     fontWeight: 600,
                     transition: 'all 0.15s',
-                    boxShadow: '0 2px 4px rgba(124, 58, 237, 0.3)',
+                    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)',
                   }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.background = '#6d28d9'
-                    e.currentTarget.style.boxShadow = '0 4px 8px rgba(124, 58, 237, 0.4)'
+                    e.currentTarget.style.background = '#f0f0f0'
+                    e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.2)'
                   }}
                   onMouseLeave={(e) => {
-                    e.currentTarget.style.background =
-                      'linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%)'
-                    e.currentTarget.style.boxShadow = '0 2px 4px rgba(124, 58, 237, 0.3)'
+                    e.currentTarget.style.background = '#ffffff'
+                    e.currentTarget.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.15)'
                   }}
                 >
                   {opt.label}
@@ -196,9 +195,24 @@ export default function Modal({
             <>
               {type !== 'alert' && (
                 <button
-                  className="ig-btn"
                   onClick={onCancel}
-                  style={{ padding: '8px 16px', fontSize: 13 }}
+                  style={{
+                    padding: '8px 16px',
+                    fontSize: 13,
+                    background: 'rgba(0, 0, 0, 0.6)',
+                    border: 'none',
+                    borderRadius: 6,
+                    color: '#ffffff',
+                    cursor: 'pointer',
+                    fontWeight: 500,
+                    transition: 'all 0.15s',
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = 'rgba(0, 0, 0, 0.8)'
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = 'rgba(0, 0, 0, 0.6)'
+                  }}
                 >
                   {cancelText}
                 </button>

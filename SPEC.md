@@ -258,7 +258,7 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | T141   | x      | Fix resize bugs - side-by-side layout, flat design, stopPropagation on click. Debug + fix desktop ResizeHandle rendering (T139 broke it). Update FAB overlay flat style                                                     | B89, B90, B91, B92   |
 | T142   | x      | Fix modal + FAB - style choice buttons (visible bg, border, clear clickable look). Hide FAB when sidebar active on mobile. Fix resize button overlap (adjust spacing/positioning)                                           | B93, B94, B95        |
 | T143   | x      | Fix resize button spacing - adjust calc() positioning to create 2px gap between buttons: first `calc(50% - 29px)`, second `calc(50% + 1px)` on all 4 edges                                                                  | B96, V67             |
-| T144   | .      | Fix modal button colors - choice buttons white bg (#fff) + black text + box-shadow for depth on white modal bg. Cancel rgba(0,0,0,0.6) bg + white text                                                                      | B97, V66             |
+| T144   | x      | Fix modal button colors - choice buttons white bg (#fff) + black text + box-shadow for depth on white modal bg. Cancel rgba(0,0,0,0.6) bg + white text                                                                      | B97, V66             |
 | T145   | .      | FAB subtle background - change to rgba(255,255,255,0.08) solid (no gradient), keep blur(8px), simplify/remove border. Match grid zoom control style                                                                         | B98, V68             |
 
 ---
