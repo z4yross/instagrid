@@ -104,146 +104,140 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 
 ## §T — Tasks
 
-| id     | status | task                                                                                                                                                 | cites                |
-| ------ | ------ | ---------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------- |
-| T1     | x      | Scaffold Vite+React+TS project, install deps (@dnd-kit/core @dnd-kit/modifiers @dnd-kit/utilities zustand zundo jszip), configure Tailwind dark mode | C4,C5,C6,C8          |
-| T2     | x      | Zustand store: blocks[], gridRows, selectedBlockId, cellModeBlockId, showGuides, history via zundo                                                   | C6,V5                |
-| T3     | x      | Grid canvas component: 3-col layout, cell aspect 3:4, dynamic rows, visible guide lines toggle                                                       | C9,V7                |
-| T4     | x      | Image upload: drag-drop onto canvas + file picker, multi-file, JPG/PNG/WEBP, low-res warning                                                         | I.fs,V6              |
-| T5     | x      | Block component: renders image in assigned cells, drag via @dnd-kit, snap-to-grid on drop                                                            | C5,V1,V2             |
-| T6     | x      | Block resize: drag corner/edge handles, snap to cell boundary, update block span                                                                     | C5,V1,V2             |
-| ~~T7~~ | ~~x~~  | ~~Fill mode~~ DEPRECATED v2                                                                                                                          | ~~V8~~               |
-| ~~T8~~ | ~~x~~  | ~~Block toolbar with fillMode toggle~~ DEPRECATED v2                                                                                                 | ~~C9~~               |
-| ~~T9~~ | ~~x~~  | ~~Cell mode~~ DEPRECATED v2                                                                                                                          | ~~V10~~              |
-| T10    | x      | Upload order indicator: number badge on each cell (Instagram order per V4)                                                                           | V4                   |
-| T11    | x      | Preview panel: right-side or modal, live Instagram profile simulation, shows upload numbers                                                          | V4                   |
-| T12    | x      | Export pipeline: OffscreenCanvas renders each cell at 1080×1350, names by upload order, bundles ZIP                                                  | I.canvas,I.zip,V3,V4 |
-| T13    | x      | Per-cell export: right-click or button downloads single cell as JPG                                                                                  | V9                   |
-| T14    | x      | Undo/redo: Ctrl+Z / Ctrl+Y wired to zundo                                                                                                            | V5                   |
-| T15    | x      | Sidebar: thumbnail list of uploaded images, upload button, "Export all" + "Clear canvas" actions                                                     | —                    |
-| T16    | x      | Grid guide toggle button in toolbar                                                                                                                  | V7                   |
-| T17    | x      | Dark mode global styles, app layout (sidebar + canvas + optional preview panel)                                                                      | C3                   |
-
-### v2 Tasks
-
-| T18 | x | Remove fillMode from types/store/components — single mode: contain + bars | V11 |
-| T19 | x | Remove cell mode: double-click, CellModeOverlay, cellOverrides, cellOrder | V11 |
-| T20 | x | localStorage: persist/restore state on mutation (debounced 500ms) | V15 |
-| T21 | x | Right sidebar toolbar: always visible, context-aware enable/disable | — |
-| T22 | x | Custom color picker component for bars (replace `<input type="color">`) | — |
-| T23 | x | Arrow keys pan image: ←→↑↓ modify transform.panX/panY, rotated by transform.rotation | V16 |
-| T24 | x | Group selection: Shift+click blocks, render selection box, move/transform as group | V12 |
-| T25 | x | Auto-flow: on upload/move, snap block to first free position (left→right, top→bottom) | V13 |
-| T26 | x | Placeholder blocks: add/remove, render solid color or gradient from adjacent images | V14 |
-| T27 | x | Grid zoom/pan: zoom controls (50%-200%), pan via canvas drag, preserve cell sizes | V17 |
-| T28 | x | Style improvements: polish buttons, hover states, transitions | — |
-
-### v3 Tasks (bug fixes)
-
-| T29 | x | Redesign right toolbar as slim icon-only vertical bar (no section labels) | B5 |
-| T30 | x | Group drag: custom DndKit overlay showing all selected blocks preview | V19, B6 |
-| T31 | x | Group drag: smart row wrapping on border collision (not merge) | B7 |
-| T32 | x | Grid zoom: replace CSS scale with visible row count adjustment, center grid | V20, B8 |
-| T33 | x | localStorage: catch QuotaExceededError, log + warn user, graceful degradation | V18, B4 |
-| T34 | x | Export numbering: skip empty/placeholder cells, only number cells with images | V4, B9 |
-| T35 | x | Grid zoom: ensure gridRows >= visibleRows to show empty cells on zoom out | B10 |
-| T36 | x | Reduce grid gradient opacity, make subtle (0.04 → 0.015 alpha) | B11 |
-| T37 | x | Increase app contrast: lighter surfaces, accent borders, visual hierarchy | B12 |
-| T38 | x | Remove preview feed panel (PreviewPanel, onPreview button) | — |
-| T39 | x | Zoom in removes trailing empty rows: shrink gridRows to content when reducing visibleRows | V21, B13 |
-| T40 | x | Design-focused color scheme: refined palette, stronger visual identity | B14 |
-| T41 | x | IndexedDB for image persistence: store images in IDB, blocks/gridRows in localStorage | V22, B15 |
-| T42 | x | Loading state during IndexedDB restore: show spinner/skeleton until images loaded | V23, B16 |
-| T43 | x | Fix batch upload overlap: track blocks locally in handleFiles loop, findFreeCell uses updated array | V13, B17 |
-| T44 | x | Fix export numbering: right-to-left scan in cellUploadNumber (reverse col loop) | V4, B18 |
-| T45 | x | Ctrl+click toggle selection, Shift+click range selection (Windows-style multi-select) | V12, B19 |
-| T46 | x | Replace fullscreen loading with skeleton placeholders in sidebar + grid | V23, B20 |
-| T47 | x | Click sidebar thumbnail to add image back to grid (after remove/clear) | B21 |
-| T48 | x | Add "Clear images" button to sidebar - clears images from memory + IDB | B22 |
-| T49 | x | Add grid skeletons + IDB image count query for precise skeleton rendering | V23, B23 |
-| T50 | x | Fix batch upload stacking - debug T43, verify local blocks tracking works | B24 |
-| T51 | x | Fix drag duplicate visual - check DragOverlay, ensure single block rendered | B25 |
-| T52 | x | Delete single image from thumbnail: X button on hover, remove image from IDB + all blocks using that imageId | V22 |
-| T53 | x | Fix DragOverlay cursor offset: track initial grab position, apply offset to DragOverlay transform | B26 |
-| T54 | x | Fix Shift+click range selection: sort blocks by grid position (row\*COLS+col) before slicing range | V12, B27 |
-| T55 | x | Fix export: crop visible image portion per cell (not contain). Apply transforms, slice by cell bounds, render 1010px crop + 35px bars each side = 1080px | V3, V24, B28 |
-| T56 | x | Verify export resolution: check if images exported at full 1080x1350 or scaled down | V3, B29 |
-| T57 | x | Copy/paste block: Ctrl+C selected block, Ctrl+V paste at first free cell | — |
-| T58 | x | Mirror vertical/horizontal: add flip-x and flip-y transform controls to toolbar | — |
-| T59 | x | Fix color picker position: open to left not right to avoid viewport overflow | B30 |
-| T60 | x | Debug export: verify transform application, crop bounds, cell offset calculations | B31 |
-| T61 | x | Save/load profiles: store multiple named profiles in IDB (blocks + gridRows + timestamp). Switch between profiles via UI | V15, V22 |
-| T62 | x | Export bars from image content: extend/blur edge pixels instead of solid barsColor. Match IG carousel style | V24 |
-| T63 | x | Fix save profile: debug IDB transaction, ensure profiles persist correctly | B32 |
-| T64 | x | Add "New profile" button: clears canvas to start fresh (same as clear canvas) | — |
-| T65 | x | Fix export to match grid exactly: verify transform math, coordinate systems, scaling factors | V24, B33 |
-| T66 | x | Export bars: extend image naturally (not blur). Draw image scaled to full 1080px, crop center 1010px. Black bars if image smaller than full width | V24, B34 |
-| T67 | x | Fix profiles store creation: delete old DB, force v2 creation on init | B35 |
-| T68 | x | Replace browser dialogs (alert/confirm/prompt) with custom modal components | — |
-| T69 | x | Fix export crop to exactly match grid display: pass actual grid cell size to export or store transforms as percentages | V24, B36 |
-| T70 | x | Fix export cell X offset: use EXPORT_W (1080) not CROP_W (1010) for cellOffsetX | V24, B37 |
-| T71 | x | Fix export for multi-row blocks: verify Y offset and image scaling use correct dimensions (crop vs full canvas) | V24, B38 |
-| T72 | x | Design refresh: black/white color scheme with orange accents (remove purple), remove keyboard hint labels from sidebar | — |
-| T73 | x | Increase B/W contrast: use pure black (#000) and pure white (#fff) for dramatic contrast, remove all blue/purple gradients, replace with black/white/orange gradients | — |
-| T74 | x | Add white backgrounds to strategic UI elements (buttons, panels, modals) for true B/W contrast, not just black everywhere | — |
-| T75 | x | Context-aware +/- zoom: if block selected zoom image (transform.zoom), else zoom grid (visibleRows) | V16,V20,V5 |
-| T76 | x | ColorPicker: reduce preset grid to 10 columns (fits 220px container exactly) | V25 |
-| T77 | x | Smart save: update existing profile without prompt, prompt only for new profile | V26, V15, V22 |
-| T78 | x | Autosave profiles: debounced 2s on blocks/gridRows change, track currentProfileId in store | V27, V15, V22 |
-| T79 | x | Update drag overlay styling to match black/white theme (remove purple gradients) | — |
-| T80 | x | Add custom favicon (grid icon matching app logo) | — |
-| T81 | x | Sidebar responsive: desktop (left, toggleable), mobile (fullscreen overlay, hidden by default) | V28 |
-| T82 | x | Toolbar responsive: desktop (right vertical), mobile (top horizontal) | V28 |
-| T83 | x | Fix mobile TopToolbar: remove logo, show only essential buttons, increase button size/contrast | V29, B40 |
-| T84 | x | Mobile sidebar full width + auto-expand grid rows to fill viewport height | B41 |
-| T85 | x | Replace +/- zoom buttons with clear labels or icons (e.g. "Fit" / "Fill") to avoid confusion | B42 |
-| T86 | x | Desktop sidebar always visible: remove toggle button from RightToolbar, force sidebarVisible=true on desktop | V28 |
-| T87 | x | Fix mobile sidebar width: remove maxWidth constraint in mobile wrapper | B43 |
-| T88 | x | Fix mobile sidebar width properly: wrap Sidebar in div with width constraint or pass width via style prop to override inline style | B44, V30 |
-| T89 | x | Redesign mobile TopToolbar: simplify/group controls, improve spacing, increase contrast, consider vertical/floating layout | B45, V31 |
-| T90 | x | Fix grid zoom semantics: swap +/- button actions (+ adds rows, - removes rows), set default visibleRows=5 on mobile init | B46, V32 |
-| T91 | x | Mobile toolbar pure black background: change TopToolbar from gradient to solid #000 | B47, V33 |
-| T92 | x | Mobile sidebar full height: set height 100% to extend from top to bottom viewport edge | B48, V34 |
-| T93 | x | Mobile grid auto-fit: calculate visibleRows on mount/resize to fill available height (viewport - toolbar - zoom controls) | B49, V35 |
-| T94 | x | Mobile button styling: remove borders, darker/pure black backgrounds, add subtle white glow (box-shadow) | B50, V36 |
-| T95 | x | Mobile canvas pure black: override CanvasArea/GridCanvas bg to #000 on mobile (not gray #0d0d0d) | B50, V36 |
-| T96 | x | Mobile pan mode toggle: add toolbar button to enable/disable pan mode (touch drag modifies transform.panX/Y on selected block) | V37 |
-| T97 | x | Mobile resize mode toggle: add toolbar button to enable/disable resize mode (touch drag on block edges changes colSpan/rowSpan) | V37 |
-| T98 | x | Mobile sidebar smooth animation: keep sidebar mounted, add CSS transform transition (translateX) for fast slide in/out under 300ms | B51, V38 |
-| T99 | x | Disable block drag when pan/resize mode active: modify CanvasArea onDragStart/onDragEnd to skip if panMode or resizeMode enabled | B52, V39 |
-| T100 | x | Disable pan/resize buttons when no selection: add disabled={disabled} (selectedBlocks.length === 0) to pan/resize IconBtn | B53, V40 |
-| T101 | x | Change pan icon from ✋ to white symbol: use ⟷ or ↔ for consistency with other white text icons | B54, V36 |
-| T102 | x | Fix drag prevention - add check in onDragStart to prevent drag from starting when panMode/resizeMode active (not just onDragEnd) | B55, V39 |
-| T103 | x | Change pan icon to omnidirectional symbol: use ✥ (crosshair) or ⊕ or text "PAN" instead of ↔ | B56, V36 |
-| T104 | x | Fix sidebar scroll containment: remove overflowY from sidebar root, add flex layout with scrollable thumbnails section only | B57, V41 |
-| T105 | x | Replace pan/resize modes with drag mode: remove panMode/resizeMode from store, add dragMode (default false), replace 2 buttons with 1 drag button, invert onDragStart logic (allow drag only when dragMode true or desktop) | B58, V42 |
-| T106 | x | Fix drag prevention - remove platform check in onDragStart, prevent drag when !dragMode on all platforms (not just mobile) | B59, V43 |
-| T107 | x | Enable drag button always - remove disabled={disabled} from drag IconBtn, make it global toggle available anytime | B60, V44 |
-| T108 | x | Replace drag icon ⤡ with intuitive symbol: use ⊞ (window/drag handle) or ☰ (hamburger) or text "DRAG" | B61 |
-| T109 | x | Replace 🔒 emoji with white lock icon - install lucide-react, use Lock icon component for monochrome white rendering | B62, V45 |
-| T110 | x | Mobile touch pan on image when drag locked - detect touch on img element, track delta, update transform.panX/panY on touchmove, no conflict with resize handles | B63, V46 |
-| T111 | x | Reorder toolbar buttons - drag lock second position (after sidebar toggle), most-used controls up front | B64, V47 |
-| T112 | x | Change sidebar toggle icon from ‹› arrows to hamburger ☰ (Menu icon from lucide-react) | B65, V47 |
-| T113 | x | Fix touch pan - replace React onTouch handlers with useEffect + native addEventListener({ passive: false }) to allow preventDefault | B66, V46 |
-| T114 | x | Fix pan gesture - remove block.transform from useEffect deps, use ref for stable updateBlock callback to prevent listener churn | B67, V46 |
-| T115 | x | Fix scroll on images - make touchAction conditional (none when drag enabled, auto when drag locked), allow scroll over unselected images | B68, V46 |
-| T116 | x | Fix pan on selected - touchAction="none" when (drag enabled OR (pan enabled AND selected)), else "auto" for scroll | B69, V46 |
-| T117 | x | Mobile tap to deselect - regular click on already-selected single block deselects (setSelectedBlocks([])), restores scroll | B70, V48 |
-| T118 | x | Debug + fix pan - add console logs to verify listeners attach/fire, try attaching to block root instead of just img element to capture bars area | B71, V46 |
-| T119 | x | Add active state to menu button - pass active={sidebarVisible} to sidebar toggle IconBtn for visual feedback | B72, V47 |
-| T120 | x | Make drag lock universal - remove platform checks, dragMode controls drag on all platforms. Update isDragEnabled, touchAction, pan logic | V49 |
-| T121 | x | Increase resize handle size on mobile (44px min touch target), add stopPropagation to touch/pointer events to prevent pan/drag interference | B73, V50 |
-| T122 | x | Fix RightToolbar IconBtn active state styling - match TopToolbar pattern: rgba white background + white glow when active, remove CSS var dependency | B74, V51 |
-| T123 | x | Hide TopToolbar buttons when sidebar open on mobile - conditional render based on sidebarVisible, show logo only when sidebar visible | B75, V52 |
-| T124 | x | Mobile pinch zoom gesture support - detect 2-finger touch on selected block when drag locked, track pinch distance delta, adjust block transform.zoom (pinch out = zoom in, pinch in = zoom out) | B76, V53 |
-| T125 | x | Debug resize handle pan interference - verify stopPropagation order, check if pan listeners attach to resize handle element or parent, ensure resize touch events don't bubble to pan handlers | B77, V54 |
-| T126 | x | Mobile FAB component - circular draggable button (bottom-right default), drag to reposition, persist position to localStorage, tap to toggle overlay visibility | V55 |
-| T127 | x | Mobile action overlay - keyboard layout (top: - ↑ +, middle: ← ↓ →), position left/right of FAB based on space, wire to adjustPan/adjustZoom actions | V56 |
-| T128 | x | Fix T123 - TopToolbar on mobile sidebar open should show menu button + logo (not logo only). Remove logo from Sidebar on mobile | B78, V52 |
-| T129 | x | Setup husky + lint-staged + commitlint - enforce conventional commits format, run prettier on pre-commit. No ESLint config | V57 |
-| T130 | . | Mobile resize handles avoid right edge - hide right/corner-br handles when block.col + block.colSpan near right edge (e.g. within 1 col of COLS), or offset handles inward | B79, V58 |
-| T131 | . | Replace TopToolbar zoom buttons with FAB toggle button - remove +/- IconBtn, add toggle to show/hide FAB, wire to App fabOverlayVisible state | B80, V59 |
-| T132 | . | Fix FAB visibility - increase background opacity or add backdrop-filter blur, fix icon vertical centering (adjust line-height or flexbox alignment) | B81 |
+| id     | status | task                                                                                                                                                                                                                        | cites                |
+| ------ | ------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------- |
+| T1     | x      | Scaffold Vite+React+TS project, install deps (@dnd-kit/core @dnd-kit/modifiers @dnd-kit/utilities zustand zundo jszip), configure Tailwind dark mode                                                                        | C4,C5,C6,C8          |
+| T2     | x      | Zustand store: blocks[], gridRows, selectedBlockId, cellModeBlockId, showGuides, history via zundo                                                                                                                          | C6,V5                |
+| T3     | x      | Grid canvas component: 3-col layout, cell aspect 3:4, dynamic rows, visible guide lines toggle                                                                                                                              | C9,V7                |
+| T4     | x      | Image upload: drag-drop onto canvas + file picker, multi-file, JPG/PNG/WEBP, low-res warning                                                                                                                                | I.fs,V6              |
+| T5     | x      | Block component: renders image in assigned cells, drag via @dnd-kit, snap-to-grid on drop                                                                                                                                   | C5,V1,V2             |
+| T6     | x      | Block resize: drag corner/edge handles, snap to cell boundary, update block span                                                                                                                                            | C5,V1,V2             |
+| ~~T7~~ | ~~x~~  | ~~Fill mode~~ DEPRECATED v2                                                                                                                                                                                                 | ~~V8~~               |
+| ~~T8~~ | ~~x~~  | ~~Block toolbar with fillMode toggle~~ DEPRECATED v2                                                                                                                                                                        | ~~C9~~               |
+| ~~T9~~ | ~~x~~  | ~~Cell mode~~ DEPRECATED v2                                                                                                                                                                                                 | ~~V10~~              |
+| T10    | x      | Upload order indicator: number badge on each cell (Instagram order per V4)                                                                                                                                                  | V4                   |
+| T11    | x      | Preview panel: right-side or modal, live Instagram profile simulation, shows upload numbers                                                                                                                                 | V4                   |
+| T12    | x      | Export pipeline: OffscreenCanvas renders each cell at 1080×1350, names by upload order, bundles ZIP                                                                                                                         | I.canvas,I.zip,V3,V4 |
+| T13    | x      | Per-cell export: right-click or button downloads single cell as JPG                                                                                                                                                         | V9                   |
+| T14    | x      | Undo/redo: Ctrl+Z / Ctrl+Y wired to zundo                                                                                                                                                                                   | V5                   |
+| T15    | x      | Sidebar: thumbnail list of uploaded images, upload button, "Export all" + "Clear canvas" actions                                                                                                                            | —                    |
+| T16    | x      | Grid guide toggle button in toolbar                                                                                                                                                                                         | V7                   |
+| T17    | x      | Dark mode global styles, app layout (sidebar + canvas + optional preview panel)                                                                                                                                             | C3                   |
+| T18    | x      | Remove fillMode from types/store/components — single mode: contain + bars                                                                                                                                                   | V11                  |
+| T19    | x      | Remove cell mode: double-click, CellModeOverlay, cellOverrides, cellOrder                                                                                                                                                   | V11                  |
+| T20    | x      | localStorage: persist/restore state on mutation (debounced 500ms)                                                                                                                                                           | V15                  |
+| T21    | x      | Right sidebar toolbar: always visible, context-aware enable/disable                                                                                                                                                         | —                    |
+| T22    | x      | Custom color picker component for bars (replace `<input type="color">`)                                                                                                                                                     | —                    |
+| T23    | x      | Arrow keys pan image: ←→↑↓ modify transform.panX/panY, rotated by transform.rotation                                                                                                                                        | V16                  |
+| T24    | x      | Group selection: Shift+click blocks, render selection box, move/transform as group                                                                                                                                          | V12                  |
+| T25    | x      | Auto-flow: on upload/move, snap block to first free position (left→right, top→bottom)                                                                                                                                       | V13                  |
+| T26    | x      | Placeholder blocks: add/remove, render solid color or gradient from adjacent images                                                                                                                                         | V14                  |
+| T27    | x      | Grid zoom/pan: zoom controls (50%-200%), pan via canvas drag, preserve cell sizes                                                                                                                                           | V17                  |
+| T28    | x      | Style improvements: polish buttons, hover states, transitions                                                                                                                                                               | —                    |
+| T29    | x      | Redesign right toolbar as slim icon-only vertical bar (no section labels)                                                                                                                                                   | B5                   |
+| T30    | x      | Group drag: custom DndKit overlay showing all selected blocks preview                                                                                                                                                       | V19, B6              |
+| T31    | x      | Group drag: smart row wrapping on border collision (not merge)                                                                                                                                                              | B7                   |
+| T32    | x      | Grid zoom: replace CSS scale with visible row count adjustment, center grid                                                                                                                                                 | V20, B8              |
+| T33    | x      | localStorage: catch QuotaExceededError, log + warn user, graceful degradation                                                                                                                                               | V18, B4              |
+| T34    | x      | Export numbering: skip empty/placeholder cells, only number cells with images                                                                                                                                               | V4, B9               |
+| T35    | x      | Grid zoom: ensure gridRows >= visibleRows to show empty cells on zoom out                                                                                                                                                   | B10                  |
+| T36    | x      | Reduce grid gradient opacity, make subtle (0.04 → 0.015 alpha)                                                                                                                                                              | B11                  |
+| T37    | x      | Increase app contrast: lighter surfaces, accent borders, visual hierarchy                                                                                                                                                   | B12                  |
+| T38    | x      | Remove preview feed panel (PreviewPanel, onPreview button)                                                                                                                                                                  | —                    |
+| T39    | x      | Zoom in removes trailing empty rows: shrink gridRows to content when reducing visibleRows                                                                                                                                   | V21, B13             |
+| T40    | x      | Design-focused color scheme: refined palette, stronger visual identity                                                                                                                                                      | B14                  |
+| T41    | x      | IndexedDB for image persistence: store images in IDB, blocks/gridRows in localStorage                                                                                                                                       | V22, B15             |
+| T42    | x      | Loading state during IndexedDB restore: show spinner/skeleton until images loaded                                                                                                                                           | V23, B16             |
+| T43    | x      | Fix batch upload overlap: track blocks locally in handleFiles loop, findFreeCell uses updated array                                                                                                                         | V13, B17             |
+| T44    | x      | Fix export numbering: right-to-left scan in cellUploadNumber (reverse col loop)                                                                                                                                             | V4, B18              |
+| T45    | x      | Ctrl+click toggle selection, Shift+click range selection (Windows-style multi-select)                                                                                                                                       | V12, B19             |
+| T46    | x      | Replace fullscreen loading with skeleton placeholders in sidebar + grid                                                                                                                                                     | V23, B20             |
+| T47    | x      | Click sidebar thumbnail to add image back to grid (after remove/clear)                                                                                                                                                      | B21                  |
+| T48    | x      | Add "Clear images" button to sidebar - clears images from memory + IDB                                                                                                                                                      | B22                  |
+| T49    | x      | Add grid skeletons + IDB image count query for precise skeleton rendering                                                                                                                                                   | V23, B23             |
+| T50    | x      | Fix batch upload stacking - debug T43, verify local blocks tracking works                                                                                                                                                   | B24                  |
+| T51    | x      | Fix drag duplicate visual - check DragOverlay, ensure single block rendered                                                                                                                                                 | B25                  |
+| T52    | x      | Delete single image from thumbnail: X button on hover, remove image from IDB + all blocks using that imageId                                                                                                                | V22                  |
+| T53    | x      | Fix DragOverlay cursor offset: track initial grab position, apply offset to DragOverlay transform                                                                                                                           | B26                  |
+| T54    | x      | Fix Shift+click range selection: sort blocks by grid position (row\*COLS+col) before slicing range                                                                                                                          | V12, B27             |
+| T55    | x      | Fix export: crop visible image portion per cell (not contain). Apply transforms, slice by cell bounds, render 1010px crop + 35px bars each side = 1080px                                                                    | V3, V24, B28         |
+| T56    | x      | Verify export resolution: check if images exported at full 1080x1350 or scaled down                                                                                                                                         | V3, B29              |
+| T57    | x      | Copy/paste block: Ctrl+C selected block, Ctrl+V paste at first free cell                                                                                                                                                    | —                    |
+| T58    | x      | Mirror vertical/horizontal: add flip-x and flip-y transform controls to toolbar                                                                                                                                             | —                    |
+| T59    | x      | Fix color picker position: open to left not right to avoid viewport overflow                                                                                                                                                | B30                  |
+| T60    | x      | Debug export: verify transform application, crop bounds, cell offset calculations                                                                                                                                           | B31                  |
+| T61    | x      | Save/load profiles: store multiple named profiles in IDB (blocks + gridRows + timestamp). Switch between profiles via UI                                                                                                    | V15, V22             |
+| T62    | x      | Export bars from image content: extend/blur edge pixels instead of solid barsColor. Match IG carousel style                                                                                                                 | V24                  |
+| T63    | x      | Fix save profile: debug IDB transaction, ensure profiles persist correctly                                                                                                                                                  | B32                  |
+| T64    | x      | Add "New profile" button: clears canvas to start fresh (same as clear canvas)                                                                                                                                               | —                    |
+| T65    | x      | Fix export to match grid exactly: verify transform math, coordinate systems, scaling factors                                                                                                                                | V24, B33             |
+| T66    | x      | Export bars: extend image naturally (not blur). Draw image scaled to full 1080px, crop center 1010px. Black bars if image smaller than full width                                                                           | V24, B34             |
+| T67    | x      | Fix profiles store creation: delete old DB, force v2 creation on init                                                                                                                                                       | B35                  |
+| T68    | x      | Replace browser dialogs (alert/confirm/prompt) with custom modal components                                                                                                                                                 | —                    |
+| T69    | x      | Fix export crop to exactly match grid display: pass actual grid cell size to export or store transforms as percentages                                                                                                      | V24, B36             |
+| T70    | x      | Fix export cell X offset: use EXPORT_W (1080) not CROP_W (1010) for cellOffsetX                                                                                                                                             | V24, B37             |
+| T71    | x      | Fix export for multi-row blocks: verify Y offset and image scaling use correct dimensions (crop vs full canvas)                                                                                                             | V24, B38             |
+| T72    | x      | Design refresh: black/white color scheme with orange accents (remove purple), remove keyboard hint labels from sidebar                                                                                                      | —                    |
+| T73    | x      | Increase B/W contrast: use pure black (#000) and pure white (#fff) for dramatic contrast, remove all blue/purple gradients, replace with black/white/orange gradients                                                       | —                    |
+| T74    | x      | Add white backgrounds to strategic UI elements (buttons, panels, modals) for true B/W contrast, not just black everywhere                                                                                                   | —                    |
+| T75    | x      | Context-aware +/- zoom: if block selected zoom image (transform.zoom), else zoom grid (visibleRows)                                                                                                                         | V16,V20,V5           |
+| T76    | x      | ColorPicker: reduce preset grid to 10 columns (fits 220px container exactly)                                                                                                                                                | V25                  |
+| T77    | x      | Smart save: update existing profile without prompt, prompt only for new profile                                                                                                                                             | V26, V15, V22        |
+| T78    | x      | Autosave profiles: debounced 2s on blocks/gridRows change, track currentProfileId in store                                                                                                                                  | V27, V15, V22        |
+| T79    | x      | Update drag overlay styling to match black/white theme (remove purple gradients)                                                                                                                                            | —                    |
+| T80    | x      | Add custom favicon (grid icon matching app logo)                                                                                                                                                                            | —                    |
+| T81    | x      | Sidebar responsive: desktop (left, toggleable), mobile (fullscreen overlay, hidden by default)                                                                                                                              | V28                  |
+| T82    | x      | Toolbar responsive: desktop (right vertical), mobile (top horizontal)                                                                                                                                                       | V28                  |
+| T83    | x      | Fix mobile TopToolbar: remove logo, show only essential buttons, increase button size/contrast                                                                                                                              | V29, B40             |
+| T84    | x      | Mobile sidebar full width + auto-expand grid rows to fill viewport height                                                                                                                                                   | B41                  |
+| T85    | x      | Replace +/- zoom buttons with clear labels or icons (e.g. "Fit" / "Fill") to avoid confusion                                                                                                                                | B42                  |
+| T86    | x      | Desktop sidebar always visible: remove toggle button from RightToolbar, force sidebarVisible=true on desktop                                                                                                                | V28                  |
+| T87    | x      | Fix mobile sidebar width: remove maxWidth constraint in mobile wrapper                                                                                                                                                      | B43                  |
+| T88    | x      | Fix mobile sidebar width properly: wrap Sidebar in div with width constraint or pass width via style prop to override inline style                                                                                          | B44, V30             |
+| T89    | x      | Redesign mobile TopToolbar: simplify/group controls, improve spacing, increase contrast, consider vertical/floating layout                                                                                                  | B45, V31             |
+| T90    | x      | Fix grid zoom semantics: swap +/- button actions (+ adds rows, - removes rows), set default visibleRows=5 on mobile init                                                                                                    | B46, V32             |
+| T91    | x      | Mobile toolbar pure black background: change TopToolbar from gradient to solid #000                                                                                                                                         | B47, V33             |
+| T92    | x      | Mobile sidebar full height: set height 100% to extend from top to bottom viewport edge                                                                                                                                      | B48, V34             |
+| T93    | x      | Mobile grid auto-fit: calculate visibleRows on mount/resize to fill available height (viewport - toolbar - zoom controls)                                                                                                   | B49, V35             |
+| T94    | x      | Mobile button styling: remove borders, darker/pure black backgrounds, add subtle white glow (box-shadow)                                                                                                                    | B50, V36             |
+| T95    | x      | Mobile canvas pure black: override CanvasArea/GridCanvas bg to #000 on mobile (not gray #0d0d0d)                                                                                                                            | B50, V36             |
+| T96    | x      | Mobile pan mode toggle: add toolbar button to enable/disable pan mode (touch drag modifies transform.panX/Y on selected block)                                                                                              | V37                  |
+| T97    | x      | Mobile resize mode toggle: add toolbar button to enable/disable resize mode (touch drag on block edges changes colSpan/rowSpan)                                                                                             | V37                  |
+| T98    | x      | Mobile sidebar smooth animation: keep sidebar mounted, add CSS transform transition (translateX) for fast slide in/out under 300ms                                                                                          | B51, V38             |
+| T99    | x      | Disable block drag when pan/resize mode active: modify CanvasArea onDragStart/onDragEnd to skip if panMode or resizeMode enabled                                                                                            | B52, V39             |
+| T100   | x      | Disable pan/resize buttons when no selection: add disabled={disabled} (selectedBlocks.length === 0) to pan/resize IconBtn                                                                                                   | B53, V40             |
+| T101   | x      | Change pan icon from ✋ to white symbol: use ⟷ or ↔ for consistency with other white text icons                                                                                                                             | B54, V36             |
+| T102   | x      | Fix drag prevention - add check in onDragStart to prevent drag from starting when panMode/resizeMode active (not just onDragEnd)                                                                                            | B55, V39             |
+| T103   | x      | Change pan icon to omnidirectional symbol: use ✥ (crosshair) or ⊕ or text "PAN" instead of ↔                                                                                                                                | B56, V36             |
+| T104   | x      | Fix sidebar scroll containment: remove overflowY from sidebar root, add flex layout with scrollable thumbnails section only                                                                                                 | B57, V41             |
+| T105   | x      | Replace pan/resize modes with drag mode: remove panMode/resizeMode from store, add dragMode (default false), replace 2 buttons with 1 drag button, invert onDragStart logic (allow drag only when dragMode true or desktop) | B58, V42             |
+| T106   | x      | Fix drag prevention - remove platform check in onDragStart, prevent drag when !dragMode on all platforms (not just mobile)                                                                                                  | B59, V43             |
+| T107   | x      | Enable drag button always - remove disabled={disabled} from drag IconBtn, make it global toggle available anytime                                                                                                           | B60, V44             |
+| T108   | x      | Replace drag icon ⤡ with intuitive symbol: use ⊞ (window/drag handle) or ☰ (hamburger) or text "DRAG"                                                                                                                      | B61                  |
+| T109   | x      | Replace 🔒 emoji with white lock icon - install lucide-react, use Lock icon component for monochrome white rendering                                                                                                        | B62, V45             |
+| T110   | x      | Mobile touch pan on image when drag locked - detect touch on img element, track delta, update transform.panX/panY on touchmove, no conflict with resize handles                                                             | B63, V46             |
+| T111   | x      | Reorder toolbar buttons - drag lock second position (after sidebar toggle), most-used controls up front                                                                                                                     | B64, V47             |
+| T112   | x      | Change sidebar toggle icon from ‹› arrows to hamburger ☰ (Menu icon from lucide-react)                                                                                                                                     | B65, V47             |
+| T113   | x      | Fix touch pan - replace React onTouch handlers with useEffect + native addEventListener({ passive: false }) to allow preventDefault                                                                                         | B66, V46             |
+| T114   | x      | Fix pan gesture - remove block.transform from useEffect deps, use ref for stable updateBlock callback to prevent listener churn                                                                                             | B67, V46             |
+| T115   | x      | Fix scroll on images - make touchAction conditional (none when drag enabled, auto when drag locked), allow scroll over unselected images                                                                                    | B68, V46             |
+| T116   | x      | Fix pan on selected - touchAction="none" when (drag enabled OR (pan enabled AND selected)), else "auto" for scroll                                                                                                          | B69, V46             |
+| T117   | x      | Mobile tap to deselect - regular click on already-selected single block deselects (setSelectedBlocks([])), restores scroll                                                                                                  | B70, V48             |
+| T118   | x      | Debug + fix pan - add console logs to verify listeners attach/fire, try attaching to block root instead of just img element to capture bars area                                                                            | B71, V46             |
+| T119   | x      | Add active state to menu button - pass active={sidebarVisible} to sidebar toggle IconBtn for visual feedback                                                                                                                | B72, V47             |
+| T120   | x      | Make drag lock universal - remove platform checks, dragMode controls drag on all platforms. Update isDragEnabled, touchAction, pan logic                                                                                    | V49                  |
+| T121   | x      | Increase resize handle size on mobile (44px min touch target), add stopPropagation to touch/pointer events to prevent pan/drag interference                                                                                 | B73, V50             |
+| T122   | x      | Fix RightToolbar IconBtn active state styling - match TopToolbar pattern: rgba white background + white glow when active, remove CSS var dependency                                                                         | B74, V51             |
+| T123   | x      | Hide TopToolbar buttons when sidebar open on mobile - conditional render based on sidebarVisible, show logo only when sidebar visible                                                                                       | B75, V52             |
+| T124   | x      | Mobile pinch zoom gesture support - detect 2-finger touch on selected block when drag locked, track pinch distance delta, adjust block transform.zoom (pinch out = zoom in, pinch in = zoom out)                            | B76, V53             |
+| T125   | x      | Debug resize handle pan interference - verify stopPropagation order, check if pan listeners attach to resize handle element or parent, ensure resize touch events don't bubble to pan handlers                              | B77, V54             |
+| T126   | x      | Mobile FAB component - circular draggable button (bottom-right default), drag to reposition, persist position to localStorage, tap to toggle overlay visibility                                                             | V55                  |
+| T127   | x      | Mobile action overlay - keyboard layout (top: - ↑ +, middle: ← ↓ →), position left/right of FAB based on space, wire to adjustPan/adjustZoom actions                                                                        | V56                  |
+| T128   | x      | Fix T123 - TopToolbar on mobile sidebar open should show menu button + logo (not logo only). Remove logo from Sidebar on mobile                                                                                             | B78, V52             |
+| T129   | x      | Setup husky + lint-staged + commitlint - enforce conventional commits format, run prettier on pre-commit. No ESLint config                                                                                                  | V57                  |
+| T130   | x      | Mobile resize handles avoid right edge - hide right/corner-br handles when block.col + block.colSpan near right edge (e.g. within 1 col of COLS), or offset handles inward                                                  | B79, V58             |
+| T131   | .      | Replace TopToolbar zoom buttons with FAB toggle button - remove +/- IconBtn, add toggle to show/hide FAB, wire to App fabOverlayVisible state                                                                               | B80, V59             |
+| T132   | .      | Fix FAB visibility - increase background opacity or add backdrop-filter blur, fix icon vertical centering (adjust line-height or flexbox alignment)                                                                         | B81                  |
 
 ---
 
