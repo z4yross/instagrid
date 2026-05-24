@@ -46,8 +46,7 @@ export interface AppState {
   gridCellH: number
   currentProfileId: number | null
   sidebarVisible: boolean
-  panMode: boolean
-  resizeMode: boolean
+  dragMode: boolean
 
   addImage: (img: UploadedImage) => void
   addBlock: (block: ImageBlock) => void
@@ -68,6 +67,5 @@ export interface AppState {
   loadProfileState: (blocks: ImageBlock[], gridRows: number) => void
   setCurrentProfileId: (id: number | null) => void
   toggleSidebar: () => void
-  togglePanMode: () => void
-  toggleResizeMode: () => void
+  toggleDragMode: () => void
 }
