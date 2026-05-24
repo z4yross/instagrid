@@ -65,6 +65,8 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | V23 | Loading state: skeleton placeholders in sidebar thumbnails + grid blocks during IDB restore. No fullscreen overlay. Skeleton count matches actual image count from IDB. |
 | V24 | Export crops visible image portion per cell with transforms applied. Not contain full image. Each 1080×1350 shows only what's visible in that grid cell (like Instagram carousel: 1010px crop + 35px bars each side). |
 | V25 | UI components fit containers. Width/height calculations include padding + gaps. No overflow. |
+| V26 | Save profile button: if current profile exists update it directly. Prompt for name only if unsaved/new profile. |
+| V27 | Autosave: profiles save automatically on state change (debounced 2s). Manual save available. |
 
 ---
 
@@ -154,6 +156,8 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | T74 | x | Add white backgrounds to strategic UI elements (buttons, panels, modals) for true B/W contrast, not just black everywhere | — |
 | T75 | x | Context-aware +/- zoom: if block selected zoom image (transform.zoom), else zoom grid (visibleRows) | V16,V20,V5 |
 | T76 | x | ColorPicker: reduce preset grid to 10 columns (fits 220px container exactly) | V25 |
+| T77 | . | Smart save: update existing profile without prompt, prompt only for new profile | V26, V15, V22 |
+| T78 | . | Autosave profiles: debounced 2s on blocks/gridRows change, track currentProfileId in store | V27, V15, V22 |
 
 ---
 
