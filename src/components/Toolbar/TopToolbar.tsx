@@ -1,5 +1,6 @@
 import { useStore } from '@/store/useStore'
 import ColorPicker from '@/components/ColorPicker/ColorPicker'
+import { Lock } from 'lucide-react'
 
 export default function TopToolbar() {
   const selectedBlockIds = useStore((s) => s.selectedBlockIds)
@@ -79,7 +80,9 @@ export default function TopToolbar() {
       {/* Essential controls only */}
       <IconBtn onClick={rotate} disabled={disabled} title="Rotate">↻</IconBtn>
 
-      <IconBtn onClick={toggleDragMode} active={dragMode} title="Drag mode">🔒</IconBtn>
+      <IconBtn onClick={toggleDragMode} active={dragMode} title="Drag mode">
+        <Lock size={18} />
+      </IconBtn>
 
       <IconBtn onClick={() => adjustZoom(0.1)} disabled={disabled} title="Zoom in">＋</IconBtn>
       <IconBtn onClick={() => adjustZoom(-0.1)} disabled={disabled} title="Zoom out">－</IconBtn>

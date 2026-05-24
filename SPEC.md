@@ -206,7 +206,7 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | T106 | x | Fix drag prevention - remove platform check in onDragStart, prevent drag when !dragMode on all platforms (not just mobile) | B59, V43 |
 | T107 | x | Enable drag button always - remove disabled={disabled} from drag IconBtn, make it global toggle available anytime | B60, V44 |
 | T108 | x | Replace drag icon ⤡ with intuitive symbol: use ⊞ (window/drag handle) or ☰ (hamburger) or text "DRAG" | B61 |
-| T109 | . | Replace 🔒 emoji with white lock icon - install lucide-react, use Lock icon component for monochrome white rendering | B62, V45 |
+| T109 | x | Replace 🔒 emoji with white lock icon - install lucide-react, use Lock icon component for monochrome white rendering | B62, V45 |
 
 ---
 
