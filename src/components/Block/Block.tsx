@@ -41,9 +41,10 @@ export default function Block({
 	const isSelected = selectedBlockIds.includes(block.id);
 	const isPlaceholder = block.isPlaceholder === true;
 
-	// Desktop always draggable, mobile requires dragMode
+	// dragMode: true=locked (disabled), false=unlocked (enabled)
+	// Desktop always draggable, mobile checks lock state
 	const isMobile = window.innerWidth <= 768;
-	const isDragEnabled = isMobile ? dragMode : true;
+	const isDragEnabled = isMobile ? !dragMode : true;
 
 	const style: React.CSSProperties = {
 		position: "absolute",

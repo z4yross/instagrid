@@ -26,7 +26,7 @@ const useStore = create<AppState>()(
         gridCellH: 533,
         currentProfileId: null,
         sidebarVisible: window.innerWidth > 768,
-        dragMode: false,
+        dragMode: true, // true = locked (drag disabled), false = unlocked (drag enabled)
 
       addImage: (img: UploadedImage) =>
         set((s) => ({ images: [...s.images, img] })),
