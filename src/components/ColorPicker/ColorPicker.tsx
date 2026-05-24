@@ -98,7 +98,7 @@ export default function ColorPicker({ value, onChange, disabled }: Props) {
           <div
             style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(11, 1fr)',
+              gridTemplateColumns: 'repeat(10, 1fr)',
               gap: 4,
               marginBottom: 12,
             }}
