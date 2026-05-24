@@ -233,7 +233,7 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | T122 | x | Fix RightToolbar IconBtn active state styling - match TopToolbar pattern: rgba white background + white glow when active, remove CSS var dependency | B74, V51 |
 | T123 | x | Hide TopToolbar buttons when sidebar open on mobile - conditional render based on sidebarVisible, show logo only when sidebar visible | B75, V52 |
 | T124 | x | Mobile pinch zoom gesture support - detect 2-finger touch on selected block when drag locked, track pinch distance delta, adjust block transform.zoom (pinch out = zoom in, pinch in = zoom out) | B76, V53 |
-| T125 | . | Debug resize handle pan interference - verify stopPropagation order, check if pan listeners attach to resize handle element or parent, ensure resize touch events don't bubble to pan handlers | B77, V54 |
+| T125 | x | Debug resize handle pan interference - verify stopPropagation order, check if pan listeners attach to resize handle element or parent, ensure resize touch events don't bubble to pan handlers | B77, V54 |
 | T126 | . | Mobile FAB component - circular draggable button (bottom-right default), drag to reposition, persist position to localStorage, tap to toggle overlay visibility | V55 |
 | T127 | . | Mobile action overlay - keyboard layout (top: - ↑ +, middle: ← ↓ →), position left/right of FAB based on space, wire to adjustPan/adjustZoom actions | V56 |
 | T128 | x | Fix T123 - TopToolbar on mobile sidebar open should show menu button + logo (not logo only). Remove logo from Sidebar on mobile | B78, V52 |

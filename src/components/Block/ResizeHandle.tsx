@@ -104,6 +104,7 @@ export default function ResizeHandle({ block, cellW, cellH, edge }: Props) {
 
   return (
     <div
+      data-resize-handle="true"
       style={style}
       onPointerDown={onPointerDown}
       onPointerMove={onPointerMove}

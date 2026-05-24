@@ -78,6 +78,12 @@ export default function Block({
 		}
 
 		function handleTouchStart(e: TouchEvent) {
+			// T125: Skip if touch starts on resize handle (event bubbled despite stopPropagation)
+			const target = e.target as HTMLElement;
+			if (target.closest('[data-resize-handle]')) {
+				return;
+			}
+
 			if (e.touches.length === 2) {
 				// T124: Pinch zoom gesture
 				initialPinchDistance = getDistance(e.touches[0], e.touches[1]);
