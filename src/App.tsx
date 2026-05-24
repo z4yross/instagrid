@@ -26,21 +26,56 @@ export default function App() {
   if (isMobile) {
     // Mobile layout: TopToolbar + fullscreen sidebar overlay
     return (
-      <div style={{ display: 'flex', flexDirection: 'column', height: '100%', overflow: 'hidden', background: 'var(--color-bg-base)' }}>
-        <TopToolbar />
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          height: '100%',
+          overflow: 'hidden',
+          background: 'var(--color-bg-base)',
+        }}
+      >
+        <TopToolbar
+          onToggleFAB={() => setFabOverlayVisible(!fabOverlayVisible)}
+          fabVisible={fabOverlayVisible}
+        />
 
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', marginTop: 64, position: 'relative' }}>
+        <div
+          style={{
+            flex: 1,
+            display: 'flex',
+            flexDirection: 'column',
+            overflow: 'hidden',
+            marginTop: 64,
+            position: 'relative',
+          }}
+        >
           {lowResWarning.length > 0 && (
-            <div style={{
-              padding: '6px 12px',
-              background: 'rgba(251,191,36,0.12)',
-              borderBottom: '1px solid rgba(251,191,36,0.3)',
-              fontSize: 12, color: 'var(--color-warning)',
-              display: 'flex', alignItems: 'center', gap: 8,
-            }}>
+            <div
+              style={{
+                padding: '6px 12px',
+                background: 'rgba(251,191,36,0.12)',
+                borderBottom: '1px solid rgba(251,191,36,0.3)',
+                fontSize: 12,
+                color: 'var(--color-warning)',
+                display: 'flex',
+                alignItems: 'center',
+                gap: 8,
+              }}
+            >
               ⚠ Low resolution: {lowResWarning.join(', ')} — may look blurry at export
-              <button style={{ marginLeft: 'auto', background: 'none', border: 'none', color: 'inherit', cursor: 'pointer' }}
-                onClick={() => setLowResWarning([])}>✕</button>
+              <button
+                style={{
+                  marginLeft: 'auto',
+                  background: 'none',
+                  border: 'none',
+                  color: 'inherit',
+                  cursor: 'pointer',
+                }}
+                onClick={() => setLowResWarning([])}
+              >
+                ✕
+              </button>
             </div>
           )}
 
@@ -61,16 +96,18 @@ export default function App() {
               }}
               onClick={() => useStore.getState().toggleSidebar()}
             />
-            <div style={{
-              position: 'fixed',
-              left: 0,
-              top: 64,
-              bottom: 0,
-              right: 0,
-              zIndex: 100,
-              transform: sidebarVisible ? 'translateX(0)' : 'translateX(-100%)',
-              transition: 'transform 0.25s ease-out',
-            }}>
+            <div
+              style={{
+                position: 'fixed',
+                left: 0,
+                top: 64,
+                bottom: 0,
+                right: 0,
+                zIndex: 100,
+                transform: sidebarVisible ? 'translateX(0)' : 'translateX(-100%)',
+                transition: 'transform 0.25s ease-out',
+              }}
+            >
               <Sidebar onLowRes={setLowResWarning} width="100%" />
             </div>
           </>
@@ -83,10 +120,7 @@ export default function App() {
           />
 
           {/* Mobile action overlay */}
-          <MobileActionOverlay
-            visible={fabOverlayVisible}
-            fabPosition={fabPosition}
-          />
+          <MobileActionOverlay visible={fabOverlayVisible} fabPosition={fabPosition} />
         </div>
       </div>
     )
@@ -94,21 +128,51 @@ export default function App() {
 
   // Desktop layout: RightToolbar + left sidebar (always visible)
   return (
-    <div style={{ display: 'flex', height: '100%', overflow: 'hidden', background: 'var(--color-bg-base)' }}>
+    <div
+      style={{
+        display: 'flex',
+        height: '100%',
+        overflow: 'hidden',
+        background: 'var(--color-bg-base)',
+      }}
+    >
       <Sidebar onLowRes={setLowResWarning} />
 
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', marginRight: 64 }}>
+      <div
+        style={{
+          flex: 1,
+          display: 'flex',
+          flexDirection: 'column',
+          overflow: 'hidden',
+          marginRight: 64,
+        }}
+      >
         {lowResWarning.length > 0 && (
-          <div style={{
-            padding: '6px 12px',
-            background: 'rgba(251,191,36,0.12)',
-            borderBottom: '1px solid rgba(251,191,36,0.3)',
-            fontSize: 12, color: 'var(--color-warning)',
-            display: 'flex', alignItems: 'center', gap: 8,
-          }}>
+          <div
+            style={{
+              padding: '6px 12px',
+              background: 'rgba(251,191,36,0.12)',
+              borderBottom: '1px solid rgba(251,191,36,0.3)',
+              fontSize: 12,
+              color: 'var(--color-warning)',
+              display: 'flex',
+              alignItems: 'center',
+              gap: 8,
+            }}
+          >
             ⚠ Low resolution: {lowResWarning.join(', ')} — may look blurry at export
-            <button style={{ marginLeft: 'auto', background: 'none', border: 'none', color: 'inherit', cursor: 'pointer' }}
-              onClick={() => setLowResWarning([])}>✕</button>
+            <button
+              style={{
+                marginLeft: 'auto',
+                background: 'none',
+                border: 'none',
+                color: 'inherit',
+                cursor: 'pointer',
+              }}
+              onClick={() => setLowResWarning([])}
+            >
+              ✕
+            </button>
           </div>
         )}
 
