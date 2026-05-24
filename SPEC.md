@@ -174,7 +174,7 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | T87 | x | Fix mobile sidebar width: remove maxWidth constraint in mobile wrapper | B43 |
 | T88 | x | Fix mobile sidebar width properly: wrap Sidebar in div with width constraint or pass width via style prop to override inline style | B44, V30 |
 | T89 | x | Redesign mobile TopToolbar: simplify/group controls, improve spacing, increase contrast, consider vertical/floating layout | B45, V31 |
-| T90 | . | Fix grid zoom semantics: swap +/- button actions (+ adds rows, - removes rows), set default visibleRows=5 on mobile init | B46, V32 |
+| T90 | x | Fix grid zoom semantics: swap +/- button actions (+ adds rows, - removes rows), set default visibleRows=5 on mobile init | B46, V32 |
 
 ---
 

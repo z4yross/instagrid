@@ -268,22 +268,20 @@ export default function CanvasArea({ onLowRes }: Props) {
 				<button
 					onClick={(e) => {
 						e.stopPropagation();
-						setVisibleRows(visibleRows + 1);
+						setVisibleRows(visibleRows - 1);
 					}}
-					disabled={visibleRows >= 10}
+					disabled={visibleRows <= 1}
 					style={{
 						padding: "6px 10px",
 						fontSize: 12,
 						background: "rgba(255, 255, 255, 0.08)",
 						border: "none",
 						borderRadius: 6,
-						cursor: visibleRows >= 10 ? "not-allowed" : "pointer",
+						cursor: visibleRows <= 1 ? "not-allowed" : "pointer",
 						color: "var(--color-text-primary)",
-						opacity: visibleRows >= 10 ? 0.5 : 1,
+						opacity: visibleRows <= 1 ? 0.5 : 1,
 					}}
-				>
-					Fit
-				</button>
+				>-</button>
 				<span
 					style={{
 						padding: "6px 10px",
@@ -298,26 +296,24 @@ export default function CanvasArea({ onLowRes }: Props) {
 				<button
 					onClick={(e) => {
 						e.stopPropagation();
-						setVisibleRows(visibleRows - 1);
+						setVisibleRows(visibleRows + 1);
 					}}
-					disabled={visibleRows <= 1}
+					disabled={visibleRows >= 10}
 					style={{
 						padding: "6px 10px",
 						fontSize: 12,
 						background: "rgba(255, 255, 255, 0.08)",
 						border: "none",
 						borderRadius: 6,
-						cursor: visibleRows <= 1 ? "not-allowed" : "pointer",
+						cursor: visibleRows >= 10 ? "not-allowed" : "pointer",
 						color: "var(--color-text-primary)",
-						opacity: visibleRows <= 1 ? 0.5 : 1,
+						opacity: visibleRows >= 10 ? 0.5 : 1,
 					}}
-				>
-					Fill
-				</button>
+				>+</button>
 				<button
 					onClick={(e) => {
 						e.stopPropagation();
-						setVisibleRows(3);
+						setVisibleRows(window.innerWidth <= 768 ? 5 : 3);
 					}}
 					style={{
 						padding: "6px 10px",

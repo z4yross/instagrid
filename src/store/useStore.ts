@@ -19,7 +19,7 @@ const useStore = create<AppState>()(
         selectedBlockIds: [],
         lastSelectedId: null,
         showGuides: true,
-        visibleRows: 3,
+        visibleRows: window.innerWidth <= 768 ? 5 : 3,
         isLoading: true,
         imageCount: 0,
         gridCellW: 400,
