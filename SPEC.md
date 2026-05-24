@@ -167,7 +167,7 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | T83 | x | Fix mobile TopToolbar: remove logo, show only essential buttons, increase button size/contrast | V29, B40 |
 | T84 | x | Mobile sidebar full width + auto-expand grid rows to fill viewport height | B41 |
 | T85 | x | Replace +/- zoom buttons with clear labels or icons (e.g. "Fit" / "Fill") to avoid confusion | B42 |
-| T86 | . | Desktop sidebar always visible: remove toggle button from RightToolbar, force sidebarVisible=true on desktop | V28 |
+| T86 | x | Desktop sidebar always visible: remove toggle button from RightToolbar, force sidebarVisible=true on desktop | V28 |
 
 ---
 

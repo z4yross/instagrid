@@ -7,8 +7,6 @@ export default function RightToolbar() {
   const updateBlock = useStore((s) => s.updateBlock)
   const removeBlocks = useStore((s) => s.removeBlocks)
   const setSelectedBlocks = useStore((s) => s.setSelectedBlocks)
-  const toggleSidebar = useStore((s) => s.toggleSidebar)
-  const sidebarVisible = useStore((s) => s.sidebarVisible)
 
   const selectedBlocks = blocks.filter((b) => selectedBlockIds.includes(b.id))
   const block = selectedBlocks.length === 1 ? selectedBlocks[0] : null
@@ -79,10 +77,6 @@ export default function RightToolbar() {
         zIndex: 100,
       }}
     >
-      <IconBtn onClick={toggleSidebar} title={sidebarVisible ? 'Hide sidebar' : 'Show sidebar'}>
-        {sidebarVisible ? '‹' : '›'}
-      </IconBtn>
-
       {selectedBlocks.length > 1 && (
         <div style={{
           fontSize: 10,
@@ -98,8 +92,6 @@ export default function RightToolbar() {
           {selectedBlocks.length}
         </div>
       )}
-
-      <div style={{ height: 1, background: 'var(--color-border)', margin: '4px 0' }} />
 
       <IconBtn onClick={rotate} disabled={disabled} title="Rotate 90°">↻</IconBtn>
       <IconBtn onClick={flipHorizontal} disabled={disabled} title="Flip horizontal">⇄</IconBtn>

@@ -67,10 +67,10 @@ export default function App() {
     )
   }
 
-  // Desktop layout: RightToolbar + left sidebar
+  // Desktop layout: RightToolbar + left sidebar (always visible)
   return (
     <div style={{ display: 'flex', height: '100%', overflow: 'hidden', background: 'var(--color-bg-base)' }}>
-      {sidebarVisible && <Sidebar onLowRes={setLowResWarning} />}
+      <Sidebar onLowRes={setLowResWarning} />
 
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', marginRight: 64 }}>
         {lowResWarning.length > 0 && (
