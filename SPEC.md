@@ -180,7 +180,7 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | T90 | x | Fix grid zoom semantics: swap +/- button actions (+ adds rows, - removes rows), set default visibleRows=5 on mobile init | B46, V32 |
 | T91 | x | Mobile toolbar pure black background: change TopToolbar from gradient to solid #000 | B47, V33 |
 | T92 | x | Mobile sidebar full height: set height 100% to extend from top to bottom viewport edge | B48, V34 |
-| T93 | . | Mobile grid auto-fit: calculate visibleRows on mount/resize to fill available height (viewport - toolbar - zoom controls) | B49, V35 |
+| T93 | x | Mobile grid auto-fit: calculate visibleRows on mount/resize to fill available height (viewport - toolbar - zoom controls) | B49, V35 |
 
 ---
 

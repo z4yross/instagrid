@@ -54,6 +54,34 @@ export default function CanvasArea({ onLowRes }: Props) {
 		return () => ro.disconnect();
 	}, []);
 
+	// T93: mobile grid auto-fit height
+	useEffect(() => {
+		const isMobile = window.innerWidth <= 768;
+		if (!isMobile) return;
+
+		function calculateOptimalRows() {
+			const viewportHeight = window.innerHeight;
+			const viewportWidth = window.innerWidth;
+			const toolbarHeight = 64;
+			const zoomControlsHeight = 60;
+			const availableHeight = viewportHeight - toolbarHeight - zoomControlsHeight;
+
+			// Cell aspect ratio 3:4 (width:height), 3 columns
+			const cellWidth = viewportWidth / COLS;
+			const cellHeight = cellWidth * (4 / 3);
+			const optimalRows = Math.floor(availableHeight / cellHeight);
+
+			// Clamp to reasonable range
+			const clampedRows = Math.max(1, Math.min(10, optimalRows));
+			setVisibleRows(clampedRows);
+		}
+
+		calculateOptimalRows();
+
+		window.addEventListener('resize', calculateOptimalRows);
+		return () => window.removeEventListener('resize', calculateOptimalRows);
+	}, [setVisibleRows]);
+
 	// T57: copy/paste blocks
 	useEffect(() => {
 		function handleKeyDown(e: KeyboardEvent) {
