@@ -85,6 +85,8 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | V43 | dragMode controls block position drag on all platforms (mobile and desktop). When dragMode=false, drag disabled globally. |
 | V44 | Drag mode button always enabled - mode is global toggle, not selection-dependent. |
 | V45 | Toolbar icons monochrome white - use Unicode symbols or icon library (react-icons, lucide-react). No color emojis. |
+| V46 | Mobile image pan via touch when drag locked - swipe on image adjusts transform.panX/panY. No conflict with resize. |
+| V47 | Toolbar button order: sidebar toggle first, drag lock second (most-used controls up front). |
 
 ---
 
@@ -207,6 +209,9 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | T107 | x | Enable drag button always - remove disabled={disabled} from drag IconBtn, make it global toggle available anytime | B60, V44 |
 | T108 | x | Replace drag icon ⤡ with intuitive symbol: use ⊞ (window/drag handle) or ☰ (hamburger) or text "DRAG" | B61 |
 | T109 | x | Replace 🔒 emoji with white lock icon - install lucide-react, use Lock icon component for monochrome white rendering | B62, V45 |
+| T110 | x | Mobile touch pan on image when drag locked - detect touch on img element, track delta, update transform.panX/panY on touchmove, no conflict with resize handles | B63, V46 |
+| T111 | ~ | Reorder toolbar buttons - drag lock second position (after sidebar toggle), most-used controls up front | B64, V47 |
+| T112 | ~ | Change sidebar toggle icon from ‹› arrows to hamburger ☰ (Menu icon from lucide-react) | B65, V47 |
 
 ---
 
@@ -276,4 +281,7 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | B60 | 2026-05-24 | Drag button disabled when no block selected, but dragMode is global toggle - should be always enabled | V44 |
 | B61 | 2026-05-24 | Drag icon ⤡ not intuitive, hard to understand what button does | — |
 | B62 | 2026-05-24 | Drag icon 🔒 renders as color emoji, not white text. Inconsistent with other toolbar icons (↻ ＋ － ✕) | V45 |
+| B63 | 2026-05-24 | No way to pan image on mobile when drag locked. User can't adjust image position within block on touch devices | V46 |
+| B64 | 2026-05-24 | Drag button not prominent - should be second position (after sidebar toggle) for easy mobile access | V47 |
+| B65 | 2026-05-24 | Sidebar toggle uses arrows ‹›, should use hamburger icon ☰ for better recognition | V47 |
 

@@ -3,6 +3,7 @@ import { useStore } from "@/store/useStore";
 import { cellUploadNumber, COLS } from "@/utils/gridUtils";
 import { useDraggable } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
+import { useRef } from "react";
 import ResizeHandle from "./ResizeHandle";
 
 interface Props {
@@ -32,6 +33,7 @@ export default function Block({
 	const lastSelectedId = useStore((s) => s.lastSelectedId);
 	const setSelectedBlocks = useStore((s) => s.setSelectedBlocks);
 	const toggleBlockSelection = useStore((s) => s.toggleBlockSelection);
+	const updateBlock = useStore((s) => s.updateBlock);
 	const images = useStore((s) => s.images);
 	const gridRows = useStore((s) => s.gridRows);
 	const image = block.imageId
@@ -45,6 +47,39 @@ export default function Block({
 	// Desktop always draggable, mobile checks lock state
 	const isMobile = window.innerWidth <= 768;
 	const isDragEnabled = isMobile ? !dragMode : true;
+
+	// T110: Touch pan on image when drag locked (mobile only)
+	const touchStartRef = useRef<{ x: number; y: number } | null>(null);
+	const isPanEnabled = isMobile && dragMode; // Pan only when drag locked
+
+	function handleTouchStart(e: React.TouchEvent) {
+		if (!isPanEnabled || !isSelected) return;
+		const touch = e.touches[0];
+		touchStartRef.current = { x: touch.clientX, y: touch.clientY };
+	}
+
+	function handleTouchMove(e: React.TouchEvent) {
+		if (!isPanEnabled || !isSelected || !touchStartRef.current) return;
+		e.preventDefault(); // Prevent scroll while panning
+		const touch = e.touches[0];
+		const deltaX = touch.clientX - touchStartRef.current.x;
+		const deltaY = touch.clientY - touchStartRef.current.y;
+
+		// Update pan based on delta (scale by 0.5 for smoother control)
+		updateBlock(block.id, {
+			transform: {
+				...block.transform,
+				panX: block.transform.panX + deltaX * 0.5,
+				panY: block.transform.panY + deltaY * 0.5,
+			},
+		});
+
+		touchStartRef.current = { x: touch.clientX, y: touch.clientY };
+	}
+
+	function handleTouchEnd() {
+		touchStartRef.current = null;
+	}
 
 	const style: React.CSSProperties = {
 		position: "absolute",
@@ -132,6 +167,9 @@ export default function Block({
 						alt=""
 						draggable={false}
 						style={buildImgStyle(block)}
+						onTouchStart={handleTouchStart}
+						onTouchMove={handleTouchMove}
+						onTouchEnd={handleTouchEnd}
 					/>
 				)}
 				{isPlaceholder && (
