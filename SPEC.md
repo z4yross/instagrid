@@ -264,7 +264,7 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | T144   | x      | Fix modal button colors - choice buttons white bg (#fff) + black text + box-shadow for depth on white modal bg. Cancel rgba(0,0,0,0.6) bg + white text                                                                      | B97, V66             |
 | T145   | x      | FAB subtle background - change to rgba(255,255,255,0.08) solid (no gradient), keep blur(8px), simplify/remove border. Match grid zoom control style                                                                         | B98, V68             |
 | T146   | x      | Add resize mode toggle - store resizeMode ('buttons' or 'handles'), default 'buttons'. Toggle buttons in toolbars (desktop: after lock, mobile: after FAB toggle). Conditional render in Block.tsx                          | V65, V69, V71        |
-| T147   | .      | Remove placeholder text - delete "Placeholder" text div from Block.tsx isPlaceholder render, show only barsColor background                                                                                                 | B100, V70            |
+| T147   | x      | Remove placeholder text - delete "Placeholder" text div from Block.tsx isPlaceholder render, show only barsColor background                                                                                                 | B100, V70            |
 
 ---
 

@@ -231,24 +231,6 @@ export default function Block({
         {!isPlaceholder && image && (
           <img src={image.src} alt="" draggable={false} style={buildImgStyle(block)} />
         )}
-        {isPlaceholder && (
-          <div
-            style={{
-              position: 'absolute',
-              inset: 0,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontSize: 10,
-              color: 'var(--color-text-muted)',
-              fontWeight: 500,
-              letterSpacing: '0.05em',
-              textTransform: 'uppercase',
-            }}
-          >
-            Placeholder
-          </div>
-        )}
       </div>
 
       <CellBadges block={block} cellW={cellW} cellH={cellH} gridRows={gridRows} />
