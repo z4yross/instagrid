@@ -39,6 +39,8 @@ export default function TopToolbar() {
     setSelectedBlocks([])
   }
 
+  const isMobile = window.innerWidth <= 768
+
   return (
     <div
       style={{
@@ -57,46 +59,65 @@ export default function TopToolbar() {
         zIndex: 100,
       }}
     >
-      {/* Sidebar toggle */}
-      <IconBtn onClick={toggleSidebar} active={sidebarVisible} title={sidebarVisible ? 'Hide' : 'Show'}>
-        <Menu size={18} />
-      </IconBtn>
+      {isMobile && sidebarVisible ? (
+        /* Menu button + logo when sidebar open on mobile */
+        <>
+          <IconBtn onClick={toggleSidebar} active={sidebarVisible} title="Hide">
+            <Menu size={18} />
+          </IconBtn>
+          <div style={{
+            fontSize: 20,
+            fontWeight: 700,
+            color: '#ffffff',
+            letterSpacing: '-0.02em',
+          }}>
+            InstaGrid
+          </div>
+        </>
+      ) : (
+        <>
+          {/* Sidebar toggle */}
+          <IconBtn onClick={toggleSidebar} active={sidebarVisible} title={sidebarVisible ? 'Hide' : 'Show'}>
+            <Menu size={18} />
+          </IconBtn>
 
-      {/* Drag lock - second position for mobile access */}
-      <IconBtn onClick={toggleDragMode} active={dragMode} title="Drag mode">
-        <Lock size={18} />
-      </IconBtn>
+          {/* Drag lock - second position for mobile access */}
+          <IconBtn onClick={toggleDragMode} active={dragMode} title="Drag mode">
+            <Lock size={18} />
+          </IconBtn>
 
-      {/* Selection count badge */}
-      {selectedBlocks.length > 1 && (
-        <div style={{
-          fontSize: 11,
-          fontWeight: 700,
-          color: '#000',
-          padding: '5px 8px',
-          background: '#ffffff',
-          borderRadius: 4,
-          boxShadow: '0 2px 4px rgba(0,0,0,0.3)',
-        }}>
-          {selectedBlocks.length}
-        </div>
+          {/* Selection count badge */}
+          {selectedBlocks.length > 1 && (
+            <div style={{
+              fontSize: 11,
+              fontWeight: 700,
+              color: '#000',
+              padding: '5px 8px',
+              background: '#ffffff',
+              borderRadius: 4,
+              boxShadow: '0 2px 4px rgba(0,0,0,0.3)',
+            }}>
+              {selectedBlocks.length}
+            </div>
+          )}
+
+          {/* Essential controls only */}
+          <IconBtn onClick={rotate} disabled={disabled} title="Rotate">↻</IconBtn>
+
+          <IconBtn onClick={() => adjustZoom(0.1)} disabled={disabled} title="Zoom in">＋</IconBtn>
+          <IconBtn onClick={() => adjustZoom(-0.1)} disabled={disabled} title="Zoom out">－</IconBtn>
+
+          <ColorPicker
+            value={block?.barsColor ?? '#000000'}
+            onChange={(color) => block && updateBlock(block.id, { barsColor: color })}
+            disabled={disabled}
+          />
+
+          <div style={{ flex: 1 }} />
+
+          <IconBtn onClick={del} disabled={disabled} title="Delete" danger>✕</IconBtn>
+        </>
       )}
-
-      {/* Essential controls only */}
-      <IconBtn onClick={rotate} disabled={disabled} title="Rotate">↻</IconBtn>
-
-      <IconBtn onClick={() => adjustZoom(0.1)} disabled={disabled} title="Zoom in">＋</IconBtn>
-      <IconBtn onClick={() => adjustZoom(-0.1)} disabled={disabled} title="Zoom out">－</IconBtn>
-
-      <ColorPicker
-        value={block?.barsColor ?? '#000000'}
-        onChange={(color) => block && updateBlock(block.id, { barsColor: color })}
-        disabled={disabled}
-      />
-
-      <div style={{ flex: 1 }} />
-
-      <IconBtn onClick={del} disabled={disabled} title="Delete" danger>✕</IconBtn>
     </div>
   )
 }

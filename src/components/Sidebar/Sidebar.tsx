@@ -200,26 +200,28 @@ export default function Sidebar({ onLowRes, width = 210 }: Props) {
       `,
       boxShadow: 'inset -8px 0 12px rgba(0, 0, 0, 0.4)',
     }}>
-      {/* header */}
-      <div style={{
-        padding: '14px 14px 10px',
-      }}>
-        <div style={{ fontSize: 20, fontWeight: 700, letterSpacing: '-0.5px', color: 'var(--color-text-primary)', display: 'flex', alignItems: 'center', gap: 6 }}>
-          insta<span style={{ color: 'var(--color-accent)' }}>grid</span>
-          <svg width="18" height="18" viewBox="0 0 18 18" style={{ opacity: 0.8 }}>
-            <rect x="1" y="1" width="4" height="4" fill="var(--color-accent)" />
-            <rect x="7" y="1" width="4" height="4" fill="var(--color-accent)" opacity="0.6" />
-            <rect x="13" y="1" width="4" height="4" fill="var(--color-accent)" opacity="0.3" />
-            <rect x="1" y="7" width="4" height="4" fill="var(--color-accent)" opacity="0.6" />
-            <rect x="7" y="7" width="4" height="4" fill="var(--color-accent)" />
-            <rect x="13" y="7" width="4" height="4" fill="var(--color-accent)" opacity="0.6" />
-            <rect x="1" y="13" width="4" height="4" fill="var(--color-accent)" opacity="0.3" />
-            <rect x="7" y="13" width="4" height="4" fill="var(--color-accent)" opacity="0.6" />
-            <rect x="13" y="13" width="4" height="4" fill="var(--color-accent)" />
-          </svg>
+      {/* header - desktop only, logo appears in TopToolbar on mobile */}
+      {window.innerWidth > 768 && (
+        <div style={{
+          padding: '14px 14px 10px',
+        }}>
+          <div style={{ fontSize: 20, fontWeight: 700, letterSpacing: '-0.5px', color: 'var(--color-text-primary)', display: 'flex', alignItems: 'center', gap: 6 }}>
+            insta<span style={{ color: 'var(--color-accent)' }}>grid</span>
+            <svg width="18" height="18" viewBox="0 0 18 18" style={{ opacity: 0.8 }}>
+              <rect x="1" y="1" width="4" height="4" fill="var(--color-accent)" />
+              <rect x="7" y="1" width="4" height="4" fill="var(--color-accent)" opacity="0.6" />
+              <rect x="13" y="1" width="4" height="4" fill="var(--color-accent)" opacity="0.3" />
+              <rect x="1" y="7" width="4" height="4" fill="var(--color-accent)" opacity="0.6" />
+              <rect x="7" y="7" width="4" height="4" fill="var(--color-accent)" />
+              <rect x="13" y="7" width="4" height="4" fill="var(--color-accent)" opacity="0.6" />
+              <rect x="1" y="13" width="4" height="4" fill="var(--color-accent)" opacity="0.3" />
+              <rect x="7" y="13" width="4" height="4" fill="var(--color-accent)" opacity="0.6" />
+              <rect x="13" y="13" width="4" height="4" fill="var(--color-accent)" />
+            </svg>
+          </div>
+          <div style={{ fontSize: 11, color: 'var(--color-text-muted)', marginTop: 3, letterSpacing: '0.5px' }}>feed planner</div>
         </div>
-        <div style={{ fontSize: 11, color: 'var(--color-text-muted)', marginTop: 3, letterSpacing: '0.5px' }}>feed planner</div>
-      </div>
+      )}
 
       {/* upload */}
       <div style={{ padding: '10px 10px 8px', display: 'flex', flexDirection: 'column', gap: 6 }}>

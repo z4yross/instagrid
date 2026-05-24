@@ -236,7 +236,7 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | T125 | . | Debug resize handle pan interference - verify stopPropagation order, check if pan listeners attach to resize handle element or parent, ensure resize touch events don't bubble to pan handlers | B77, V54 |
 | T126 | . | Mobile FAB component - circular draggable button (bottom-right default), drag to reposition, persist position to localStorage, tap to toggle overlay visibility | V55 |
 | T127 | . | Mobile action overlay - keyboard layout (top: - ↑ +, middle: ← ↓ →), position left/right of FAB based on space, wire to adjustPan/adjustZoom actions | V56 |
-| T128 | . | Fix T123 - TopToolbar on mobile sidebar open should show menu button + logo (not logo only). Remove logo from Sidebar on mobile | B78, V52 |
+| T128 | x | Fix T123 - TopToolbar on mobile sidebar open should show menu button + logo (not logo only). Remove logo from Sidebar on mobile | B78, V52 |
 
 ---
 
