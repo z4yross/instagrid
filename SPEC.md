@@ -165,6 +165,8 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | T81 | x | Sidebar responsive: desktop (left, toggleable), mobile (fullscreen overlay, hidden by default) | V28 |
 | T82 | x | Toolbar responsive: desktop (right vertical), mobile (top horizontal) | V28 |
 | T83 | x | Fix mobile TopToolbar: remove logo, show only essential buttons, increase button size/contrast | V29, B40 |
+| T84 | . | Mobile sidebar full width + auto-expand grid rows to fill viewport height | B41 |
+| T85 | . | Replace +/- zoom buttons with clear labels or icons (e.g. "Fit" / "Fill") to avoid confusion | B42 |
 
 ---
 
@@ -212,4 +214,6 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | B38 | 2026-05-23 | Multi-row block export: panY misaligned | When block spans multiple rows, Y offset breaks. May need image scaling to use crop area dimensions not full canvas. T70 fix for X may have revealed Y coordinate system inconsistency → T71 |
 | B39 | 2026-05-23 | ColorPicker preset grid overflow: 11 cols * (16px + 4px gap) + 24px padding = 240px, container only 220px | V25, T76 |
 | B40 | 2026-05-24 | Mobile TopToolbar buttons invisible/lost. Logo wastes space, too many buttons overflow, low contrast | V29, T83 |
+| B41 | 2026-05-24 | Mobile sidebar overlay not full width | T84 |
+| B42 | 2026-05-24 | Zoom controls confusing: + removes rows, - adds rows. Users expect + to add, - to subtract | T85 |
 
