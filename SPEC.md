@@ -114,6 +114,8 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | V72     | Sidebar toggle shows favicon as logo - /favicon.svg (3x3 grid icon), not text or hamburger. Favicon acts as toggle button.                                                                                            |
 | V73     | Favicon background transparent - no black background when on gray button. Favicon adapts to button background.                                                                                                        |
 | V74     | Logo button matches toolbar button styling - same background, padding, hover effects as other IconBtn buttons.                                                                                                        |
+| V75     | Sidebar close hint when open - left arrow (←) button on right side of toolbar when sidebar visible on mobile. Makes close functionality obvious.                                                                      |
+| V76     | Sidebar auto-close on action - sidebar closes after thumbnail drag or add placeholder on mobile. User sees result immediately.                                                                                        |
 
 ---
 
@@ -272,6 +274,8 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | T149   | x      | Use favicon as logo - replace "IG" text with <img src="/favicon.svg" /> in sidebar toggle buttons. 24px size, maintain clickable button styling                                                                             | B101, V72            |
 | T150   | x      | Remove favicon black background - edit /public/favicon.svg, change black rect fill to transparent. Keep white grid squares                                                                                                  | B102, V73            |
 | T151   | x      | Match logo button styling - replace custom button with IconBtn component or apply same styles (48x48, gradient bg, hover effects) to logo button in TopToolbar                                                              | B103, V74            |
+| T152   | x      | Add close arrow when sidebar open - IconBtn with left arrow (← or ChevronLeft) on right side of TopToolbar when sidebar visible on mobile. Calls toggleSidebar                                                              | V75                  |
+| T153   | .      | Sidebar auto-close on thumbnail/placeholder action - call toggleSidebar after drag thumbnail to canvas and after add placeholder button click on mobile                                                                     | V76                  |
 
 ---
 

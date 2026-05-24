@@ -1,6 +1,6 @@
 import { useStore } from '@/store/useStore'
 import ColorPicker from '@/components/ColorPicker/ColorPicker'
-import { Lock, Layers, Maximize2 } from 'lucide-react'
+import { Lock, Layers, Maximize2, ChevronLeft } from 'lucide-react'
 
 interface Props {
   onToggleFAB?: () => void
@@ -74,6 +74,10 @@ export default function TopToolbar({ onToggleFAB, fabVisible }: Props = {}) {
           >
             InstaGrid
           </div>
+          <div style={{ flex: 1 }} />
+          <IconBtn onClick={toggleSidebar} active={false} title="Close sidebar">
+            <ChevronLeft size={18} />
+          </IconBtn>
         </>
       ) : (
         <>
