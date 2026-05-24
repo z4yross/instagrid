@@ -188,6 +188,11 @@ export default function Sidebar({ onLowRes, width = 210 }: Props) {
       // Track locally for next iteration
       currentBlocks = [...currentBlocks, block]
     }
+
+    // V76: Close sidebar on mobile after upload adds images to grid
+    if (loaded.length > 0 && window.innerWidth <= 768) {
+      toggleSidebar()
+    }
   }
 
   function doExport() {
