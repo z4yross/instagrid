@@ -164,7 +164,7 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | T80 | x | Add custom favicon (grid icon matching app logo) | — |
 | T81 | x | Sidebar responsive: desktop (left, toggleable), mobile (fullscreen overlay, hidden by default) | V28 |
 | T82 | x | Toolbar responsive: desktop (right vertical), mobile (top horizontal) | V28 |
-| T83 | . | Fix mobile TopToolbar: remove logo, show only essential buttons, increase button size/contrast | V29, B40 |
+| T83 | x | Fix mobile TopToolbar: remove logo, show only essential buttons, increase button size/contrast | V29, B40 |
 
 ---
 

@@ -22,20 +22,6 @@ export default function TopToolbar() {
     })
   }
 
-  function flipHorizontal() {
-    if (selectedBlocks.length === 0) return
-    selectedBlocks.forEach((b) => {
-      updateBlock(b.id, { transform: { ...b.transform, flipX: !b.transform.flipX } })
-    })
-  }
-
-  function flipVertical() {
-    if (selectedBlocks.length === 0) return
-    selectedBlocks.forEach((b) => {
-      updateBlock(b.id, { transform: { ...b.transform, flipY: !b.transform.flipY } })
-    })
-  }
-
   function adjustPan(dx: number, dy: number) {
     if (selectedBlocks.length === 0) return
     selectedBlocks.forEach((b) => {
@@ -80,58 +66,41 @@ export default function TopToolbar() {
       }}
     >
       {/* Sidebar toggle */}
-      <IconBtn onClick={toggleSidebar} title={sidebarVisible ? 'Hide sidebar' : 'Show sidebar'}>
+      <IconBtn onClick={toggleSidebar} title={sidebarVisible ? 'Hide' : 'Show'}>
         {sidebarVisible ? '‹' : '›'}
       </IconBtn>
 
-      {/* Logo */}
-      <div style={{ fontSize: 16, fontWeight: 700, letterSpacing: '-0.5px', color: 'var(--color-text-primary)', display: 'flex', alignItems: 'center', gap: 4, marginRight: 12 }}>
-        insta<span style={{ color: 'var(--color-accent)' }}>grid</span>
-      </div>
-
-      {/* Selection count */}
+      {/* Selection count badge */}
       {selectedBlocks.length > 1 && (
         <div style={{
-          fontSize: 10,
+          fontSize: 11,
           fontWeight: 700,
-          color: '#ffffff',
-          padding: '4px 8px',
-          background: 'var(--color-accent)',
+          color: '#000',
+          padding: '5px 8px',
+          background: '#ffffff',
           borderRadius: 4,
-          border: '1px solid var(--color-accent)',
-          boxShadow: '0 0 12px rgba(255, 255, 255, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2)',
+          boxShadow: '0 2px 4px rgba(0,0,0,0.3)',
         }}>
-          {selectedBlocks.length} selected
+          {selectedBlocks.length}
         </div>
       )}
 
-      {/* Controls */}
-      <IconBtn onClick={rotate} disabled={disabled} title="Rotate 90°">↻</IconBtn>
-      <IconBtn onClick={flipHorizontal} disabled={disabled} title="Flip horizontal">⇄</IconBtn>
-      <IconBtn onClick={flipVertical} disabled={disabled} title="Flip vertical">⇅</IconBtn>
+      {/* Essential controls only */}
+      <IconBtn onClick={rotate} disabled={disabled} title="Rotate">↻</IconBtn>
 
-      <div style={{ width: 1, height: 32, background: 'var(--color-border)', margin: '0 4px' }} />
-
-      <IconBtn onClick={() => adjustPan(0, -10)} disabled={disabled} title="Pan up">↑</IconBtn>
-      <IconBtn onClick={() => adjustPan(-10, 0)} disabled={disabled} title="Pan left">←</IconBtn>
-      <IconBtn onClick={() => adjustPan(10, 0)} disabled={disabled} title="Pan right">→</IconBtn>
-      <IconBtn onClick={() => adjustPan(0, 10)} disabled={disabled} title="Pan down">↓</IconBtn>
-
-      <div style={{ width: 1, height: 32, background: 'var(--color-border)', margin: '0 4px' }} />
+      <IconBtn onClick={() => adjustPan(0, -10)} disabled={disabled} title="Up">↑</IconBtn>
+      <IconBtn onClick={() => adjustPan(-10, 0)} disabled={disabled} title="Left">←</IconBtn>
+      <IconBtn onClick={() => adjustPan(10, 0)} disabled={disabled} title="Right">→</IconBtn>
+      <IconBtn onClick={() => adjustPan(0, 10)} disabled={disabled} title="Down">↓</IconBtn>
 
       <IconBtn onClick={() => adjustZoom(0.1)} disabled={disabled} title="Zoom in">＋</IconBtn>
       <IconBtn onClick={() => adjustZoom(-0.1)} disabled={disabled} title="Zoom out">－</IconBtn>
 
-      <div style={{ width: 1, height: 32, background: 'var(--color-border)', margin: '0 4px' }} />
-
-      <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-        <span style={{ fontSize: 10, color: 'var(--color-text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Color</span>
-        <ColorPicker
-          value={block?.barsColor ?? '#000000'}
-          onChange={(color) => block && updateBlock(block.id, { barsColor: color })}
-          disabled={disabled}
-        />
-      </div>
+      <ColorPicker
+        value={block?.barsColor ?? '#000000'}
+        onChange={(color) => block && updateBlock(block.id, { barsColor: color })}
+        disabled={disabled}
+      />
 
       <div style={{ flex: 1 }} />
 
@@ -153,44 +122,30 @@ function IconBtn({ children, onClick, disabled, title, danger }: {
       disabled={disabled}
       title={title}
       style={{
-        width: 40,
-        height: 40,
+        width: 44,
+        height: 44,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        fontSize: 14,
+        fontSize: 16,
         fontWeight: 700,
-        background: disabled ? 'rgba(255, 255, 255, 0.05)' : danger ? 'transparent' : 'linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.06) 100%)',
-        border: danger ? '1px dashed rgba(255, 255, 255, 0.3)' : 'none',
-        color: disabled ? '#555555' : danger ? '#ff4444' : '#ffffff',
-        borderRadius: 6,
+        background: disabled ? 'rgba(255, 255, 255, 0.08)' : danger ? 'rgba(255, 68, 68, 0.15)' : 'rgba(255, 255, 255, 0.15)',
+        border: disabled ? '1px solid rgba(255, 255, 255, 0.1)' : danger ? '1px solid rgba(255, 68, 68, 0.4)' : '1px solid rgba(255, 255, 255, 0.25)',
+        color: disabled ? '#666666' : danger ? '#ff4444' : '#ffffff',
+        borderRadius: 8,
         cursor: disabled ? 'not-allowed' : 'pointer',
-        transition: 'all 0.2s',
-        opacity: disabled ? 0.4 : 1,
-        boxShadow: danger ? 'none' : '0 4px 8px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.15)',
+        transition: 'all 0.15s',
+        opacity: disabled ? 0.5 : 1,
+        boxShadow: '0 2px 4px rgba(0, 0, 0, 0.3)',
       }}
       onMouseEnter={(e) => {
         if (!disabled) {
-          if (danger) {
-            e.currentTarget.style.background = 'rgba(255, 68, 68, 0.08)'
-            e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.5)'
-            e.currentTarget.style.color = '#ff6666'
-          } else {
-            e.currentTarget.style.background = 'linear-gradient(135deg, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0.1) 100%)'
-            e.currentTarget.style.boxShadow = '0 6px 12px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.2)'
-          }
+          e.currentTarget.style.background = danger ? 'rgba(255, 68, 68, 0.25)' : 'rgba(255, 255, 255, 0.22)'
         }
       }}
       onMouseLeave={(e) => {
         if (!disabled) {
-          if (danger) {
-            e.currentTarget.style.background = 'transparent'
-            e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.3)'
-            e.currentTarget.style.color = '#ff4444'
-          } else {
-            e.currentTarget.style.background = 'linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.06) 100%)'
-            e.currentTarget.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.15)'
-          }
+          e.currentTarget.style.background = danger ? 'rgba(255, 68, 68, 0.15)' : 'rgba(255, 255, 255, 0.15)'
         }
       }}
     >
