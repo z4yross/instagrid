@@ -252,7 +252,7 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | T138   | x      | Strengthen commitlint rules - add explicit rules to commitlint.config.js: header-max-length [2, 'error', 99] for < 100 chars, body-max-line-length [2, 'error', 100]                                                        | B87, V64, C11        |
 | T139   | x      | Mobile button-based resize - replace drag handles with 8 buttons (2 per edge: expand/shrink). Top/right/bottom/left edges, IconBtn style, +/- or ▲▼◀▶ icons. Remove ResizeHandle on mobile                                  | B88, V65, V50        |
 | T140   | x      | Export format prompt - show modal with 2 options (ZIP bundle, Individual JPGs) before export on both platforms. Remove platform detection from doExport, add user choice flow                                               | V63                  |
-| T141   | .      | Fix resize bugs - side-by-side layout, flat design, stopPropagation on click. Debug + fix desktop ResizeHandle rendering (T139 broke it). Update FAB overlay flat style                                                     | B89, B90, B91, B92   |
+| T141   | x      | Fix resize bugs - side-by-side layout, flat design, stopPropagation on click. Debug + fix desktop ResizeHandle rendering (T139 broke it). Update FAB overlay flat style                                                     | B89, B90, B91, B92   |
 
 ---
 

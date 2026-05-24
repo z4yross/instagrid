@@ -387,93 +387,117 @@ function MobileResizeButtons({ block }: { block: ImageBlock }) {
 
   const btnStyle: React.CSSProperties = {
     position: 'absolute',
-    width: 32,
-    height: 32,
+    width: 28,
+    height: 28,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    background: 'rgba(0, 0, 0, 0.3)',
+    background: 'rgba(0, 0, 0, 0.4)',
     backdropFilter: 'blur(4px)',
-    border: '1px solid rgba(255, 255, 255, 0.2)',
+    border: 'none',
     borderRadius: 4,
     color: '#fff',
     cursor: 'pointer',
     zIndex: 20,
-    transition: 'all 0.15s',
+    transition: 'background 0.15s',
   }
 
   return (
     <>
-      {/* Top edge: expand up, shrink down */}
+      {/* Top edge: side-by-side horizontal */}
       <button
-        style={{ ...btnStyle, top: 4, left: '50%', transform: 'translateX(-50%)' }}
-        onClick={() => resize('up', 1)}
-        onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(0, 0, 0, 0.5)')}
-        onMouseLeave={(e) => (e.currentTarget.style.background = 'rgba(0, 0, 0, 0.3)')}
+        style={{ ...btnStyle, top: 4, left: 'calc(50% - 16px)' }}
+        onClick={(e) => {
+          e.stopPropagation()
+          resize('up', 1)
+        }}
+        onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(0, 0, 0, 0.6)')}
+        onMouseLeave={(e) => (e.currentTarget.style.background = 'rgba(0, 0, 0, 0.4)')}
       >
-        <ChevronUp size={18} />
+        <ChevronUp size={16} />
       </button>
       <button
-        style={{ ...btnStyle, top: 40, left: '50%', transform: 'translateX(-50%)' }}
-        onClick={() => resize('up', -1)}
-        onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(0, 0, 0, 0.5)')}
-        onMouseLeave={(e) => (e.currentTarget.style.background = 'rgba(0, 0, 0, 0.3)')}
+        style={{ ...btnStyle, top: 4, left: 'calc(50% + 16px)', transform: 'translateX(-100%)' }}
+        onClick={(e) => {
+          e.stopPropagation()
+          resize('up', -1)
+        }}
+        onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(0, 0, 0, 0.6)')}
+        onMouseLeave={(e) => (e.currentTarget.style.background = 'rgba(0, 0, 0, 0.4)')}
       >
-        <ChevronDown size={18} />
-      </button>
-
-      {/* Right edge: expand right, shrink left */}
-      <button
-        style={{ ...btnStyle, right: 4, top: '50%', transform: 'translateY(-50%)' }}
-        onClick={() => resize('right', 1)}
-        onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(0, 0, 0, 0.5)')}
-        onMouseLeave={(e) => (e.currentTarget.style.background = 'rgba(0, 0, 0, 0.3)')}
-      >
-        <ChevronRight size={18} />
-      </button>
-      <button
-        style={{ ...btnStyle, right: 40, top: '50%', transform: 'translateY(-50%)' }}
-        onClick={() => resize('right', -1)}
-        onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(0, 0, 0, 0.5)')}
-        onMouseLeave={(e) => (e.currentTarget.style.background = 'rgba(0, 0, 0, 0.3)')}
-      >
-        <ChevronLeft size={18} />
+        <ChevronDown size={16} />
       </button>
 
-      {/* Bottom edge: expand down, shrink up */}
+      {/* Right edge: side-by-side vertical */}
       <button
-        style={{ ...btnStyle, bottom: 4, left: '50%', transform: 'translateX(-50%)' }}
-        onClick={() => resize('down', 1)}
-        onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(0, 0, 0, 0.5)')}
-        onMouseLeave={(e) => (e.currentTarget.style.background = 'rgba(0, 0, 0, 0.3)')}
+        style={{ ...btnStyle, right: 4, top: 'calc(50% - 16px)' }}
+        onClick={(e) => {
+          e.stopPropagation()
+          resize('right', 1)
+        }}
+        onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(0, 0, 0, 0.6)')}
+        onMouseLeave={(e) => (e.currentTarget.style.background = 'rgba(0, 0, 0, 0.4)')}
       >
-        <ChevronDown size={18} />
+        <ChevronRight size={16} />
       </button>
       <button
-        style={{ ...btnStyle, bottom: 40, left: '50%', transform: 'translateX(-50%)' }}
-        onClick={() => resize('down', -1)}
-        onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(0, 0, 0, 0.5)')}
-        onMouseLeave={(e) => (e.currentTarget.style.background = 'rgba(0, 0, 0, 0.3)')}
+        style={{ ...btnStyle, right: 4, top: 'calc(50% + 16px)', transform: 'translateY(-100%)' }}
+        onClick={(e) => {
+          e.stopPropagation()
+          resize('right', -1)
+        }}
+        onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(0, 0, 0, 0.6)')}
+        onMouseLeave={(e) => (e.currentTarget.style.background = 'rgba(0, 0, 0, 0.4)')}
       >
-        <ChevronUp size={18} />
+        <ChevronLeft size={16} />
       </button>
 
-      {/* Left edge: expand left, shrink right */}
+      {/* Bottom edge: side-by-side horizontal */}
       <button
-        style={{ ...btnStyle, left: 4, top: '50%', transform: 'translateY(-50%)' }}
-        onClick={() => resize('left', 1)}
-        onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(0, 0, 0, 0.5)')}
-        onMouseLeave={(e) => (e.currentTarget.style.background = 'rgba(0, 0, 0, 0.3)')}
+        style={{ ...btnStyle, bottom: 4, left: 'calc(50% - 16px)' }}
+        onClick={(e) => {
+          e.stopPropagation()
+          resize('down', 1)
+        }}
+        onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(0, 0, 0, 0.6)')}
+        onMouseLeave={(e) => (e.currentTarget.style.background = 'rgba(0, 0, 0, 0.4)')}
       >
-        <ChevronLeft size={18} />
+        <ChevronDown size={16} />
       </button>
       <button
-        style={{ ...btnStyle, left: 40, top: '50%', transform: 'translateY(-50%)' }}
-        onClick={() => resize('left', -1)}
-        onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(0, 0, 0, 0.5)')}
-        onMouseLeave={(e) => (e.currentTarget.style.background = 'rgba(0, 0, 0, 0.3)')}
+        style={{ ...btnStyle, bottom: 4, left: 'calc(50% + 16px)', transform: 'translateX(-100%)' }}
+        onClick={(e) => {
+          e.stopPropagation()
+          resize('down', -1)
+        }}
+        onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(0, 0, 0, 0.6)')}
+        onMouseLeave={(e) => (e.currentTarget.style.background = 'rgba(0, 0, 0, 0.4)')}
       >
-        <ChevronRight size={18} />
+        <ChevronUp size={16} />
+      </button>
+
+      {/* Left edge: side-by-side vertical */}
+      <button
+        style={{ ...btnStyle, left: 4, top: 'calc(50% - 16px)' }}
+        onClick={(e) => {
+          e.stopPropagation()
+          resize('left', 1)
+        }}
+        onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(0, 0, 0, 0.6)')}
+        onMouseLeave={(e) => (e.currentTarget.style.background = 'rgba(0, 0, 0, 0.4)')}
+      >
+        <ChevronLeft size={16} />
+      </button>
+      <button
+        style={{ ...btnStyle, left: 4, top: 'calc(50% + 16px)', transform: 'translateY(-100%)' }}
+        onClick={(e) => {
+          e.stopPropagation()
+          resize('left', -1)
+        }}
+        onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(0, 0, 0, 0.6)')}
+        onMouseLeave={(e) => (e.currentTarget.style.background = 'rgba(0, 0, 0, 0.4)')}
+      >
+        <ChevronRight size={16} />
       </button>
     </>
   )
