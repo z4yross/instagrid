@@ -75,6 +75,8 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | V33 | Mobile UI pure black: toolbar background #000 (no gradients). Clean minimal aesthetic. |
 | V34 | Mobile sidebar full height: extends from top (below toolbar) to bottom viewport edge. |
 | V35 | Mobile grid auto-fit height: calculate visibleRows to fill available viewport without scrolling or wasted space. |
+| V36 | Mobile pure black aesthetic: all backgrounds #000 (not gray), buttons borderless with subtle glow (no visible borders). |
+| V37 | Mobile touch interaction modes: pan mode (touch drag adjusts image transform), resize mode (touch drag changes block cell span). |
 
 ---
 
@@ -181,6 +183,10 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | T91 | x | Mobile toolbar pure black background: change TopToolbar from gradient to solid #000 | B47, V33 |
 | T92 | x | Mobile sidebar full height: set height 100% to extend from top to bottom viewport edge | B48, V34 |
 | T93 | x | Mobile grid auto-fit: calculate visibleRows on mount/resize to fill available height (viewport - toolbar - zoom controls) | B49, V35 |
+| T94 | x | Mobile button styling: remove borders, darker/pure black backgrounds, add subtle white glow (box-shadow) | B50, V36 |
+| T95 | . | Mobile canvas pure black: override CanvasArea/GridCanvas bg to #000 on mobile (not gray #0d0d0d) | B50, V36 |
+| T96 | . | Mobile pan mode toggle: add toolbar button to enable/disable pan mode (touch drag modifies transform.panX/Y on selected block) | V37 |
+| T97 | . | Mobile resize mode toggle: add toolbar button to enable/disable resize mode (touch drag on block edges changes colSpan/rowSpan) | V37 |
 
 ---
 
@@ -237,4 +243,5 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | B47 | 2026-05-24 | Mobile toolbar has gradient background (0a0a0a→1a1a1a), should be pure black #000 for cleaner look | V33 |
 | B48 | 2026-05-24 | Mobile sidebar doesn't fill full height, black space below content (screenshot shows sidebar ends mid-screen) | V34 |
 | B49 | 2026-05-24 | Grid doesn't auto-adjust rows to fill available height on mobile, hardcoded default=5 leaves wasted space or scrolling | V35 |
+| B50 | 2026-05-24 | Mobile styling ugly: gray backgrounds (#0d0d0d, #1a1a1a), toolbar buttons have borders and semi-transparent white backgrounds look gray/washed out | V36 |
 

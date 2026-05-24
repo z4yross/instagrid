@@ -113,23 +113,25 @@ function IconBtn({ children, onClick, disabled, title, danger }: {
         justifyContent: 'center',
         fontSize: 18,
         fontWeight: 700,
-        background: disabled ? 'rgba(255, 255, 255, 0.08)' : danger ? 'rgba(255, 68, 68, 0.15)' : 'rgba(255, 255, 255, 0.15)',
-        border: disabled ? '1px solid rgba(255, 255, 255, 0.1)' : danger ? '1px solid rgba(255, 68, 68, 0.4)' : '1px solid rgba(255, 255, 255, 0.25)',
+        background: disabled ? 'rgba(0, 0, 0, 0.15)' : danger ? 'rgba(255, 68, 68, 0.2)' : 'rgba(0, 0, 0, 0.3)',
+        border: 'none',
         color: disabled ? '#666666' : danger ? '#ff4444' : '#ffffff',
         borderRadius: 8,
         cursor: disabled ? 'not-allowed' : 'pointer',
         transition: 'all 0.15s',
         opacity: disabled ? 0.5 : 1,
-        boxShadow: '0 2px 4px rgba(0, 0, 0, 0.3)',
+        boxShadow: disabled ? 'none' : danger ? '0 0 8px rgba(255, 68, 68, 0.3)' : '0 0 8px rgba(255, 255, 255, 0.15)',
       }}
       onMouseEnter={(e) => {
         if (!disabled) {
-          e.currentTarget.style.background = danger ? 'rgba(255, 68, 68, 0.25)' : 'rgba(255, 255, 255, 0.22)'
+          e.currentTarget.style.background = danger ? 'rgba(255, 68, 68, 0.3)' : 'rgba(0, 0, 0, 0.5)'
+          e.currentTarget.style.boxShadow = danger ? '0 0 12px rgba(255, 68, 68, 0.4)' : '0 0 12px rgba(255, 255, 255, 0.25)'
         }
       }}
       onMouseLeave={(e) => {
         if (!disabled) {
-          e.currentTarget.style.background = danger ? 'rgba(255, 68, 68, 0.15)' : 'rgba(255, 255, 255, 0.15)'
+          e.currentTarget.style.background = danger ? 'rgba(255, 68, 68, 0.2)' : 'rgba(0, 0, 0, 0.3)'
+          e.currentTarget.style.boxShadow = danger ? '0 0 8px rgba(255, 68, 68, 0.3)' : '0 0 8px rgba(255, 255, 255, 0.15)'
         }
       }}
     >
