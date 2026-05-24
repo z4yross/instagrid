@@ -44,11 +44,7 @@ export default function TopToolbar() {
         left: 0,
         right: 0,
         height: 64,
-        background: `
-          linear-gradient(180deg, #0a0a0a 0%, #1a1a1a 100%),
-          repeating-linear-gradient(0deg, transparent, transparent 1px, rgba(255,255,255,0.05) 1px, rgba(255,255,255,0.05) 2px),
-          repeating-linear-gradient(90deg, transparent, transparent 1px, rgba(255,255,255,0.05) 1px, rgba(255,255,255,0.05) 2px)
-        `,
+        background: '#000',
         borderBottom: 'none',
         boxShadow: 'inset 0 -8px 12px rgba(0, 0, 0, 0.4)',
         display: 'flex',

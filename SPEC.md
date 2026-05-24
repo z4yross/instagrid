@@ -72,6 +72,9 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | V30 | Sidebar width responsive: 210px desktop, 100vw mobile (via wrapper constraint or direct style prop). |
 | V31 | Mobile toolbar UX: simplified controls, adequate spacing/contrast, touch-friendly (min 48px targets). |
 | V32 | Grid zoom intuitive: + adds rows (zoom out), - removes rows (zoom in). Default 5 rows mobile, 3 desktop. |
+| V33 | Mobile UI pure black: toolbar background #000 (no gradients). Clean minimal aesthetic. |
+| V34 | Mobile sidebar full height: extends from top (below toolbar) to bottom viewport edge. |
+| V35 | Mobile grid auto-fit height: calculate visibleRows to fill available viewport without scrolling or wasted space. |
 
 ---
 
@@ -175,6 +178,9 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | T88 | x | Fix mobile sidebar width properly: wrap Sidebar in div with width constraint or pass width via style prop to override inline style | B44, V30 |
 | T89 | x | Redesign mobile TopToolbar: simplify/group controls, improve spacing, increase contrast, consider vertical/floating layout | B45, V31 |
 | T90 | x | Fix grid zoom semantics: swap +/- button actions (+ adds rows, - removes rows), set default visibleRows=5 on mobile init | B46, V32 |
+| T91 | x | Mobile toolbar pure black background: change TopToolbar from gradient to solid #000 | B47, V33 |
+| T92 | . | Mobile sidebar full height: set height 100% to extend from top to bottom viewport edge | B48, V34 |
+| T93 | . | Mobile grid auto-fit: calculate visibleRows on mount/resize to fill available height (viewport - toolbar - zoom controls) | B49, V35 |
 
 ---
 
@@ -228,4 +234,7 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | B44 | 2026-05-24 | Mobile sidebar STILL not full width after T87: CSS !important doesn't override inline style width:210. Wrapper right:0 but child fixed 210px | V30 |
 | B45 | 2026-05-24 | Mobile TopToolbar cramped and ugly: too many 44px buttons in 56px height, poor spacing, overall bad UX | V31 |
 | B46 | 2026-05-24 | Grid zoom controls counterintuitive: + removes rows (Fill), - adds rows (Fit). Users expect + to add, - to remove. Default 3 rows too few for mobile (screenshot shows 5 fills screen) | V32 |
+| B47 | 2026-05-24 | Mobile toolbar has gradient background (0a0a0a→1a1a1a), should be pure black #000 for cleaner look | V33 |
+| B48 | 2026-05-24 | Mobile sidebar doesn't fill full height, black space below content (screenshot shows sidebar ends mid-screen) | V34 |
+| B49 | 2026-05-24 | Grid doesn't auto-adjust rows to fill available height on mobile, hardcoded default=5 leaves wasted space or scrolling | V35 |
 
