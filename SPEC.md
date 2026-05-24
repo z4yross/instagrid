@@ -8,121 +8,121 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 
 ## §C — Constraints
 
-| id | constraint |
-|----|------------|
-| C1 | No backend. 100% browser. No auth. |
-| C2 | Web only. No mobile-first breakpoints. |
-| C3 | Dark mode default. |
-| C4 | Stack: React 18 + TypeScript + Vite |
-| C5 | Drag/resize: @dnd-kit |
-| C6 | State + undo/redo: Zustand + zundo |
-| C7 | Export: Canvas API native (no html2canvas) |
-| C8 | ZIP: JSZip |
-| C9 | Grid: 3 cols, cells 3:4 ratio (1080×1350px export) |
-| C10 | Upload order: right-to-left, top-to-bottom (Instagram order) |
+| id  | constraint                                                              |
+| --- | ----------------------------------------------------------------------- |
+| C1  | No backend. 100% browser. No auth.                                      |
+| C2  | Web only. No mobile-first breakpoints.                                  |
+| C3  | Dark mode default.                                                      |
+| C4  | Stack: React 18 + TypeScript + Vite                                     |
+| C5  | Drag/resize: @dnd-kit                                                   |
+| C6  | State + undo/redo: Zustand + zundo                                      |
+| C7  | Export: Canvas API native (no html2canvas)                              |
+| C8  | ZIP: JSZip                                                              |
+| C9  | Grid: 3 cols, cells 3:4 ratio (1080×1350px export)                      |
+| C10 | Upload order: right-to-left, top-to-bottom (Instagram order)            |
 | C11 | Git commits: conventional format (type: description), < 100 chars total |
 
 ---
 
 ## §I — Interfaces
 
-| id | surface |
-|----|---------|
-| I.fs | FileReader API — read JPG/PNG/WEBP from disk |
-| I.canvas | OffscreenCanvas / Canvas 2D API — render + export cells |
-| I.zip | JSZip — bundle exported cells as ZIP download |
-| I.dnd | @dnd-kit/core + @dnd-kit/modifiers — drag blocks, snap to grid |
-| I.store | Zustand store + zundo middleware — app state + undo/redo |
+| id       | surface                                                        |
+| -------- | -------------------------------------------------------------- |
+| I.fs     | FileReader API — read JPG/PNG/WEBP from disk                   |
+| I.canvas | OffscreenCanvas / Canvas 2D API — render + export cells        |
+| I.zip    | JSZip — bundle exported cells as ZIP download                  |
+| I.dnd    | @dnd-kit/core + @dnd-kit/modifiers — drag blocks, snap to grid |
+| I.store  | Zustand store + zundo middleware — app state + undo/redo       |
 
 ---
 
 ## §V — Invariants
 
-| id | invariant |
-|----|-----------|
-| V1 | Blocks never overlap. Any drop/resize that causes collision rejected or snapped to nearest free zone. |
-| V2 | Block position always snapped to grid cell boundary. No fractional cell positions. |
-| V3 | Export cell size always exactly 1080×1350px regardless of canvas display size. |
-| V4 | Export numbering = right-to-left per row, bottom-to-top (Instagram upload order). Only non-empty cells (with images) numbered, starting from 1. |
-| V5 | Undo/redo only covers canvas state mutations (block add/move/resize/delete, transform). Not file uploads. |
-| V6 | Low-res warning shown if source image width < 1080px. Non-blocking. |
-| V7 | Grid rows grow dynamically — minimum 3 rows always visible, adds rows as blocks fill bottom. |
-| ~~V8~~ | ~~fillMode removed — single mode: contain with bars~~ DEPRECATED v2 |
-| ~~V9~~ | ~~Single-cell export~~ DEPRECATED v2 |
-| ~~V10~~ | ~~Cell-mode edits~~ DEPRECATED v2 |
-| V11 | Images always render with objectFit:contain + bars color background. No zoom/cover mode. |
-| V12 | Group selection: Ctrl+click toggles individual, Shift+click selects range. Move/transform together, no overlap with non-selected. |
-| V13 | Auto-flow: on upload/move, blocks snap to first available position (top-left priority). |
-| V14 | Placeholders: empty cells can hold solid color or gradient (from adjacent images). |
-| V15 | localStorage: state persists on every mutation. Restore on load. |
-| V16 | Arrow keys: pan image (not block position). Direction rotates with image rotation. |
-| ~~V17~~ | ~~Grid zoom: viewport zoom 50%-200%, pan via drag. Does not affect export size.~~ DEPRECATED v3 |
-| V18 | localStorage quota errors caught, logged to console. User warned when storage fails. |
-| V19 | Group drag shows visual preview of all selected blocks, not just dragged block. |
-| V20 | Grid zoom adds/removes visible rows (not CSS scale). Grid stays centered. No pan controls. |
-| V21 | Grid rows shrink when zooming in. If trailing rows empty, gridRows reduced to match highest block + 1 row min. |
-| V22 | IndexedDB: images persist via IndexedDB (not localStorage). Blocks/gridRows in localStorage. No quota issues. |
-| V23 | Loading state: skeleton placeholders in sidebar thumbnails + grid blocks during IDB restore. No fullscreen overlay. Skeleton count matches actual image count from IDB. |
-| V24 | Export crops visible image portion per cell with transforms applied. Not contain full image. Each 1080×1350 shows only what's visible in that grid cell (like Instagram carousel: 1010px crop + 35px bars each side). |
-| V25 | UI components fit containers. Width/height calculations include padding + gaps. No overflow. |
-| V26 | Save profile button: if current profile exists update it directly. Prompt for name only if unsaved/new profile. |
-| V27 | Autosave: profiles save automatically on state change (debounced 2s). Manual save available. |
-| V28 | Responsive layout: desktop (>768px) = sidebar left (always visible) + toolbar right; mobile (≤768px) = sidebar fullscreen overlay (toggleable) + toolbar top. |
-| V29 | Mobile toolbar: no logo, essential controls only, high-contrast buttons, no overflow. |
-| V30 | Sidebar width responsive: 210px desktop, 100vw mobile (via wrapper constraint or direct style prop). |
-| V31 | Mobile toolbar UX: simplified controls, adequate spacing/contrast, touch-friendly (min 48px targets). |
-| V32 | Grid zoom intuitive: + adds rows (zoom out), - removes rows (zoom in). Default 5 rows mobile, 3 desktop. |
-| V33 | Mobile UI pure black: toolbar background #000 (no gradients). Clean minimal aesthetic. |
-| V34 | Mobile sidebar full height: extends from top (below toolbar) to bottom viewport edge. |
-| V35 | Mobile grid auto-fit height: calculate visibleRows to fill available viewport without scrolling or wasted space. |
-| V36 | Mobile pure black aesthetic: all backgrounds #000 (not gray), buttons borderless with subtle glow (no visible borders). |
-| V37 | Mobile touch interaction modes: pan mode (touch drag adjusts image transform), resize mode (touch drag changes block cell span). |
-| V38 | Mobile sidebar performance: opens/closes in under 300ms with smooth CSS slide transition. No mount/unmount lag. |
-| V39 | Touch mode exclusivity: when panMode or resizeMode active, block position dragging disabled. Only mode-specific interaction enabled. |
-| V40 | Touch mode button availability: pan/resize buttons only enabled when at least one block selected (modes require selection). |
-| V41 | Sidebar scroll containment: only thumbnail list section scrolls, header and action buttons stay fixed at top/bottom. |
-| V42 | Mobile drag mode toggle: drag disabled by default (prevents scroll conflict), single button enables position drag. Desktop always draggable. Replaces pan/resize modes. |
-| V43 | dragMode controls block position drag on all platforms (mobile and desktop). When dragMode=false, drag disabled globally. |
-| V44 | Drag mode button always enabled - mode is global toggle, not selection-dependent. |
-| V45 | Toolbar icons monochrome white - use Unicode symbols or icon library (react-icons, lucide-react). No color emojis. |
-| V46 | Mobile image pan via touch when drag locked - swipe on image adjusts transform.panX/panY. No conflict with resize. |
-| V47 | Toolbar button order: sidebar toggle first, drag lock second (most-used controls up front). |
-| V48 | Mobile deselect: regular click on selected block (when only selection) deselects it, restoring scroll. |
-| V49 | Drag lock universal - dragMode controls block position drag on all platforms (mobile and desktop), not platform-specific. |
-| V50 | Mobile resize handles larger touch targets (min 44px), prevent pan/drag interference via event stopPropagation. |
-| V51 | Toolbar button active states visually distinct - active buttons show lighter background + white glow, consistent styling across mobile/desktop toolbars. |
-| V52 | Mobile toolbar adaptive - when sidebar open, show menu toggle button + logo/branding only. Full controls when sidebar closed. Logo appears in toolbar, not sidebar. |
-| V53 | Mobile pinch zoom gestures (2-finger pinch) zoom selected block image (transform.zoom) when drag locked, not grid or browser zoom. |
-| V54 | Resize handle touch events isolated - touch on resize handle never triggers pan, only resize. Event propagation stopped. |
-| V55 | Mobile floating action button (FAB) - draggable circular button, tap to toggle action overlay (pan arrows + zoom buttons). Position persists in localStorage. |
-| V56 | Mobile action overlay keyboard layout - top row (- ↑ +), middle row (← ↓ →). Opens right or left of FAB based on screen space. |
-| V57 | Git hooks via husky + lint-staged enforce conventional commits + prettier format on commit. No ESLint. |
-| V58 | Mobile resize handles avoid right screen edge - offset inward or hide to prevent system back gesture conflict. |
-| V59 | Mobile TopToolbar has FAB toggle button (show/hide FAB), no zoom +/- buttons (zoom available in FAB overlay). |
+| id      | invariant                                                                                                                                                                                                             |
+| ------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| V1      | Blocks never overlap. Any drop/resize that causes collision rejected or snapped to nearest free zone.                                                                                                                 |
+| V2      | Block position always snapped to grid cell boundary. No fractional cell positions.                                                                                                                                    |
+| V3      | Export cell size always exactly 1080×1350px regardless of canvas display size.                                                                                                                                        |
+| V4      | Export numbering = right-to-left per row, bottom-to-top (Instagram upload order). Only non-empty cells (with images) numbered, starting from 1.                                                                       |
+| V5      | Undo/redo only covers canvas state mutations (block add/move/resize/delete, transform). Not file uploads.                                                                                                             |
+| V6      | Low-res warning shown if source image width < 1080px. Non-blocking.                                                                                                                                                   |
+| V7      | Grid rows grow dynamically — minimum 3 rows always visible, adds rows as blocks fill bottom.                                                                                                                          |
+| ~~V8~~  | ~~fillMode removed — single mode: contain with bars~~ DEPRECATED v2                                                                                                                                                   |
+| ~~V9~~  | ~~Single-cell export~~ DEPRECATED v2                                                                                                                                                                                  |
+| ~~V10~~ | ~~Cell-mode edits~~ DEPRECATED v2                                                                                                                                                                                     |
+| V11     | Images always render with objectFit:contain + bars color background. No zoom/cover mode.                                                                                                                              |
+| V12     | Group selection: Ctrl+click toggles individual, Shift+click selects range. Move/transform together, no overlap with non-selected.                                                                                     |
+| V13     | Auto-flow: on upload/move, blocks snap to first available position (top-left priority).                                                                                                                               |
+| V14     | Placeholders: empty cells can hold solid color or gradient (from adjacent images).                                                                                                                                    |
+| V15     | localStorage: state persists on every mutation. Restore on load.                                                                                                                                                      |
+| V16     | Arrow keys: pan image (not block position). Direction rotates with image rotation.                                                                                                                                    |
+| ~~V17~~ | ~~Grid zoom: viewport zoom 50%-200%, pan via drag. Does not affect export size.~~ DEPRECATED v3                                                                                                                       |
+| V18     | localStorage quota errors caught, logged to console. User warned when storage fails.                                                                                                                                  |
+| V19     | Group drag shows visual preview of all selected blocks, not just dragged block.                                                                                                                                       |
+| V20     | Grid zoom adds/removes visible rows (not CSS scale). Grid stays centered. No pan controls.                                                                                                                            |
+| V21     | Grid rows shrink when zooming in. If trailing rows empty, gridRows reduced to match highest block + 1 row min.                                                                                                        |
+| V22     | IndexedDB: images persist via IndexedDB (not localStorage). Blocks/gridRows in localStorage. No quota issues.                                                                                                         |
+| V23     | Loading state: skeleton placeholders in sidebar thumbnails + grid blocks during IDB restore. No fullscreen overlay. Skeleton count matches actual image count from IDB.                                               |
+| V24     | Export crops visible image portion per cell with transforms applied. Not contain full image. Each 1080×1350 shows only what's visible in that grid cell (like Instagram carousel: 1010px crop + 35px bars each side). |
+| V25     | UI components fit containers. Width/height calculations include padding + gaps. No overflow.                                                                                                                          |
+| V26     | Save profile button: if current profile exists update it directly. Prompt for name only if unsaved/new profile.                                                                                                       |
+| V27     | Autosave: profiles save automatically on state change (debounced 2s). Manual save available.                                                                                                                          |
+| V28     | Responsive layout: desktop (>768px) = sidebar left (always visible) + toolbar right; mobile (≤768px) = sidebar fullscreen overlay (toggleable) + toolbar top.                                                         |
+| V29     | Mobile toolbar: no logo, essential controls only, high-contrast buttons, no overflow.                                                                                                                                 |
+| V30     | Sidebar width responsive: 210px desktop, 100vw mobile (via wrapper constraint or direct style prop).                                                                                                                  |
+| V31     | Mobile toolbar UX: simplified controls, adequate spacing/contrast, touch-friendly (min 48px targets).                                                                                                                 |
+| V32     | Grid zoom intuitive: + adds rows (zoom out), - removes rows (zoom in). Default 5 rows mobile, 3 desktop.                                                                                                              |
+| V33     | Mobile UI pure black: toolbar background #000 (no gradients). Clean minimal aesthetic.                                                                                                                                |
+| V34     | Mobile sidebar full height: extends from top (below toolbar) to bottom viewport edge.                                                                                                                                 |
+| V35     | Mobile grid auto-fit height: calculate visibleRows to fill available viewport without scrolling or wasted space.                                                                                                      |
+| V36     | Mobile pure black aesthetic: all backgrounds #000 (not gray), buttons borderless with subtle glow (no visible borders).                                                                                               |
+| V37     | Mobile touch interaction modes: pan mode (touch drag adjusts image transform), resize mode (touch drag changes block cell span).                                                                                      |
+| V38     | Mobile sidebar performance: opens/closes in under 300ms with smooth CSS slide transition. No mount/unmount lag.                                                                                                       |
+| V39     | Touch mode exclusivity: when panMode or resizeMode active, block position dragging disabled. Only mode-specific interaction enabled.                                                                                  |
+| V40     | Touch mode button availability: pan/resize buttons only enabled when at least one block selected (modes require selection).                                                                                           |
+| V41     | Sidebar scroll containment: only thumbnail list section scrolls, header and action buttons stay fixed at top/bottom.                                                                                                  |
+| V42     | Mobile drag mode toggle: drag disabled by default (prevents scroll conflict), single button enables position drag. Desktop always draggable. Replaces pan/resize modes.                                               |
+| V43     | dragMode controls block position drag on all platforms (mobile and desktop). When dragMode=false, drag disabled globally.                                                                                             |
+| V44     | Drag mode button always enabled - mode is global toggle, not selection-dependent.                                                                                                                                     |
+| V45     | Toolbar icons monochrome white - use Unicode symbols or icon library (react-icons, lucide-react). No color emojis.                                                                                                    |
+| V46     | Mobile image pan via touch when drag locked - swipe on image adjusts transform.panX/panY. No conflict with resize.                                                                                                    |
+| V47     | Toolbar button order: sidebar toggle first, drag lock second (most-used controls up front).                                                                                                                           |
+| V48     | Mobile deselect: regular click on selected block (when only selection) deselects it, restoring scroll.                                                                                                                |
+| V49     | Drag lock universal - dragMode controls block position drag on all platforms (mobile and desktop), not platform-specific.                                                                                             |
+| V50     | Mobile resize handles larger touch targets (min 44px), prevent pan/drag interference via event stopPropagation.                                                                                                       |
+| V51     | Toolbar button active states visually distinct - active buttons show lighter background + white glow, consistent styling across mobile/desktop toolbars.                                                              |
+| V52     | Mobile toolbar adaptive - when sidebar open, show menu toggle button + logo/branding only. Full controls when sidebar closed. Logo appears in toolbar, not sidebar.                                                   |
+| V53     | Mobile pinch zoom gestures (2-finger pinch) zoom selected block image (transform.zoom) when drag locked, not grid or browser zoom.                                                                                    |
+| V54     | Resize handle touch events isolated - touch on resize handle never triggers pan, only resize. Event propagation stopped.                                                                                              |
+| V55     | Mobile floating action button (FAB) - draggable circular button, tap to toggle action overlay (pan arrows + zoom buttons). Position persists in localStorage.                                                         |
+| V56     | Mobile action overlay keyboard layout - top row (- ↑ +), middle row (← ↓ →). Opens right or left of FAB based on screen space.                                                                                        |
+| V57     | Git hooks via husky + lint-staged enforce conventional commits + prettier format on commit. No ESLint.                                                                                                                |
+| V58     | Mobile resize handles avoid right screen edge - offset inward or hide to prevent system back gesture conflict.                                                                                                        |
+| V59     | Mobile TopToolbar has FAB toggle button (show/hide FAB), no zoom +/- buttons (zoom available in FAB overlay).                                                                                                         |
 
 ---
 
 ## §T — Tasks
 
-| id | status | task | cites |
-|----|--------|------|-------|
-| T1 | x | Scaffold Vite+React+TS project, install deps (@dnd-kit/core @dnd-kit/modifiers @dnd-kit/utilities zustand zundo jszip), configure Tailwind dark mode | C4,C5,C6,C8 |
-| T2 | x | Zustand store: blocks[], gridRows, selectedBlockId, cellModeBlockId, showGuides, history via zundo | C6,V5 |
-| T3 | x | Grid canvas component: 3-col layout, cell aspect 3:4, dynamic rows, visible guide lines toggle | C9,V7 |
-| T4 | x | Image upload: drag-drop onto canvas + file picker, multi-file, JPG/PNG/WEBP, low-res warning | I.fs,V6 |
-| T5 | x | Block component: renders image in assigned cells, drag via @dnd-kit, snap-to-grid on drop | C5,V1,V2 |
-| T6 | x | Block resize: drag corner/edge handles, snap to cell boundary, update block span | C5,V1,V2 |
-| ~~T7~~ | ~~x~~ | ~~Fill mode~~ DEPRECATED v2 | ~~V8~~ |
-| ~~T8~~ | ~~x~~ | ~~Block toolbar with fillMode toggle~~ DEPRECATED v2 | ~~C9~~ |
-| ~~T9~~ | ~~x~~ | ~~Cell mode~~ DEPRECATED v2 | ~~V10~~ |
-| T10 | x | Upload order indicator: number badge on each cell (Instagram order per V4) | V4 |
-| T11 | x | Preview panel: right-side or modal, live Instagram profile simulation, shows upload numbers | V4 |
-| T12 | x | Export pipeline: OffscreenCanvas renders each cell at 1080×1350, names by upload order, bundles ZIP | I.canvas,I.zip,V3,V4 |
-| T13 | x | Per-cell export: right-click or button downloads single cell as JPG | V9 |
-| T14 | x | Undo/redo: Ctrl+Z / Ctrl+Y wired to zundo | V5 |
-| T15 | x | Sidebar: thumbnail list of uploaded images, upload button, "Export all" + "Clear canvas" actions | — |
-| T16 | x | Grid guide toggle button in toolbar | V7 |
-| T17 | x | Dark mode global styles, app layout (sidebar + canvas + optional preview panel) | C3 |
+| id     | status | task                                                                                                                                                 | cites                |
+| ------ | ------ | ---------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------- |
+| T1     | x      | Scaffold Vite+React+TS project, install deps (@dnd-kit/core @dnd-kit/modifiers @dnd-kit/utilities zustand zundo jszip), configure Tailwind dark mode | C4,C5,C6,C8          |
+| T2     | x      | Zustand store: blocks[], gridRows, selectedBlockId, cellModeBlockId, showGuides, history via zundo                                                   | C6,V5                |
+| T3     | x      | Grid canvas component: 3-col layout, cell aspect 3:4, dynamic rows, visible guide lines toggle                                                       | C9,V7                |
+| T4     | x      | Image upload: drag-drop onto canvas + file picker, multi-file, JPG/PNG/WEBP, low-res warning                                                         | I.fs,V6              |
+| T5     | x      | Block component: renders image in assigned cells, drag via @dnd-kit, snap-to-grid on drop                                                            | C5,V1,V2             |
+| T6     | x      | Block resize: drag corner/edge handles, snap to cell boundary, update block span                                                                     | C5,V1,V2             |
+| ~~T7~~ | ~~x~~  | ~~Fill mode~~ DEPRECATED v2                                                                                                                          | ~~V8~~               |
+| ~~T8~~ | ~~x~~  | ~~Block toolbar with fillMode toggle~~ DEPRECATED v2                                                                                                 | ~~C9~~               |
+| ~~T9~~ | ~~x~~  | ~~Cell mode~~ DEPRECATED v2                                                                                                                          | ~~V10~~              |
+| T10    | x      | Upload order indicator: number badge on each cell (Instagram order per V4)                                                                           | V4                   |
+| T11    | x      | Preview panel: right-side or modal, live Instagram profile simulation, shows upload numbers                                                          | V4                   |
+| T12    | x      | Export pipeline: OffscreenCanvas renders each cell at 1080×1350, names by upload order, bundles ZIP                                                  | I.canvas,I.zip,V3,V4 |
+| T13    | x      | Per-cell export: right-click or button downloads single cell as JPG                                                                                  | V9                   |
+| T14    | x      | Undo/redo: Ctrl+Z / Ctrl+Y wired to zundo                                                                                                            | V5                   |
+| T15    | x      | Sidebar: thumbnail list of uploaded images, upload button, "Export all" + "Clear canvas" actions                                                     | —                    |
+| T16    | x      | Grid guide toggle button in toolbar                                                                                                                  | V7                   |
+| T17    | x      | Dark mode global styles, app layout (sidebar + canvas + optional preview panel)                                                                      | C3                   |
 
 ### v2 Tasks
 
@@ -165,7 +165,7 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | T51 | x | Fix drag duplicate visual - check DragOverlay, ensure single block rendered | B25 |
 | T52 | x | Delete single image from thumbnail: X button on hover, remove image from IDB + all blocks using that imageId | V22 |
 | T53 | x | Fix DragOverlay cursor offset: track initial grab position, apply offset to DragOverlay transform | B26 |
-| T54 | x | Fix Shift+click range selection: sort blocks by grid position (row*COLS+col) before slicing range | V12, B27 |
+| T54 | x | Fix Shift+click range selection: sort blocks by grid position (row\*COLS+col) before slicing range | V12, B27 |
 | T55 | x | Fix export: crop visible image portion per cell (not contain). Apply transforms, slice by cell bounds, render 1010px crop + 35px bars each side = 1080px | V3, V24, B28 |
 | T56 | x | Verify export resolution: check if images exported at full 1080x1350 or scaled down | V3, B29 |
 | T57 | x | Copy/paste block: Ctrl+C selected block, Ctrl+V paste at first free cell | — |
@@ -240,7 +240,7 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | T126 | x | Mobile FAB component - circular draggable button (bottom-right default), drag to reposition, persist position to localStorage, tap to toggle overlay visibility | V55 |
 | T127 | x | Mobile action overlay - keyboard layout (top: - ↑ +, middle: ← ↓ →), position left/right of FAB based on space, wire to adjustPan/adjustZoom actions | V56 |
 | T128 | x | Fix T123 - TopToolbar on mobile sidebar open should show menu button + logo (not logo only). Remove logo from Sidebar on mobile | B78, V52 |
-| T129 | . | Setup husky + lint-staged + commitlint - enforce conventional commits format, run prettier on pre-commit. No ESLint config | V57 |
+| T129 | x | Setup husky + lint-staged + commitlint - enforce conventional commits format, run prettier on pre-commit. No ESLint config | V57 |
 | T130 | . | Mobile resize handles avoid right edge - hide right/corner-br handles when block.col + block.colSpan near right edge (e.g. within 1 col of COLS), or offset handles inward | B79, V58 |
 | T131 | . | Replace TopToolbar zoom buttons with FAB toggle button - remove +/- IconBtn, add toggle to show/hide FAB, wire to App fabOverlayVisible state | B80, V59 |
 | T132 | . | Fix FAB visibility - increase background opacity or add backdrop-filter blur, fix icon vertical centering (adjust line-height or flexbox alignment) | B81 |
@@ -249,87 +249,86 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 
 ## §B — Bug Log
 
-| id | date | cause | fix |
-|----|------|-------|-----|
-| B1 | 2026-05-23 | Export numbering right-to-left top-to-bottom instead of left-to-right bottom-to-top | Fixed cellUploadNumber formula |
-| B2 | 2026-05-23 | Cell mode edits not reflected in grid view | Cell overrides not applied in block render |
-| B3 | 2026-05-23 | Bars mode in cell mode: image positioning uses relative pixels, hard to see bars color | Geometry issues with multi-cell blocks in cell mode |
-| B4 | 2026-05-23 | localStorage not persisting images/grid state on page reload | Data URLs exceed localStorage quota (5-10MB), saveState fails silently → V18 |
-| B5 | 2026-05-23 | Right toolbar too wide with categories, expected slim icon-only bar | RightToolbar uses 240px with section labels → T29 |
-| B6 | 2026-05-23 | Group drag shows single image preview, not whole group | DndKit only shows dragged element, need custom overlay → V19, T30 |
-| B7 | 2026-05-23 | Group drag border collision merges blocks instead of wrapping to adjacent row | Collision detection doesn't handle row wrapping → T31 |
-| B8 | 2026-05-23 | Grid zoom should add/remove rows and center grid, not scale with pan | Current zoom uses CSS transform, should modify visible row count → V20, T32 |
-| B9 | 2026-05-23 | Export numbering counts empty/placeholder cells, should only number cells with images | cellUploadNumber gives sequential numbers to all cells → V4 updated, T34 |
-| B10 | 2026-05-23 | Zoom out (add rows) doesn't show empty grid cells | gridRows only expands for blocks, should show empty cells when visibleRows > gridRows → T35 |
-| B11 | 2026-05-23 | Grid gradient too obvious, visible oval looks weird | GridCanvas radial-gradient too opaque (0.04 alpha) → T36 |
-| B12 | 2026-05-23 | App too dark, lacks contrast (only upload button has contrast) | Color scheme needs more visual hierarchy, accent highlights → T37 |
-| B13 | 2026-05-23 | Zoom in doesn't remove trailing empty rows, keeps large gridRows | setVisibleRows only expands gridRows, never shrinks. Inverse of B10 → V21, T39 |
-| B14 | 2026-05-23 | Color scheme after T37 still not design-focused enough | Need palette with stronger design identity, refined visual language → T40 |
-| B15 | 2026-05-23 | Images still lost on reload despite T33 fix | localStorage quota (5-10MB) insufficient for image data URLs. V18 warns but doesn't solve persistence → V22, T41 |
-| B16 | 2026-05-23 | No loading indicator on page reload, images pop in after IndexedDB delay | T41 async IDB load lacks visual feedback. User sees empty grid then sudden image load → V23, T42 |
-| B17 | 2026-05-23 | Multiple images uploaded together overlap at same position | findFreeCell reads stale blocks state. Loop doesn't track newly added blocks, all find same position → V13, T43 |
-| B18 | 2026-05-23 | Export numbering left-to-right, should be right-to-left for Instagram upload order | cellUploadNumber scans left-to-right but IG displays first upload on right. V4 wrong → V4 updated, T44 |
-| B19 | 2026-05-23 | Group selection only Shift+click, missing Ctrl+click for Windows-style toggle | Block.tsx only checks shiftKey. Need ctrlKey/metaKey for individual add/remove, shiftKey for range → V12 updated, T45 |
-| B20 | 2026-05-23 | Loading state fullscreen overlay blocks entire UI | T42 shows fullscreen spinner. Should be skeleton placeholders in sidebar + grid only → V23 updated, T46 |
-| B21 | 2026-05-23 | After clear canvas, can't re-add images from sidebar (drag blocked) | clearCanvas clears blocks but images in sidebar can't be dragged to grid again → T47 |
-| B22 | 2026-05-23 | No button to clear images from memory/IDB | Images persist forever. Need "Clear images" button separate from "Clear canvas" → T48 |
-| B23 | 2026-05-23 | Grid skeletons missing, only sidebar has loading placeholders | T46 added sidebar skeletons but grid still empty during load → V23 updated, T49 |
-| B24 | 2026-05-23 | Batch upload still stacks all images in first cell | T43 supposedly fixed but user reports images still overlap. handleFiles broken? → T50 |
-| B25 | 2026-05-23 | Drag shows duplicate block visual (but places correctly) | DragOverlay or block rendering issue creates visual duplicate during drag → T51 |
-| B26 | 2026-05-23 | DragOverlay offset down-right from cursor during drag | DragOverlay doesn't account for initial grab offset. Positions from top-left of block not cursor → T53 |
-| B27 | 2026-05-23 | Shift+click range selection skips intermediate blocks | Range selection uses blocks array order (creation order) not visual grid order. Need sort by row*COLS+col → T54 |
-| B28 | 2026-05-23 | Export not applying image transforms, crops wrong | renderCell uses contain (full image per cell) not crop (visible portion per cell). Should slice image by cell bounds like IG carousel: 1010px crop + 35px bars → V24, T55 |
-| B29 | 2026-05-23 | Exported images low resolution | Export quality or scaling issue? Need verify actual resolution vs expected → T56 |
-| B30 | 2026-05-23 | Color picker opens to right, overflows viewport | Picker should open to left for better positioning → T59 |
-| B31 | 2026-05-23 | Exported images still incorrect after T55 | Need debug actual export output vs expected. Transform application or crop logic issue → T60 |
-| B32 | 2026-05-23 | Save profile doesn't work | Need debug why saveProfile not persisting. Check IDB transaction or version upgrade → T63 |
-| B33 | 2026-05-23 | Export still doesn't match grid display | Transform order fix (T60) not sufficient. Need verify exact pixel-perfect match with grid → T65 |
-| B34 | 2026-05-23 | Export bars should extend image not blur | T62 uses blur. Should extend image edges naturally. Black bars only if no image extension possible → T66 |
-| B35 | 2026-05-23 | Profile save broken after reload - profiles store missing | DB upgrade from v1→v2 not creating profiles store. Need force recreate or check existing connections → T67 |
-| B36 | 2026-05-23 | Export crop shows wrong portion of image compared to grid display | T65/T66 used hardcoded 400px reference for pan scaling. Actual grid cell size varies by viewport. Need pass real cell size or store transforms as viewport-independent values → T69 |
-| B37 | 2026-05-23 | Export multi-cell X offset wrong (zoom/panY correct, panX offset wrong) | cellOffsetX uses CROP_W (1010) but each export cell is EXPORT_W (1080) wide. Cells overlap/gap incorrectly → T70 |
-| B38 | 2026-05-23 | Multi-row block export: panY misaligned | When block spans multiple rows, Y offset breaks. May need image scaling to use crop area dimensions not full canvas. T70 fix for X may have revealed Y coordinate system inconsistency → T71 |
-| B39 | 2026-05-23 | ColorPicker preset grid overflow: 11 cols * (16px + 4px gap) + 24px padding = 240px, container only 220px | V25, T76 |
-| B40 | 2026-05-24 | Mobile TopToolbar buttons invisible/lost. Logo wastes space, too many buttons overflow, low contrast | V29, T83 |
-| B41 | 2026-05-24 | Mobile sidebar overlay not full width | T84 |
-| B42 | 2026-05-24 | Zoom controls confusing: + removes rows, - adds rows. Users expect + to add, - to subtract | T85 |
-| B43 | 2026-05-24 | Mobile sidebar still not full width: maxWidth:210 limits it despite wrapper being 100% | T87 |
-| B44 | 2026-05-24 | Mobile sidebar STILL not full width after T87: CSS !important doesn't override inline style width:210. Wrapper right:0 but child fixed 210px | V30 |
-| B45 | 2026-05-24 | Mobile TopToolbar cramped and ugly: too many 44px buttons in 56px height, poor spacing, overall bad UX | V31 |
-| B46 | 2026-05-24 | Grid zoom controls counterintuitive: + removes rows (Fill), - adds rows (Fit). Users expect + to add, - to remove. Default 3 rows too few for mobile (screenshot shows 5 fills screen) | V32 |
-| B47 | 2026-05-24 | Mobile toolbar has gradient background (0a0a0a→1a1a1a), should be pure black #000 for cleaner look | V33 |
-| B48 | 2026-05-24 | Mobile sidebar doesn't fill full height, black space below content (screenshot shows sidebar ends mid-screen) | V34 |
-| B49 | 2026-05-24 | Grid doesn't auto-adjust rows to fill available height on mobile, hardcoded default=5 leaves wasted space or scrolling | V35 |
-| B50 | 2026-05-24 | Mobile styling ugly: gray backgrounds (#0d0d0d, #1a1a1a), toolbar buttons have borders and semi-transparent white backgrounds look gray/washed out | V36 |
-| B51 | 2026-05-24 | Mobile sidebar very slow to open/close - feels sluggish, takes too long to animate | V38 |
-| B52 | 2026-05-24 | Pan/resize modes don't disable block movement - blocks still draggable for position when modes active, should only allow mode-specific interaction | V39 |
-| B53 | 2026-05-24 | Pan/resize mode buttons always enabled - should be disabled when no block selected (modes only work with selected blocks) | V40 |
-| B54 | 2026-05-24 | Pan icon ✋ renders as color emoji not white text - inconsistent with other toolbar icons | V36 |
-| B55 | 2026-05-24 | Drag still works when pan mode active - blocks show drag overlay and animate, then snap back. Should prevent drag from starting | V39 |
-| B56 | 2026-05-24 | Pan icon ↔ counterintuitive - left-right arrow implies horizontal only, but pan is omnidirectional movement | V36 |
-| B57 | 2026-05-24 | Sidebar entire container scrolls - should only scroll thumbnail section, header/buttons should stay fixed | V41 |
-| B58 | 2026-05-24 | Pan/resize mode approach too complex, buggy, causes scroll conflicts. Better design: invert logic - default drag OFF, single drag toggle ON. Simpler, saves buttons | V42 |
-| B59 | 2026-05-24 | Drag works on desktop even when dragMode=false (button deactivated). dragMode should control drag globally, not just mobile | V43 |
-| B60 | 2026-05-24 | Drag button disabled when no block selected, but dragMode is global toggle - should be always enabled | V44 |
-| B61 | 2026-05-24 | Drag icon ⤡ not intuitive, hard to understand what button does | — |
-| B62 | 2026-05-24 | Drag icon 🔒 renders as color emoji, not white text. Inconsistent with other toolbar icons (↻ ＋ － ✕) | V45 |
-| B63 | 2026-05-24 | No way to pan image on mobile when drag locked. User can't adjust image position within block on touch devices | V46 |
-| B64 | 2026-05-24 | Drag button not prominent - should be second position (after sidebar toggle) for easy mobile access | V47 |
-| B65 | 2026-05-24 | Sidebar toggle uses arrows ‹›, should use hamburger icon ☰ for better recognition | V47 |
-| B66 | 2026-05-24 | Touch pan doesn't work on mobile - e.preventDefault() fails in touchMove because React synthetic events are passive by default, can't prevent scroll | V46 |
-| B67 | 2026-05-24 | Pan still broken - useEffect deps include block.transform causing listeners detach/reattach on every pan update, breaks continuous gesture | V46 |
-| B68 | 2026-05-24 | Scroll blocked on images - touchAction: "none" always applied to block, prevents scroll even when image unselected and drag locked | V46 |
-| B69 | 2026-05-24 | Pan doesn't work - swipe on selected image causes scroll instead of pan. touchAction="auto" when drag locked allows browser scroll, need "none" when image selected for pan | V46 |
-| B70 | 2026-05-24 | Can't deselect on mobile - once image selected (touchAction="none"), stuck without scroll. Hard to click empty space on mobile to deselect | V48 |
-| B71 | 2026-05-24 | Pan STILL not working - critical core feature. Touch listeners might not attach/fire, or only work on img not bars area | V46 |
-| B72 | 2026-05-24 | Sidebar toggle button no visual feedback - doesn't show active state (glow) when sidebar open | V47 |
-| B73 | 2026-05-24 | Resize handles too small on mobile - very hard to grab without triggering pan or drag gestures. Handles need larger touch targets and gesture priority | V50 |
-| B74 | 2026-05-24 | Lock button active state not visible on desktop RightToolbar - button works but no visual feedback when dragMode active. IconBtn active styling used CSS var --color-accent-glow (may not exist) and background didn't change | V51 |
-| B75 | 2026-05-24 | Mobile toolbar cluttered when sidebar open - buttons overlap/conflict with sidebar fullscreen overlay, should show only logo when sidebar visible | V52 |
-| B76 | 2026-05-24 | Mobile pinch zoom gestures don't work - 2-finger pinch does browser zoom instead of grid zoom (visibleRows adjustment) | V53 |
-| B77 | 2026-05-24 | Pan still triggers when touching resize handle on mobile - T121 stopPropagation not sufficient, pan listeners still fire on resize handle interaction | V54 |
-| B78 | 2026-05-24 | T123 implementation wrong - when sidebar open on mobile, toolbar shows logo only (no menu button). Should show menu toggle + logo. Also sidebar shows logo on mobile, should only be in toolbar | V52 |
-| B79 | 2026-05-24 | Mobile resize handles on right screen edge conflict with system back gesture - very hard to touch right/corner handles when block near right edge | V58 |
-| B80 | 2026-05-24 | Mobile TopToolbar has zoom +/- buttons but zoom now available via FAB overlay - redundant controls, should replace with FAB toggle button | V59 |
-| B81 | 2026-05-24 | FAB button barely visible on mobile - low opacity background hard to see. Icon (⊕) not vertically centered in circle | — |
-
+| id  | date       | cause                                                                                                                                                                                                                         | fix                                                                                                                                                                                          |
+| --- | ---------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| B1  | 2026-05-23 | Export numbering right-to-left top-to-bottom instead of left-to-right bottom-to-top                                                                                                                                           | Fixed cellUploadNumber formula                                                                                                                                                               |
+| B2  | 2026-05-23 | Cell mode edits not reflected in grid view                                                                                                                                                                                    | Cell overrides not applied in block render                                                                                                                                                   |
+| B3  | 2026-05-23 | Bars mode in cell mode: image positioning uses relative pixels, hard to see bars color                                                                                                                                        | Geometry issues with multi-cell blocks in cell mode                                                                                                                                          |
+| B4  | 2026-05-23 | localStorage not persisting images/grid state on page reload                                                                                                                                                                  | Data URLs exceed localStorage quota (5-10MB), saveState fails silently → V18                                                                                                                 |
+| B5  | 2026-05-23 | Right toolbar too wide with categories, expected slim icon-only bar                                                                                                                                                           | RightToolbar uses 240px with section labels → T29                                                                                                                                            |
+| B6  | 2026-05-23 | Group drag shows single image preview, not whole group                                                                                                                                                                        | DndKit only shows dragged element, need custom overlay → V19, T30                                                                                                                            |
+| B7  | 2026-05-23 | Group drag border collision merges blocks instead of wrapping to adjacent row                                                                                                                                                 | Collision detection doesn't handle row wrapping → T31                                                                                                                                        |
+| B8  | 2026-05-23 | Grid zoom should add/remove rows and center grid, not scale with pan                                                                                                                                                          | Current zoom uses CSS transform, should modify visible row count → V20, T32                                                                                                                  |
+| B9  | 2026-05-23 | Export numbering counts empty/placeholder cells, should only number cells with images                                                                                                                                         | cellUploadNumber gives sequential numbers to all cells → V4 updated, T34                                                                                                                     |
+| B10 | 2026-05-23 | Zoom out (add rows) doesn't show empty grid cells                                                                                                                                                                             | gridRows only expands for blocks, should show empty cells when visibleRows > gridRows → T35                                                                                                  |
+| B11 | 2026-05-23 | Grid gradient too obvious, visible oval looks weird                                                                                                                                                                           | GridCanvas radial-gradient too opaque (0.04 alpha) → T36                                                                                                                                     |
+| B12 | 2026-05-23 | App too dark, lacks contrast (only upload button has contrast)                                                                                                                                                                | Color scheme needs more visual hierarchy, accent highlights → T37                                                                                                                            |
+| B13 | 2026-05-23 | Zoom in doesn't remove trailing empty rows, keeps large gridRows                                                                                                                                                              | setVisibleRows only expands gridRows, never shrinks. Inverse of B10 → V21, T39                                                                                                               |
+| B14 | 2026-05-23 | Color scheme after T37 still not design-focused enough                                                                                                                                                                        | Need palette with stronger design identity, refined visual language → T40                                                                                                                    |
+| B15 | 2026-05-23 | Images still lost on reload despite T33 fix                                                                                                                                                                                   | localStorage quota (5-10MB) insufficient for image data URLs. V18 warns but doesn't solve persistence → V22, T41                                                                             |
+| B16 | 2026-05-23 | No loading indicator on page reload, images pop in after IndexedDB delay                                                                                                                                                      | T41 async IDB load lacks visual feedback. User sees empty grid then sudden image load → V23, T42                                                                                             |
+| B17 | 2026-05-23 | Multiple images uploaded together overlap at same position                                                                                                                                                                    | findFreeCell reads stale blocks state. Loop doesn't track newly added blocks, all find same position → V13, T43                                                                              |
+| B18 | 2026-05-23 | Export numbering left-to-right, should be right-to-left for Instagram upload order                                                                                                                                            | cellUploadNumber scans left-to-right but IG displays first upload on right. V4 wrong → V4 updated, T44                                                                                       |
+| B19 | 2026-05-23 | Group selection only Shift+click, missing Ctrl+click for Windows-style toggle                                                                                                                                                 | Block.tsx only checks shiftKey. Need ctrlKey/metaKey for individual add/remove, shiftKey for range → V12 updated, T45                                                                        |
+| B20 | 2026-05-23 | Loading state fullscreen overlay blocks entire UI                                                                                                                                                                             | T42 shows fullscreen spinner. Should be skeleton placeholders in sidebar + grid only → V23 updated, T46                                                                                      |
+| B21 | 2026-05-23 | After clear canvas, can't re-add images from sidebar (drag blocked)                                                                                                                                                           | clearCanvas clears blocks but images in sidebar can't be dragged to grid again → T47                                                                                                         |
+| B22 | 2026-05-23 | No button to clear images from memory/IDB                                                                                                                                                                                     | Images persist forever. Need "Clear images" button separate from "Clear canvas" → T48                                                                                                        |
+| B23 | 2026-05-23 | Grid skeletons missing, only sidebar has loading placeholders                                                                                                                                                                 | T46 added sidebar skeletons but grid still empty during load → V23 updated, T49                                                                                                              |
+| B24 | 2026-05-23 | Batch upload still stacks all images in first cell                                                                                                                                                                            | T43 supposedly fixed but user reports images still overlap. handleFiles broken? → T50                                                                                                        |
+| B25 | 2026-05-23 | Drag shows duplicate block visual (but places correctly)                                                                                                                                                                      | DragOverlay or block rendering issue creates visual duplicate during drag → T51                                                                                                              |
+| B26 | 2026-05-23 | DragOverlay offset down-right from cursor during drag                                                                                                                                                                         | DragOverlay doesn't account for initial grab offset. Positions from top-left of block not cursor → T53                                                                                       |
+| B27 | 2026-05-23 | Shift+click range selection skips intermediate blocks                                                                                                                                                                         | Range selection uses blocks array order (creation order) not visual grid order. Need sort by row\*COLS+col → T54                                                                             |
+| B28 | 2026-05-23 | Export not applying image transforms, crops wrong                                                                                                                                                                             | renderCell uses contain (full image per cell) not crop (visible portion per cell). Should slice image by cell bounds like IG carousel: 1010px crop + 35px bars → V24, T55                    |
+| B29 | 2026-05-23 | Exported images low resolution                                                                                                                                                                                                | Export quality or scaling issue? Need verify actual resolution vs expected → T56                                                                                                             |
+| B30 | 2026-05-23 | Color picker opens to right, overflows viewport                                                                                                                                                                               | Picker should open to left for better positioning → T59                                                                                                                                      |
+| B31 | 2026-05-23 | Exported images still incorrect after T55                                                                                                                                                                                     | Need debug actual export output vs expected. Transform application or crop logic issue → T60                                                                                                 |
+| B32 | 2026-05-23 | Save profile doesn't work                                                                                                                                                                                                     | Need debug why saveProfile not persisting. Check IDB transaction or version upgrade → T63                                                                                                    |
+| B33 | 2026-05-23 | Export still doesn't match grid display                                                                                                                                                                                       | Transform order fix (T60) not sufficient. Need verify exact pixel-perfect match with grid → T65                                                                                              |
+| B34 | 2026-05-23 | Export bars should extend image not blur                                                                                                                                                                                      | T62 uses blur. Should extend image edges naturally. Black bars only if no image extension possible → T66                                                                                     |
+| B35 | 2026-05-23 | Profile save broken after reload - profiles store missing                                                                                                                                                                     | DB upgrade from v1→v2 not creating profiles store. Need force recreate or check existing connections → T67                                                                                   |
+| B36 | 2026-05-23 | Export crop shows wrong portion of image compared to grid display                                                                                                                                                             | T65/T66 used hardcoded 400px reference for pan scaling. Actual grid cell size varies by viewport. Need pass real cell size or store transforms as viewport-independent values → T69          |
+| B37 | 2026-05-23 | Export multi-cell X offset wrong (zoom/panY correct, panX offset wrong)                                                                                                                                                       | cellOffsetX uses CROP_W (1010) but each export cell is EXPORT_W (1080) wide. Cells overlap/gap incorrectly → T70                                                                             |
+| B38 | 2026-05-23 | Multi-row block export: panY misaligned                                                                                                                                                                                       | When block spans multiple rows, Y offset breaks. May need image scaling to use crop area dimensions not full canvas. T70 fix for X may have revealed Y coordinate system inconsistency → T71 |
+| B39 | 2026-05-23 | ColorPicker preset grid overflow: 11 cols \* (16px + 4px gap) + 24px padding = 240px, container only 220px                                                                                                                    | V25, T76                                                                                                                                                                                     |
+| B40 | 2026-05-24 | Mobile TopToolbar buttons invisible/lost. Logo wastes space, too many buttons overflow, low contrast                                                                                                                          | V29, T83                                                                                                                                                                                     |
+| B41 | 2026-05-24 | Mobile sidebar overlay not full width                                                                                                                                                                                         | T84                                                                                                                                                                                          |
+| B42 | 2026-05-24 | Zoom controls confusing: + removes rows, - adds rows. Users expect + to add, - to subtract                                                                                                                                    | T85                                                                                                                                                                                          |
+| B43 | 2026-05-24 | Mobile sidebar still not full width: maxWidth:210 limits it despite wrapper being 100%                                                                                                                                        | T87                                                                                                                                                                                          |
+| B44 | 2026-05-24 | Mobile sidebar STILL not full width after T87: CSS !important doesn't override inline style width:210. Wrapper right:0 but child fixed 210px                                                                                  | V30                                                                                                                                                                                          |
+| B45 | 2026-05-24 | Mobile TopToolbar cramped and ugly: too many 44px buttons in 56px height, poor spacing, overall bad UX                                                                                                                        | V31                                                                                                                                                                                          |
+| B46 | 2026-05-24 | Grid zoom controls counterintuitive: + removes rows (Fill), - adds rows (Fit). Users expect + to add, - to remove. Default 3 rows too few for mobile (screenshot shows 5 fills screen)                                        | V32                                                                                                                                                                                          |
+| B47 | 2026-05-24 | Mobile toolbar has gradient background (0a0a0a→1a1a1a), should be pure black #000 for cleaner look                                                                                                                            | V33                                                                                                                                                                                          |
+| B48 | 2026-05-24 | Mobile sidebar doesn't fill full height, black space below content (screenshot shows sidebar ends mid-screen)                                                                                                                 | V34                                                                                                                                                                                          |
+| B49 | 2026-05-24 | Grid doesn't auto-adjust rows to fill available height on mobile, hardcoded default=5 leaves wasted space or scrolling                                                                                                        | V35                                                                                                                                                                                          |
+| B50 | 2026-05-24 | Mobile styling ugly: gray backgrounds (#0d0d0d, #1a1a1a), toolbar buttons have borders and semi-transparent white backgrounds look gray/washed out                                                                            | V36                                                                                                                                                                                          |
+| B51 | 2026-05-24 | Mobile sidebar very slow to open/close - feels sluggish, takes too long to animate                                                                                                                                            | V38                                                                                                                                                                                          |
+| B52 | 2026-05-24 | Pan/resize modes don't disable block movement - blocks still draggable for position when modes active, should only allow mode-specific interaction                                                                            | V39                                                                                                                                                                                          |
+| B53 | 2026-05-24 | Pan/resize mode buttons always enabled - should be disabled when no block selected (modes only work with selected blocks)                                                                                                     | V40                                                                                                                                                                                          |
+| B54 | 2026-05-24 | Pan icon ✋ renders as color emoji not white text - inconsistent with other toolbar icons                                                                                                                                     | V36                                                                                                                                                                                          |
+| B55 | 2026-05-24 | Drag still works when pan mode active - blocks show drag overlay and animate, then snap back. Should prevent drag from starting                                                                                               | V39                                                                                                                                                                                          |
+| B56 | 2026-05-24 | Pan icon ↔ counterintuitive - left-right arrow implies horizontal only, but pan is omnidirectional movement                                                                                                                   | V36                                                                                                                                                                                          |
+| B57 | 2026-05-24 | Sidebar entire container scrolls - should only scroll thumbnail section, header/buttons should stay fixed                                                                                                                     | V41                                                                                                                                                                                          |
+| B58 | 2026-05-24 | Pan/resize mode approach too complex, buggy, causes scroll conflicts. Better design: invert logic - default drag OFF, single drag toggle ON. Simpler, saves buttons                                                           | V42                                                                                                                                                                                          |
+| B59 | 2026-05-24 | Drag works on desktop even when dragMode=false (button deactivated). dragMode should control drag globally, not just mobile                                                                                                   | V43                                                                                                                                                                                          |
+| B60 | 2026-05-24 | Drag button disabled when no block selected, but dragMode is global toggle - should be always enabled                                                                                                                         | V44                                                                                                                                                                                          |
+| B61 | 2026-05-24 | Drag icon ⤡ not intuitive, hard to understand what button does                                                                                                                                                                | —                                                                                                                                                                                            |
+| B62 | 2026-05-24 | Drag icon 🔒 renders as color emoji, not white text. Inconsistent with other toolbar icons (↻ ＋ － ✕)                                                                                                                        | V45                                                                                                                                                                                          |
+| B63 | 2026-05-24 | No way to pan image on mobile when drag locked. User can't adjust image position within block on touch devices                                                                                                                | V46                                                                                                                                                                                          |
+| B64 | 2026-05-24 | Drag button not prominent - should be second position (after sidebar toggle) for easy mobile access                                                                                                                           | V47                                                                                                                                                                                          |
+| B65 | 2026-05-24 | Sidebar toggle uses arrows ‹›, should use hamburger icon ☰ for better recognition                                                                                                                                            | V47                                                                                                                                                                                          |
+| B66 | 2026-05-24 | Touch pan doesn't work on mobile - e.preventDefault() fails in touchMove because React synthetic events are passive by default, can't prevent scroll                                                                          | V46                                                                                                                                                                                          |
+| B67 | 2026-05-24 | Pan still broken - useEffect deps include block.transform causing listeners detach/reattach on every pan update, breaks continuous gesture                                                                                    | V46                                                                                                                                                                                          |
+| B68 | 2026-05-24 | Scroll blocked on images - touchAction: "none" always applied to block, prevents scroll even when image unselected and drag locked                                                                                            | V46                                                                                                                                                                                          |
+| B69 | 2026-05-24 | Pan doesn't work - swipe on selected image causes scroll instead of pan. touchAction="auto" when drag locked allows browser scroll, need "none" when image selected for pan                                                   | V46                                                                                                                                                                                          |
+| B70 | 2026-05-24 | Can't deselect on mobile - once image selected (touchAction="none"), stuck without scroll. Hard to click empty space on mobile to deselect                                                                                    | V48                                                                                                                                                                                          |
+| B71 | 2026-05-24 | Pan STILL not working - critical core feature. Touch listeners might not attach/fire, or only work on img not bars area                                                                                                       | V46                                                                                                                                                                                          |
+| B72 | 2026-05-24 | Sidebar toggle button no visual feedback - doesn't show active state (glow) when sidebar open                                                                                                                                 | V47                                                                                                                                                                                          |
+| B73 | 2026-05-24 | Resize handles too small on mobile - very hard to grab without triggering pan or drag gestures. Handles need larger touch targets and gesture priority                                                                        | V50                                                                                                                                                                                          |
+| B74 | 2026-05-24 | Lock button active state not visible on desktop RightToolbar - button works but no visual feedback when dragMode active. IconBtn active styling used CSS var --color-accent-glow (may not exist) and background didn't change | V51                                                                                                                                                                                          |
+| B75 | 2026-05-24 | Mobile toolbar cluttered when sidebar open - buttons overlap/conflict with sidebar fullscreen overlay, should show only logo when sidebar visible                                                                             | V52                                                                                                                                                                                          |
+| B76 | 2026-05-24 | Mobile pinch zoom gestures don't work - 2-finger pinch does browser zoom instead of grid zoom (visibleRows adjustment)                                                                                                        | V53                                                                                                                                                                                          |
+| B77 | 2026-05-24 | Pan still triggers when touching resize handle on mobile - T121 stopPropagation not sufficient, pan listeners still fire on resize handle interaction                                                                         | V54                                                                                                                                                                                          |
+| B78 | 2026-05-24 | T123 implementation wrong - when sidebar open on mobile, toolbar shows logo only (no menu button). Should show menu toggle + logo. Also sidebar shows logo on mobile, should only be in toolbar                               | V52                                                                                                                                                                                          |
+| B79 | 2026-05-24 | Mobile resize handles on right screen edge conflict with system back gesture - very hard to touch right/corner handles when block near right edge                                                                             | V58                                                                                                                                                                                          |
+| B80 | 2026-05-24 | Mobile TopToolbar has zoom +/- buttons but zoom now available via FAB overlay - redundant controls, should replace with FAB toggle button                                                                                     | V59                                                                                                                                                                                          |
+| B81 | 2026-05-24 | FAB button barely visible on mobile - low opacity background hard to see. Icon (⊕) not vertically centered in circle                                                                                                          | —                                                                                                                                                                                            |
