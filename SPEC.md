@@ -77,6 +77,9 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | V35 | Mobile grid auto-fit height: calculate visibleRows to fill available viewport without scrolling or wasted space. |
 | V36 | Mobile pure black aesthetic: all backgrounds #000 (not gray), buttons borderless with subtle glow (no visible borders). |
 | V37 | Mobile touch interaction modes: pan mode (touch drag adjusts image transform), resize mode (touch drag changes block cell span). |
+| V38 | Mobile sidebar performance: opens/closes in under 300ms with smooth CSS slide transition. No mount/unmount lag. |
+| V39 | Touch mode exclusivity: when panMode or resizeMode active, block position dragging disabled. Only mode-specific interaction enabled. |
+| V40 | Touch mode button availability: pan/resize buttons only enabled when at least one block selected (modes require selection). |
 
 ---
 
@@ -187,6 +190,10 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | T95 | x | Mobile canvas pure black: override CanvasArea/GridCanvas bg to #000 on mobile (not gray #0d0d0d) | B50, V36 |
 | T96 | x | Mobile pan mode toggle: add toolbar button to enable/disable pan mode (touch drag modifies transform.panX/Y on selected block) | V37 |
 | T97 | x | Mobile resize mode toggle: add toolbar button to enable/disable resize mode (touch drag on block edges changes colSpan/rowSpan) | V37 |
+| T98 | x | Mobile sidebar smooth animation: keep sidebar mounted, add CSS transform transition (translateX) for fast slide in/out under 300ms | B51, V38 |
+| T99 | . | Disable block drag when pan/resize mode active: modify CanvasArea onDragStart/onDragEnd to skip if panMode or resizeMode enabled | B52, V39 |
+| T100 | . | Disable pan/resize buttons when no selection: add disabled={disabled} (selectedBlocks.length === 0) to pan/resize IconBtn | B53, V40 |
+| T101 | . | Change pan icon from ✋ to white symbol: use ⟷ or ↔ for consistency with other white text icons | B54, V36 |
 
 ---
 
@@ -244,4 +251,8 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | B48 | 2026-05-24 | Mobile sidebar doesn't fill full height, black space below content (screenshot shows sidebar ends mid-screen) | V34 |
 | B49 | 2026-05-24 | Grid doesn't auto-adjust rows to fill available height on mobile, hardcoded default=5 leaves wasted space or scrolling | V35 |
 | B50 | 2026-05-24 | Mobile styling ugly: gray backgrounds (#0d0d0d, #1a1a1a), toolbar buttons have borders and semi-transparent white backgrounds look gray/washed out | V36 |
+| B51 | 2026-05-24 | Mobile sidebar very slow to open/close - feels sluggish, takes too long to animate | V38 |
+| B52 | 2026-05-24 | Pan/resize modes don't disable block movement - blocks still draggable for position when modes active, should only allow mode-specific interaction | V39 |
+| B53 | 2026-05-24 | Pan/resize mode buttons always enabled - should be disabled when no block selected (modes only work with selected blocks) | V40 |
+| B54 | 2026-05-24 | Pan icon ✋ renders as color emoji not white text - inconsistent with other toolbar icons | V36 |
 

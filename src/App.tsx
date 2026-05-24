@@ -43,23 +43,33 @@ export default function App() {
           <CanvasArea onLowRes={setLowResWarning} />
 
           {/* Fullscreen sidebar overlay */}
-          {sidebarVisible && (
-            <>
-              <div
-                style={{
-                  position: 'fixed',
-                  inset: 0,
-                  background: 'rgba(0,0,0,0.5)',
-                  zIndex: 99,
-                  top: 64,
-                }}
-                onClick={() => useStore.getState().toggleSidebar()}
-              />
-              <div style={{ position: 'fixed', left: 0, top: 64, bottom: 0, right: 0, zIndex: 100 }}>
-                <Sidebar onLowRes={setLowResWarning} width="100%" />
-              </div>
-            </>
-          )}
+          <>
+            <div
+              style={{
+                position: 'fixed',
+                inset: 0,
+                background: 'rgba(0,0,0,0.5)',
+                zIndex: 99,
+                top: 64,
+                opacity: sidebarVisible ? 1 : 0,
+                pointerEvents: sidebarVisible ? 'auto' : 'none',
+                transition: 'opacity 0.25s ease-out',
+              }}
+              onClick={() => useStore.getState().toggleSidebar()}
+            />
+            <div style={{
+              position: 'fixed',
+              left: 0,
+              top: 64,
+              bottom: 0,
+              right: 0,
+              zIndex: 100,
+              transform: sidebarVisible ? 'translateX(0)' : 'translateX(-100%)',
+              transition: 'transform 0.25s ease-out',
+            }}>
+              <Sidebar onLowRes={setLowResWarning} width="100%" />
+            </div>
+          </>
         </div>
       </div>
     )
