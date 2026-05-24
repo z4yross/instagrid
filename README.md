@@ -1,75 +1,62 @@
-# React + TypeScript + Vite
+# InstaGrid
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Browser-based Instagram feed planner. Arrange images on a 3-column grid, then export numbered cells ready for upload.
 
-Currently, two official plugins are available:
+🤖 **100% vibecodeado** with Claude Code
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Features
 
-## React Compiler
+- **Visual grid planning** — Drag, resize, arrange images on 3×4 Instagram grid
+- **Smart transforms** — Pan, zoom, rotate, flip images per cell
+- **Export ready** — 1080×1350px cells numbered in Instagram upload order (right-to-left, bottom-to-top)
+- **Zero backend** — 100% browser, no server, no auth
+- **Persistent state** — IndexedDB for images, localStorage for layout
+- **Undo/redo** — Full history with Ctrl+Z / Ctrl+Y
+- **Custom colors** — Change letterbox bar colors per image
+- **Profiles** — Save and switch between multiple grid layouts
+- **Keyboard shortcuts** — Arrow keys pan, +/- zoom (context-aware)
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+## Tech Stack
 
-Note: This will impact Vite dev & build performances.
+- **React 18** + TypeScript
+- **Vite** — Fast build tooling
+- **Zustand** + zundo — State management with time travel
+- **@dnd-kit** — Drag and drop
+- **IndexedDB** — Client-side image storage
+- **Canvas API** — High-quality export rendering
+- **JSZip** — Batch export as ZIP
 
-## Expanding the ESLint configuration
+## Usage
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+1. Upload images (drag-drop or file picker)
+2. Arrange on grid — drag to move, resize corners
+3. Transform images — pan/zoom/rotate per cell
+4. Export — download numbered cells as ZIP
+5. Upload to Instagram in order (1, 2, 3...)
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## Keyboard Shortcuts
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+- `Ctrl+Z` / `Ctrl+Y` — Undo / Redo
+- `Arrow keys` — Pan selected image (rotates with image)
+- `+` / `-` — Zoom image (if selected) or zoom grid (if nothing selected)
+- `Delete` / `Backspace` — Remove selected blocks
+- `Escape` — Deselect all
+- `Ctrl+Click` — Toggle selection
+- `Shift+Click` — Range selection
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## Development
+
+```bash
+npm install
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Deployment
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+Deployed to GitHub Pages via GitHub Actions. Auto-deploys on push to `main`.
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+Live at: **[instagrid.z4yross.com](https://instagrid.z4yross.com)**
+
+---
+
+Built with 🎨 and ✨ by AI
