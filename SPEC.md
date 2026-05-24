@@ -219,6 +219,7 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | T116 | x | Fix pan on selected - touchAction="none" when (drag enabled OR (pan enabled AND selected)), else "auto" for scroll | B69, V46 |
 | T117 | x | Mobile tap to deselect - regular click on already-selected single block deselects (setSelectedBlocks([])), restores scroll | B70, V48 |
 | T118 | x | Debug + fix pan - add console logs to verify listeners attach/fire, try attaching to block root instead of just img element to capture bars area | B71, V46 |
+| T119 | x | Add active state to menu button - pass active={sidebarVisible} to sidebar toggle IconBtn for visual feedback | B72, V47 |
 
 ---
 
@@ -297,4 +298,5 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | B69 | 2026-05-24 | Pan doesn't work - swipe on selected image causes scroll instead of pan. touchAction="auto" when drag locked allows browser scroll, need "none" when image selected for pan | V46 |
 | B70 | 2026-05-24 | Can't deselect on mobile - once image selected (touchAction="none"), stuck without scroll. Hard to click empty space on mobile to deselect | V48 |
 | B71 | 2026-05-24 | Pan STILL not working - critical core feature. Touch listeners might not attach/fire, or only work on img not bars area | V46 |
+| B72 | 2026-05-24 | Sidebar toggle button no visual feedback - doesn't show active state (glow) when sidebar open | V47 |
 

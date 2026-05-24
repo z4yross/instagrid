@@ -58,7 +58,7 @@ export default function TopToolbar() {
       }}
     >
       {/* Sidebar toggle */}
-      <IconBtn onClick={toggleSidebar} title={sidebarVisible ? 'Hide' : 'Show'}>
+      <IconBtn onClick={toggleSidebar} active={sidebarVisible} title={sidebarVisible ? 'Hide' : 'Show'}>
         <Menu size={18} />
       </IconBtn>
 
