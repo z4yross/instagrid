@@ -9,10 +9,8 @@ export default function TopToolbar() {
   const setSelectedBlocks = useStore((s) => s.setSelectedBlocks)
   const toggleSidebar = useStore((s) => s.toggleSidebar)
   const sidebarVisible = useStore((s) => s.sidebarVisible)
-  const panMode = useStore((s) => s.panMode)
-  const resizeMode = useStore((s) => s.resizeMode)
-  const togglePanMode = useStore((s) => s.togglePanMode)
-  const toggleResizeMode = useStore((s) => s.toggleResizeMode)
+  const dragMode = useStore((s) => s.dragMode)
+  const toggleDragMode = useStore((s) => s.toggleDragMode)
 
   const selectedBlocks = blocks.filter((b) => selectedBlockIds.includes(b.id))
   const block = selectedBlocks.length === 1 ? selectedBlocks[0] : null
@@ -78,11 +76,10 @@ export default function TopToolbar() {
         </div>
       )}
 
-      {/* Essential controls only - pan via touch gestures */}
+      {/* Essential controls only */}
       <IconBtn onClick={rotate} disabled={disabled} title="Rotate">↻</IconBtn>
 
-      <IconBtn onClick={togglePanMode} disabled={disabled} active={panMode} title="Pan mode">✥</IconBtn>
-      <IconBtn onClick={toggleResizeMode} disabled={disabled} active={resizeMode} title="Resize mode">⇱</IconBtn>
+      <IconBtn onClick={toggleDragMode} active={dragMode} title="Drag mode">🔒</IconBtn>
 
       <IconBtn onClick={() => adjustZoom(0.1)} disabled={disabled} title="Zoom in">＋</IconBtn>
       <IconBtn onClick={() => adjustZoom(-0.1)} disabled={disabled} title="Zoom out">－</IconBtn>
