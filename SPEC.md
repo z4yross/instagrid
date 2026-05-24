@@ -185,8 +185,8 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | T93 | x | Mobile grid auto-fit: calculate visibleRows on mount/resize to fill available height (viewport - toolbar - zoom controls) | B49, V35 |
 | T94 | x | Mobile button styling: remove borders, darker/pure black backgrounds, add subtle white glow (box-shadow) | B50, V36 |
 | T95 | x | Mobile canvas pure black: override CanvasArea/GridCanvas bg to #000 on mobile (not gray #0d0d0d) | B50, V36 |
-| T96 | . | Mobile pan mode toggle: add toolbar button to enable/disable pan mode (touch drag modifies transform.panX/Y on selected block) | V37 |
-| T97 | . | Mobile resize mode toggle: add toolbar button to enable/disable resize mode (touch drag on block edges changes colSpan/rowSpan) | V37 |
+| T96 | x | Mobile pan mode toggle: add toolbar button to enable/disable pan mode (touch drag modifies transform.panX/Y on selected block) | V37 |
+| T97 | x | Mobile resize mode toggle: add toolbar button to enable/disable resize mode (touch drag on block edges changes colSpan/rowSpan) | V37 |
 
 ---
 

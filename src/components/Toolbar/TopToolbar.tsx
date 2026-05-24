@@ -9,6 +9,10 @@ export default function TopToolbar() {
   const setSelectedBlocks = useStore((s) => s.setSelectedBlocks)
   const toggleSidebar = useStore((s) => s.toggleSidebar)
   const sidebarVisible = useStore((s) => s.sidebarVisible)
+  const panMode = useStore((s) => s.panMode)
+  const resizeMode = useStore((s) => s.resizeMode)
+  const togglePanMode = useStore((s) => s.togglePanMode)
+  const toggleResizeMode = useStore((s) => s.toggleResizeMode)
 
   const selectedBlocks = blocks.filter((b) => selectedBlockIds.includes(b.id))
   const block = selectedBlocks.length === 1 ? selectedBlocks[0] : null
@@ -77,6 +81,9 @@ export default function TopToolbar() {
       {/* Essential controls only - pan via touch gestures */}
       <IconBtn onClick={rotate} disabled={disabled} title="Rotate">↻</IconBtn>
 
+      <IconBtn onClick={togglePanMode} active={panMode} title="Pan mode">✋</IconBtn>
+      <IconBtn onClick={toggleResizeMode} active={resizeMode} title="Resize mode">⇱</IconBtn>
+
       <IconBtn onClick={() => adjustZoom(0.1)} disabled={disabled} title="Zoom in">＋</IconBtn>
       <IconBtn onClick={() => adjustZoom(-0.1)} disabled={disabled} title="Zoom out">－</IconBtn>
 
@@ -93,12 +100,13 @@ export default function TopToolbar() {
   )
 }
 
-function IconBtn({ children, onClick, disabled, title, danger }: {
+function IconBtn({ children, onClick, disabled, title, danger, active }: {
   children: React.ReactNode
   onClick?: () => void
   disabled?: boolean
   title?: string
   danger?: boolean
+  active?: boolean
 }) {
   return (
     <button
@@ -113,25 +121,25 @@ function IconBtn({ children, onClick, disabled, title, danger }: {
         justifyContent: 'center',
         fontSize: 18,
         fontWeight: 700,
-        background: disabled ? 'rgba(0, 0, 0, 0.15)' : danger ? 'rgba(255, 68, 68, 0.2)' : 'rgba(0, 0, 0, 0.3)',
+        background: disabled ? 'rgba(0, 0, 0, 0.15)' : danger ? 'rgba(255, 68, 68, 0.2)' : active ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.3)',
         border: 'none',
         color: disabled ? '#666666' : danger ? '#ff4444' : '#ffffff',
         borderRadius: 8,
         cursor: disabled ? 'not-allowed' : 'pointer',
         transition: 'all 0.15s',
         opacity: disabled ? 0.5 : 1,
-        boxShadow: disabled ? 'none' : danger ? '0 0 8px rgba(255, 68, 68, 0.3)' : '0 0 8px rgba(255, 255, 255, 0.15)',
+        boxShadow: disabled ? 'none' : danger ? '0 0 8px rgba(255, 68, 68, 0.3)' : active ? '0 0 12px rgba(255, 255, 255, 0.3)' : '0 0 8px rgba(255, 255, 255, 0.15)',
       }}
       onMouseEnter={(e) => {
         if (!disabled) {
-          e.currentTarget.style.background = danger ? 'rgba(255, 68, 68, 0.3)' : 'rgba(0, 0, 0, 0.5)'
-          e.currentTarget.style.boxShadow = danger ? '0 0 12px rgba(255, 68, 68, 0.4)' : '0 0 12px rgba(255, 255, 255, 0.25)'
+          e.currentTarget.style.background = danger ? 'rgba(255, 68, 68, 0.3)' : active ? 'rgba(255, 255, 255, 0.3)' : 'rgba(0, 0, 0, 0.5)'
+          e.currentTarget.style.boxShadow = danger ? '0 0 12px rgba(255, 68, 68, 0.4)' : active ? '0 0 16px rgba(255, 255, 255, 0.4)' : '0 0 12px rgba(255, 255, 255, 0.25)'
         }
       }}
       onMouseLeave={(e) => {
         if (!disabled) {
-          e.currentTarget.style.background = danger ? 'rgba(255, 68, 68, 0.2)' : 'rgba(0, 0, 0, 0.3)'
-          e.currentTarget.style.boxShadow = danger ? '0 0 8px rgba(255, 68, 68, 0.3)' : '0 0 8px rgba(255, 255, 255, 0.15)'
+          e.currentTarget.style.background = danger ? 'rgba(255, 68, 68, 0.2)' : active ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.3)'
+          e.currentTarget.style.boxShadow = danger ? '0 0 8px rgba(255, 68, 68, 0.3)' : active ? '0 0 12px rgba(255, 255, 255, 0.3)' : '0 0 8px rgba(255, 255, 255, 0.15)'
         }
       }}
     >
