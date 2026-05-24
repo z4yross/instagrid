@@ -66,16 +66,14 @@ export default function TopToolbar({ onToggleFAB, fabVisible }: Props = {}) {
             style={{
               background: 'none',
               border: 'none',
-              color: '#ffffff',
-              fontSize: 18,
-              fontWeight: 700,
               cursor: 'pointer',
-              padding: '8px 12px',
-              letterSpacing: '-0.02em',
+              padding: '8px',
+              display: 'flex',
+              alignItems: 'center',
             }}
             title="Hide"
           >
-            IG
+            <img src="/favicon.svg" alt="Logo" style={{ width: 24, height: 24 }} />
           </button>
           <div
             style={{
@@ -96,14 +94,12 @@ export default function TopToolbar({ onToggleFAB, fabVisible }: Props = {}) {
             style={{
               background: sidebarVisible ? 'rgba(255, 255, 255, 0.2)' : 'rgba(255, 255, 255, 0.1)',
               border: 'none',
-              color: '#ffffff',
-              fontSize: 18,
-              fontWeight: 700,
               cursor: 'pointer',
-              padding: '8px 12px',
+              padding: '8px',
               borderRadius: 6,
-              letterSpacing: '-0.02em',
               transition: 'background 0.2s',
+              display: 'flex',
+              alignItems: 'center',
             }}
             onMouseEnter={(e) => {
               e.currentTarget.style.background = 'rgba(255, 255, 255, 0.25)'
@@ -115,7 +111,7 @@ export default function TopToolbar({ onToggleFAB, fabVisible }: Props = {}) {
             }}
             title={sidebarVisible ? 'Hide sidebar' : 'Show sidebar'}
           >
-            IG
+            <img src="/favicon.svg" alt="Logo" style={{ width: 24, height: 24 }} />
           </button>
 
           {/* Drag lock - second position for mobile access */}

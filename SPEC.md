@@ -111,7 +111,7 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | V69     | Resize defaults to button mode - resizeMode starts as 'buttons' on all platforms (mobile, tablet, desktop). Handles available via toggle.                                                                             |
 | V70     | Placeholder blocks show only color - no text overlay, just barsColor fill.                                                                                                                                            |
 | V71     | Resize toggle button placement - desktop: after lock button in RightToolbar. Mobile: after FAB toggle in TopToolbar.                                                                                                  |
-| V72     | Sidebar toggle shows logo/branding - no hamburger menu icon. Logo acts as toggle button.                                                                                                                              |
+| V72     | Sidebar toggle shows favicon as logo - /favicon.svg (3x3 grid icon), not text or hamburger. Favicon acts as toggle button.                                                                                            |
 
 ---
 
@@ -267,6 +267,7 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | T146   | x      | Add resize mode toggle - store resizeMode ('buttons' or 'handles'), default 'buttons'. Toggle buttons in toolbars (desktop: after lock, mobile: after FAB toggle). Conditional render in Block.tsx                          | V65, V69, V71        |
 | T147   | x      | Remove placeholder text - delete "Placeholder" text div from Block.tsx isPlaceholder render, show only barsColor background                                                                                                 | B100, V70            |
 | T148   | x      | Replace hamburger with logo - remove Menu icon from sidebar toggle, use logo/branding text (IG or InstaGrid) as clickable toggle button in TopToolbar                                                                       | V72                  |
+| T149   | x      | Use favicon as logo - replace "IG" text with <img src="/favicon.svg" /> in sidebar toggle buttons. 24px size, maintain clickable button styling                                                                             | B101, V72            |
 
 ---
 
@@ -374,3 +375,4 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | B98  | 2026-05-24 | FAB background too opaque - white gradient rgba(255,255,255,0.25-0.4) too visible/heavy. Should match grid zoom controls subtle rgba(255,255,255,0.08) style                                                                  | V68, T145                                                                                                                                                                                    |
 | B99  | 2026-05-24 | Resize handles hard to use on tablet - drag handles too small for touch on tablet devices. Need button-based resize option user can toggle                                                                                    | V65, V69, T146                                                                                                                                                                               |
 | B100 | 2026-05-24 | Placeholder blocks show text - "Placeholder" text overlay distracts from color preview. Should show only barsColor, no text                                                                                                   | V70, T147                                                                                                                                                                                    |
+| B101 | 2026-05-24 | Logo shows text "IG" instead of favicon - T148 used text, should use /favicon.svg image (3x3 grid icon)                                                                                                                       | V72, T149                                                                                                                                                                                    |
