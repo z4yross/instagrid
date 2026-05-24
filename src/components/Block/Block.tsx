@@ -406,7 +406,7 @@ function MobileResizeButtons({ block }: { block: ImageBlock }) {
     <>
       {/* Top edge: side-by-side horizontal */}
       <button
-        style={{ ...btnStyle, top: 4, left: 'calc(50% - 16px)' }}
+        style={{ ...btnStyle, top: 4, left: 'calc(50% - 18px)' }}
         onClick={(e) => {
           e.stopPropagation()
           resize('up', 1)
@@ -417,7 +417,7 @@ function MobileResizeButtons({ block }: { block: ImageBlock }) {
         <ChevronUp size={16} />
       </button>
       <button
-        style={{ ...btnStyle, top: 4, left: 'calc(50% + 16px)', transform: 'translateX(-100%)' }}
+        style={{ ...btnStyle, top: 4, left: 'calc(50% + 6px)' }}
         onClick={(e) => {
           e.stopPropagation()
           resize('up', -1)
@@ -430,7 +430,7 @@ function MobileResizeButtons({ block }: { block: ImageBlock }) {
 
       {/* Right edge: side-by-side vertical */}
       <button
-        style={{ ...btnStyle, right: 4, top: 'calc(50% - 16px)' }}
+        style={{ ...btnStyle, right: 4, top: 'calc(50% - 18px)' }}
         onClick={(e) => {
           e.stopPropagation()
           resize('right', 1)
@@ -441,7 +441,7 @@ function MobileResizeButtons({ block }: { block: ImageBlock }) {
         <ChevronRight size={16} />
       </button>
       <button
-        style={{ ...btnStyle, right: 4, top: 'calc(50% + 16px)', transform: 'translateY(-100%)' }}
+        style={{ ...btnStyle, right: 4, top: 'calc(50% + 6px)' }}
         onClick={(e) => {
           e.stopPropagation()
           resize('right', -1)
@@ -454,7 +454,7 @@ function MobileResizeButtons({ block }: { block: ImageBlock }) {
 
       {/* Bottom edge: side-by-side horizontal */}
       <button
-        style={{ ...btnStyle, bottom: 4, left: 'calc(50% - 16px)' }}
+        style={{ ...btnStyle, bottom: 4, left: 'calc(50% - 18px)' }}
         onClick={(e) => {
           e.stopPropagation()
           resize('down', 1)
@@ -465,7 +465,7 @@ function MobileResizeButtons({ block }: { block: ImageBlock }) {
         <ChevronDown size={16} />
       </button>
       <button
-        style={{ ...btnStyle, bottom: 4, left: 'calc(50% + 16px)', transform: 'translateX(-100%)' }}
+        style={{ ...btnStyle, bottom: 4, left: 'calc(50% + 6px)' }}
         onClick={(e) => {
           e.stopPropagation()
           resize('down', -1)
@@ -478,7 +478,7 @@ function MobileResizeButtons({ block }: { block: ImageBlock }) {
 
       {/* Left edge: side-by-side vertical */}
       <button
-        style={{ ...btnStyle, left: 4, top: 'calc(50% - 16px)' }}
+        style={{ ...btnStyle, left: 4, top: 'calc(50% - 18px)' }}
         onClick={(e) => {
           e.stopPropagation()
           resize('left', 1)
@@ -489,7 +489,7 @@ function MobileResizeButtons({ block }: { block: ImageBlock }) {
         <ChevronLeft size={16} />
       </button>
       <button
-        style={{ ...btnStyle, left: 4, top: 'calc(50% + 16px)', transform: 'translateY(-100%)' }}
+        style={{ ...btnStyle, left: 4, top: 'calc(50% + 6px)' }}
         onClick={(e) => {
           e.stopPropagation()
           resize('left', -1)

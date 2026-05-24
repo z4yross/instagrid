@@ -142,17 +142,52 @@ export default function Modal({
               {options.map((opt) => (
                 <button
                   key={opt.value}
-                  className="ig-btn ig-btn-accent"
                   onClick={() => onConfirm(opt.value)}
-                  style={{ padding: '12px 16px', fontSize: 14 }}
+                  style={{
+                    padding: '12px 16px',
+                    fontSize: 14,
+                    background: 'linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%)',
+                    border: 'none',
+                    borderRadius: 6,
+                    color: '#ffffff',
+                    cursor: 'pointer',
+                    fontWeight: 600,
+                    transition: 'all 0.15s',
+                    boxShadow: '0 2px 4px rgba(124, 58, 237, 0.3)',
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = '#6d28d9'
+                    e.currentTarget.style.boxShadow = '0 4px 8px rgba(124, 58, 237, 0.4)'
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background =
+                      'linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%)'
+                    e.currentTarget.style.boxShadow = '0 2px 4px rgba(124, 58, 237, 0.3)'
+                  }}
                 >
                   {opt.label}
                 </button>
               ))}
               <button
-                className="ig-btn"
                 onClick={onCancel}
-                style={{ padding: '8px 16px', fontSize: 13, marginTop: 4 }}
+                style={{
+                  padding: '8px 16px',
+                  fontSize: 13,
+                  marginTop: 4,
+                  background: '#f3f4f6',
+                  border: '1px solid #d1d5db',
+                  borderRadius: 6,
+                  color: '#374151',
+                  cursor: 'pointer',
+                  fontWeight: 500,
+                  transition: 'all 0.15s',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = '#e5e7eb'
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = '#f3f4f6'
+                }}
               >
                 {cancelText}
               </button>

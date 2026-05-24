@@ -110,13 +110,15 @@ export default function App() {
             </div>
           </>
 
-          {/* Mobile FAB for actions */}
-          <MobileFAB
-            visible={fabVisible}
-            overlayVisible={fabOverlayVisible}
-            onToggle={setFabOverlayVisible}
-            onPositionChange={setFabPosition}
-          />
+          {/* Mobile FAB for actions - hide when sidebar active */}
+          {!sidebarVisible && (
+            <MobileFAB
+              visible={fabVisible}
+              overlayVisible={fabOverlayVisible}
+              onToggle={setFabOverlayVisible}
+              onPositionChange={setFabPosition}
+            />
+          )}
 
           {/* Mobile action overlay */}
           <MobileActionOverlay visible={fabOverlayVisible} fabPosition={fabPosition} />
