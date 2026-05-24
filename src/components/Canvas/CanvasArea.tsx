@@ -185,6 +185,9 @@ export default function CanvasArea({ onLowRes }: Props) {
 	function onDragEnd(e: DragEndEvent) {
 		setActiveId(null);
 
+		// T106: also prevent drag processing when dragMode disabled
+		if (!dragMode) return;
+
 		const { active, delta } = e;
 		const draggedBlock = blocks.find((b) => b.id === active.id) as
 			| ImageBlock
