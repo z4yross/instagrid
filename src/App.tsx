@@ -13,6 +13,7 @@ export default function App() {
 
   const [lowResWarning, setLowResWarning] = useState<string[]>([])
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768)
+  const [fabVisible, setFabVisible] = useState(true) // T134: FAB visibility separate from overlay
   const [fabOverlayVisible, setFabOverlayVisible] = useState(false)
   const [fabPosition, setFabPosition] = useState({ x: 0, y: 0 })
   const sidebarVisible = useStore((s) => s.sidebarVisible)
@@ -35,10 +36,7 @@ export default function App() {
           background: 'var(--color-bg-base)',
         }}
       >
-        <TopToolbar
-          onToggleFAB={() => setFabOverlayVisible(!fabOverlayVisible)}
-          fabVisible={fabOverlayVisible}
-        />
+        <TopToolbar onToggleFAB={() => setFabVisible(!fabVisible)} fabVisible={fabVisible} />
 
         <div
           style={{
@@ -114,6 +112,7 @@ export default function App() {
 
           {/* Mobile FAB for actions */}
           <MobileFAB
+            visible={fabVisible}
             overlayVisible={fabOverlayVisible}
             onToggle={setFabOverlayVisible}
             onPositionChange={setFabPosition}

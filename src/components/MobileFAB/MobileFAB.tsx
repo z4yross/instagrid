@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
 
 interface Props {
+  visible: boolean
   onToggle: (visible: boolean) => void
   overlayVisible: boolean
   onPositionChange?: (position: { x: number; y: number }) => void
@@ -9,7 +10,7 @@ interface Props {
 const FAB_SIZE = 60
 const STORAGE_KEY = 'fab-position'
 
-export default function MobileFAB({ onToggle, overlayVisible, onPositionChange }: Props) {
+export default function MobileFAB({ visible, onToggle, overlayVisible, onPositionChange }: Props) {
   const [position, setPosition] = useState(() => {
     const saved = localStorage.getItem(STORAGE_KEY)
     if (saved) {
@@ -85,6 +86,11 @@ export default function MobileFAB({ onToggle, overlayVisible, onPositionChange }
 
     dragStartRef.current = null
     setIsDragging(false)
+  }
+
+  // T134: Only render when visible prop is true
+  if (!visible) {
+    return null
   }
 
   // Only show on mobile
