@@ -67,7 +67,7 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | V25 | UI components fit containers. Width/height calculations include padding + gaps. No overflow. |
 | V26 | Save profile button: if current profile exists update it directly. Prompt for name only if unsaved/new profile. |
 | V27 | Autosave: profiles save automatically on state change (debounced 2s). Manual save available. |
-| V28 | Responsive layout: desktop (>768px) = sidebar left + toolbar right; mobile (≤768px) = sidebar fullscreen overlay + toolbar top. Sidebar toggleable on both. |
+| V28 | Responsive layout: desktop (>768px) = sidebar left (always visible) + toolbar right; mobile (≤768px) = sidebar fullscreen overlay (toggleable) + toolbar top. |
 | V29 | Mobile toolbar: no logo, essential controls only, high-contrast buttons, no overflow. |
 
 ---
@@ -167,6 +167,7 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | T83 | x | Fix mobile TopToolbar: remove logo, show only essential buttons, increase button size/contrast | V29, B40 |
 | T84 | x | Mobile sidebar full width + auto-expand grid rows to fill viewport height | B41 |
 | T85 | x | Replace +/- zoom buttons with clear labels or icons (e.g. "Fit" / "Fill") to avoid confusion | B42 |
+| T86 | . | Desktop sidebar always visible: remove toggle button from RightToolbar, force sidebarVisible=true on desktop | V28 |
 
 ---
 
