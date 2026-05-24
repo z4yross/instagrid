@@ -253,14 +253,10 @@ export default function Block({
 
       {isSelected && selectedBlockIds.length === 1 && !isDragging && (
         <>
-          {/* T130: Hide right/corner handles on mobile when block at right edge (conflicts with system back gesture) */}
-          {(!isMobile || block.col + block.colSpan < COLS) && (
-            <ResizeHandle block={block} cellW={cellW} cellH={cellH} edge="right" />
-          )}
+          {/* T133: Show right/corner handles always, offset inward on mobile at right edge */}
+          <ResizeHandle block={block} cellW={cellW} cellH={cellH} edge="right" />
           <ResizeHandle block={block} cellW={cellW} cellH={cellH} edge="bottom" />
-          {(!isMobile || block.col + block.colSpan < COLS) && (
-            <ResizeHandle block={block} cellW={cellW} cellH={cellH} edge="corner-br" />
-          )}
+          <ResizeHandle block={block} cellW={cellW} cellH={cellH} edge="corner-br" />
         </>
       )}
     </div>

@@ -15,7 +15,12 @@ interface Props {
 export default function ResizeHandle({ block, cellW, cellH, edge }: Props) {
   const updateBlock = useStore((s) => s.updateBlock)
   const blocks = useStore((s) => s.blocks)
-  const startRef = useRef<{ mouseX: number; mouseY: number; colSpan: number; rowSpan: number } | null>(null)
+  const startRef = useRef<{
+    mouseX: number
+    mouseY: number
+    colSpan: number
+    rowSpan: number
+  } | null>(null)
 
   function onPointerDown(e: React.PointerEvent) {
     e.stopPropagation()
@@ -38,7 +43,10 @@ export default function ResizeHandle({ block, cellW, cellH, edge }: Props) {
     let newRowSpan = startRef.current.rowSpan
 
     if (edge === 'right' || edge === 'corner-br') {
-      newColSpan = Math.max(1, Math.min(COLS - block.col, Math.round(startRef.current.colSpan + dx / cellW)))
+      newColSpan = Math.max(
+        1,
+        Math.min(COLS - block.col, Math.round(startRef.current.colSpan + dx / cellW))
+      )
     }
     if (edge === 'bottom' || edge === 'corner-br') {
       newRowSpan = Math.max(1, Math.round(startRef.current.rowSpan + dy / cellH))
@@ -81,6 +89,10 @@ export default function ResizeHandle({ block, cellW, cellH, edge }: Props) {
   const isMobile = window.innerWidth <= 768
   const SIZE = isMobile ? 22 : 12 // Mobile: 44px handles, Desktop: 12px
 
+  // T133: Offset right/corner handles inward on mobile when block at right edge
+  const atRightEdge = block.col + block.colSpan >= COLS
+  const rightOffset = isMobile && atRightEdge ? 16 : 0
+
   const style: React.CSSProperties = {
     position: 'absolute',
     background: 'var(--color-accent)',
@@ -89,16 +101,24 @@ export default function ResizeHandle({ block, cellW, cellH, edge }: Props) {
     cursor,
     borderRadius: 2,
     ...(edge === 'right' && {
-      right: 0, top: '50%', transform: 'translateY(-50%)',
-      width: SIZE / 2, height: SIZE * 3,
+      right: rightOffset,
+      top: '50%',
+      transform: 'translateY(-50%)',
+      width: SIZE / 2,
+      height: SIZE * 3,
     }),
     ...(edge === 'bottom' && {
-      bottom: 0, left: '50%', transform: 'translateX(-50%)',
-      width: SIZE * 3, height: SIZE / 2,
+      bottom: 0,
+      left: '50%',
+      transform: 'translateX(-50%)',
+      width: SIZE * 3,
+      height: SIZE / 2,
     }),
     ...(edge === 'corner-br' && {
-      right: 0, bottom: 0,
-      width: SIZE, height: SIZE,
+      right: rightOffset,
+      bottom: 0,
+      width: SIZE,
+      height: SIZE,
     }),
   }
 
