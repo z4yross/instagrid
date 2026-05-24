@@ -237,7 +237,7 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | T129   | x      | Setup husky + lint-staged + commitlint - enforce conventional commits format, run prettier on pre-commit. No ESLint config                                                                                                  | V57                  |
 | T130   | x      | Mobile resize handles avoid right edge - hide right/corner-br handles when block.col + block.colSpan near right edge (e.g. within 1 col of COLS), or offset handles inward                                                  | B79, V58             |
 | T131   | x      | Replace TopToolbar zoom buttons with FAB toggle button - remove +/- IconBtn, add toggle to show/hide FAB, wire to App fabOverlayVisible state                                                                               | B80, V59             |
-| T132   | .      | Fix FAB visibility - increase background opacity or add backdrop-filter blur, fix icon vertical centering (adjust line-height or flexbox alignment)                                                                         | B81                  |
+| T132   | x      | Fix FAB visibility - increase background opacity or add backdrop-filter blur, fix icon vertical centering (adjust line-height or flexbox alignment)                                                                         | B81                  |
 
 ---
 

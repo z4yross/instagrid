@@ -55,8 +55,14 @@ export default function MobileFAB({ onToggle, overlayVisible, onPositionChange }
 
     // Only update if moved more than 5px (distinguish from tap)
     if (Math.abs(deltaX) > 5 || Math.abs(deltaY) > 5) {
-      const newX = Math.max(0, Math.min(window.innerWidth - FAB_SIZE, dragStartRef.current.fabX + deltaX))
-      const newY = Math.max(0, Math.min(window.innerHeight - FAB_SIZE, dragStartRef.current.fabY + deltaY))
+      const newX = Math.max(
+        0,
+        Math.min(window.innerWidth - FAB_SIZE, dragStartRef.current.fabX + deltaX)
+      )
+      const newY = Math.max(
+        0,
+        Math.min(window.innerHeight - FAB_SIZE, dragStartRef.current.fabY + deltaY)
+      )
 
       setPosition({ x: newX, y: newY })
     }
@@ -100,17 +106,19 @@ export default function MobileFAB({ onToggle, overlayVisible, onPositionChange }
         height: FAB_SIZE,
         borderRadius: '50%',
         background: overlayVisible
-          ? 'rgba(255, 255, 255, 0.3)'
-          : 'linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.1) 100%)',
-        border: 'none',
+          ? 'rgba(255, 255, 255, 0.5)'
+          : 'linear-gradient(135deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.25) 100%)',
+        backdropFilter: 'blur(8px)',
+        border: '1px solid rgba(255, 255, 255, 0.2)',
         color: '#ffffff',
-        fontSize: 24,
+        fontSize: 28,
         fontWeight: 700,
+        lineHeight: 1,
         cursor: isDragging ? 'grabbing' : 'grab',
         zIndex: 200,
         boxShadow: overlayVisible
-          ? '0 0 20px rgba(255, 255, 255, 0.4), 0 8px 16px rgba(0, 0, 0, 0.6)'
-          : '0 8px 16px rgba(0, 0, 0, 0.6)',
+          ? '0 0 20px rgba(255, 255, 255, 0.5), 0 8px 16px rgba(0, 0, 0, 0.7)'
+          : '0 8px 16px rgba(0, 0, 0, 0.7)',
         transition: isDragging ? 'none' : 'all 0.2s',
         touchAction: 'none',
         display: 'flex',
