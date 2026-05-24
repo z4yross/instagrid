@@ -69,6 +69,9 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | V27 | Autosave: profiles save automatically on state change (debounced 2s). Manual save available. |
 | V28 | Responsive layout: desktop (>768px) = sidebar left (always visible) + toolbar right; mobile (≤768px) = sidebar fullscreen overlay (toggleable) + toolbar top. |
 | V29 | Mobile toolbar: no logo, essential controls only, high-contrast buttons, no overflow. |
+| V30 | Sidebar width responsive: 210px desktop, 100vw mobile (via wrapper constraint or direct style prop). |
+| V31 | Mobile toolbar UX: simplified controls, adequate spacing/contrast, touch-friendly (min 48px targets). |
+| V32 | Grid zoom intuitive: + adds rows (zoom out), - removes rows (zoom in). Default 5 rows mobile, 3 desktop. |
 
 ---
 
@@ -169,6 +172,9 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | T85 | x | Replace +/- zoom buttons with clear labels or icons (e.g. "Fit" / "Fill") to avoid confusion | B42 |
 | T86 | x | Desktop sidebar always visible: remove toggle button from RightToolbar, force sidebarVisible=true on desktop | V28 |
 | T87 | x | Fix mobile sidebar width: remove maxWidth constraint in mobile wrapper | B43 |
+| T88 | x | Fix mobile sidebar width properly: wrap Sidebar in div with width constraint or pass width via style prop to override inline style | B44, V30 |
+| T89 | . | Redesign mobile TopToolbar: simplify/group controls, improve spacing, increase contrast, consider vertical/floating layout | B45, V31 |
+| T90 | . | Fix grid zoom semantics: swap +/- button actions (+ adds rows, - removes rows), set default visibleRows=5 on mobile init | B46, V32 |
 
 ---
 
@@ -219,4 +225,7 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | B41 | 2026-05-24 | Mobile sidebar overlay not full width | T84 |
 | B42 | 2026-05-24 | Zoom controls confusing: + removes rows, - adds rows. Users expect + to add, - to subtract | T85 |
 | B43 | 2026-05-24 | Mobile sidebar still not full width: maxWidth:210 limits it despite wrapper being 100% | T87 |
+| B44 | 2026-05-24 | Mobile sidebar STILL not full width after T87: CSS !important doesn't override inline style width:210. Wrapper right:0 but child fixed 210px | V30 |
+| B45 | 2026-05-24 | Mobile TopToolbar cramped and ugly: too many 44px buttons in 56px height, poor spacing, overall bad UX | V31 |
+| B46 | 2026-05-24 | Grid zoom controls counterintuitive: + removes rows (Fill), - adds rows (Fit). Users expect + to add, - to remove. Default 3 rows too few for mobile (screenshot shows 5 fills screen) | V32 |
 

@@ -8,6 +8,7 @@ import Modal, { type ModalType } from '../Modal/Modal'
 
 interface Props {
   onLowRes?: (names: string[]) => void
+  width?: number | string
 }
 
 interface ModalState {
@@ -18,7 +19,7 @@ interface ModalState {
   placeholder?: string
 }
 
-export default function Sidebar({ onLowRes }: Props) {
+export default function Sidebar({ onLowRes, width = 210 }: Props) {
   const fileRef = useRef<HTMLInputElement>(null)
   const [exporting, setExporting] = useState(false)
   const [profiles, setProfiles] = useState<Profile[]>([])
@@ -185,7 +186,7 @@ export default function Sidebar({ onLowRes }: Props) {
 
   return (
     <aside style={{
-      width: 210,
+      width,
       flexShrink: 0,
       borderRight: 'none',
       display: 'flex',
