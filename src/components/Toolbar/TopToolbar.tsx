@@ -61,20 +61,9 @@ export default function TopToolbar({ onToggleFAB, fabVisible }: Props = {}) {
       {isMobile && sidebarVisible ? (
         /* Logo + branding when sidebar open on mobile */
         <>
-          <button
-            onClick={toggleSidebar}
-            style={{
-              background: 'none',
-              border: 'none',
-              cursor: 'pointer',
-              padding: '8px',
-              display: 'flex',
-              alignItems: 'center',
-            }}
-            title="Hide"
-          >
+          <IconBtn onClick={toggleSidebar} active={true} title="Hide">
             <img src="/favicon.svg" alt="Logo" style={{ width: 24, height: 24 }} />
-          </button>
+          </IconBtn>
           <div
             style={{
               fontSize: 20,
@@ -89,30 +78,13 @@ export default function TopToolbar({ onToggleFAB, fabVisible }: Props = {}) {
       ) : (
         <>
           {/* V72: Logo as sidebar toggle */}
-          <button
+          <IconBtn
             onClick={toggleSidebar}
-            style={{
-              background: sidebarVisible ? 'rgba(255, 255, 255, 0.2)' : 'rgba(255, 255, 255, 0.1)',
-              border: 'none',
-              cursor: 'pointer',
-              padding: '8px',
-              borderRadius: 6,
-              transition: 'background 0.2s',
-              display: 'flex',
-              alignItems: 'center',
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = 'rgba(255, 255, 255, 0.25)'
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = sidebarVisible
-                ? 'rgba(255, 255, 255, 0.2)'
-                : 'rgba(255, 255, 255, 0.1)'
-            }}
+            active={sidebarVisible}
             title={sidebarVisible ? 'Hide sidebar' : 'Show sidebar'}
           >
             <img src="/favicon.svg" alt="Logo" style={{ width: 24, height: 24 }} />
-          </button>
+          </IconBtn>
 
           {/* Drag lock - second position for mobile access */}
           <IconBtn onClick={toggleDragMode} active={dragMode} title="Drag mode">

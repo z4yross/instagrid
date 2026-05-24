@@ -113,6 +113,7 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | V71     | Resize toggle button placement - desktop: after lock button in RightToolbar. Mobile: after FAB toggle in TopToolbar.                                                                                                  |
 | V72     | Sidebar toggle shows favicon as logo - /favicon.svg (3x3 grid icon), not text or hamburger. Favicon acts as toggle button.                                                                                            |
 | V73     | Favicon background transparent - no black background when on gray button. Favicon adapts to button background.                                                                                                        |
+| V74     | Logo button matches toolbar button styling - same background, padding, hover effects as other IconBtn buttons.                                                                                                        |
 
 ---
 
@@ -270,6 +271,7 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | T148   | x      | Replace hamburger with logo - remove Menu icon from sidebar toggle, use logo/branding text (IG or InstaGrid) as clickable toggle button in TopToolbar                                                                       | V72                  |
 | T149   | x      | Use favicon as logo - replace "IG" text with <img src="/favicon.svg" /> in sidebar toggle buttons. 24px size, maintain clickable button styling                                                                             | B101, V72            |
 | T150   | x      | Remove favicon black background - edit /public/favicon.svg, change black rect fill to transparent. Keep white grid squares                                                                                                  | B102, V73            |
+| T151   | x      | Match logo button styling - replace custom button with IconBtn component or apply same styles (48x48, gradient bg, hover effects) to logo button in TopToolbar                                                              | B103, V74            |
 
 ---
 
@@ -379,3 +381,4 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | B100 | 2026-05-24 | Placeholder blocks show text - "Placeholder" text overlay distracts from color preview. Should show only barsColor, no text                                                                                                   | V70, T147                                                                                                                                                                                    |
 | B101 | 2026-05-24 | Logo shows text "IG" instead of favicon - T148 used text, should use /favicon.svg image (3x3 grid icon)                                                                                                                       | V72, T149                                                                                                                                                                                    |
 | B102 | 2026-05-24 | Favicon black background clashes with gray button - when sidebar inactive, favicon's black bg on gray button bg looks bad. Need transparent favicon bg                                                                        | V73, T150                                                                                                                                                                                    |
+| B103 | 2026-05-24 | Logo button styling inconsistent - custom button styles don't match IconBtn appearance (background, padding, hover). Should match other toolbar buttons                                                                       | V74, T151                                                                                                                                                                                    |
