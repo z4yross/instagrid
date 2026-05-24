@@ -96,6 +96,9 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | V54 | Resize handle touch events isolated - touch on resize handle never triggers pan, only resize. Event propagation stopped. |
 | V55 | Mobile floating action button (FAB) - draggable circular button, tap to toggle action overlay (pan arrows + zoom buttons). Position persists in localStorage. |
 | V56 | Mobile action overlay keyboard layout - top row (- ↑ +), middle row (← ↓ →). Opens right or left of FAB based on screen space. |
+| V57 | Git hooks via husky + lint-staged enforce conventional commits + prettier format on commit. No ESLint. |
+| V58 | Mobile resize handles avoid right screen edge - offset inward or hide to prevent system back gesture conflict. |
+| V59 | Mobile TopToolbar has FAB toggle button (show/hide FAB), no zoom +/- buttons (zoom available in FAB overlay). |
 
 ---
 
@@ -237,6 +240,10 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | T126 | x | Mobile FAB component - circular draggable button (bottom-right default), drag to reposition, persist position to localStorage, tap to toggle overlay visibility | V55 |
 | T127 | x | Mobile action overlay - keyboard layout (top: - ↑ +, middle: ← ↓ →), position left/right of FAB based on space, wire to adjustPan/adjustZoom actions | V56 |
 | T128 | x | Fix T123 - TopToolbar on mobile sidebar open should show menu button + logo (not logo only). Remove logo from Sidebar on mobile | B78, V52 |
+| T129 | . | Setup husky + lint-staged + commitlint - enforce conventional commits format, run prettier on pre-commit. No ESLint config | V57 |
+| T130 | . | Mobile resize handles avoid right edge - hide right/corner-br handles when block.col + block.colSpan near right edge (e.g. within 1 col of COLS), or offset handles inward | B79, V58 |
+| T131 | . | Replace TopToolbar zoom buttons with FAB toggle button - remove +/- IconBtn, add toggle to show/hide FAB, wire to App fabOverlayVisible state | B80, V59 |
+| T132 | . | Fix FAB visibility - increase background opacity or add backdrop-filter blur, fix icon vertical centering (adjust line-height or flexbox alignment) | B81 |
 
 ---
 
@@ -322,4 +329,7 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | B76 | 2026-05-24 | Mobile pinch zoom gestures don't work - 2-finger pinch does browser zoom instead of grid zoom (visibleRows adjustment) | V53 |
 | B77 | 2026-05-24 | Pan still triggers when touching resize handle on mobile - T121 stopPropagation not sufficient, pan listeners still fire on resize handle interaction | V54 |
 | B78 | 2026-05-24 | T123 implementation wrong - when sidebar open on mobile, toolbar shows logo only (no menu button). Should show menu toggle + logo. Also sidebar shows logo on mobile, should only be in toolbar | V52 |
+| B79 | 2026-05-24 | Mobile resize handles on right screen edge conflict with system back gesture - very hard to touch right/corner handles when block near right edge | V58 |
+| B80 | 2026-05-24 | Mobile TopToolbar has zoom +/- buttons but zoom now available via FAB overlay - redundant controls, should replace with FAB toggle button | V59 |
+| B81 | 2026-05-24 | FAB button barely visible on mobile - low opacity background hard to see. Icon (⊕) not vertically centered in circle | — |
 
