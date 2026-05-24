@@ -1,6 +1,6 @@
 import { useStore } from '@/store/useStore'
 import ColorPicker from '@/components/ColorPicker/ColorPicker'
-import { Lock } from 'lucide-react'
+import { Lock, Maximize2 } from 'lucide-react'
 
 export default function RightToolbar() {
   const selectedBlockIds = useStore((s) => s.selectedBlockIds)
@@ -10,6 +10,8 @@ export default function RightToolbar() {
   const setSelectedBlocks = useStore((s) => s.setSelectedBlocks)
   const dragMode = useStore((s) => s.dragMode)
   const toggleDragMode = useStore((s) => s.toggleDragMode)
+  const resizeMode = useStore((s) => s.resizeMode)
+  const toggleResizeMode = useStore((s) => s.toggleResizeMode)
 
   const selectedBlocks = blocks.filter((b) => selectedBlockIds.includes(b.id))
   const block = selectedBlocks.length === 1 ? selectedBlocks[0] : null
@@ -40,7 +42,9 @@ export default function RightToolbar() {
   function adjustPan(dx: number, dy: number) {
     if (selectedBlocks.length === 0) return
     selectedBlocks.forEach((b) => {
-      updateBlock(b.id, { transform: { ...b.transform, panX: b.transform.panX + dx, panY: b.transform.panY + dy } })
+      updateBlock(b.id, {
+        transform: { ...b.transform, panX: b.transform.panX + dx, panY: b.transform.panY + dy },
+      })
     })
   }
 
@@ -81,17 +85,19 @@ export default function RightToolbar() {
       }}
     >
       {selectedBlocks.length > 1 && (
-        <div style={{
-          fontSize: 10,
-          fontWeight: 700,
-          color: '#ffffff',
-          textAlign: 'center',
-          padding: '6px 0',
-          background: 'var(--color-accent)',
-          borderRadius: 4,
-          border: '1px solid var(--color-accent)',
-          boxShadow: '0 0 12px rgba(255, 255, 255, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2)',
-        }}>
+        <div
+          style={{
+            fontSize: 10,
+            fontWeight: 700,
+            color: '#ffffff',
+            textAlign: 'center',
+            padding: '6px 0',
+            background: 'var(--color-accent)',
+            borderRadius: 4,
+            border: '1px solid var(--color-accent)',
+            boxShadow: '0 0 12px rgba(255, 255, 255, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2)',
+          }}
+        >
           {selectedBlocks.length}
         </div>
       )}
@@ -99,24 +105,49 @@ export default function RightToolbar() {
       <IconBtn onClick={toggleDragMode} active={dragMode} title="Drag mode">
         <Lock size={18} />
       </IconBtn>
+      <IconBtn
+        onClick={toggleResizeMode}
+        active={resizeMode === 'buttons'}
+        title={resizeMode === 'buttons' ? 'Resize: Buttons' : 'Resize: Handles'}
+      >
+        <Maximize2 size={18} />
+      </IconBtn>
 
       <div style={{ height: 1, background: 'var(--color-border)', margin: '4px 0' }} />
 
-      <IconBtn onClick={rotate} disabled={disabled} title="Rotate 90°">↻</IconBtn>
-      <IconBtn onClick={flipHorizontal} disabled={disabled} title="Flip horizontal">⇄</IconBtn>
-      <IconBtn onClick={flipVertical} disabled={disabled} title="Flip vertical">⇅</IconBtn>
+      <IconBtn onClick={rotate} disabled={disabled} title="Rotate 90°">
+        ↻
+      </IconBtn>
+      <IconBtn onClick={flipHorizontal} disabled={disabled} title="Flip horizontal">
+        ⇄
+      </IconBtn>
+      <IconBtn onClick={flipVertical} disabled={disabled} title="Flip vertical">
+        ⇅
+      </IconBtn>
 
       <div style={{ height: 1, background: 'var(--color-border)', margin: '4px 0' }} />
 
-      <IconBtn onClick={() => adjustPan(0, -10)} disabled={disabled} title="Pan up">↑</IconBtn>
-      <IconBtn onClick={() => adjustPan(-10, 0)} disabled={disabled} title="Pan left">←</IconBtn>
-      <IconBtn onClick={() => adjustPan(10, 0)} disabled={disabled} title="Pan right">→</IconBtn>
-      <IconBtn onClick={() => adjustPan(0, 10)} disabled={disabled} title="Pan down">↓</IconBtn>
+      <IconBtn onClick={() => adjustPan(0, -10)} disabled={disabled} title="Pan up">
+        ↑
+      </IconBtn>
+      <IconBtn onClick={() => adjustPan(-10, 0)} disabled={disabled} title="Pan left">
+        ←
+      </IconBtn>
+      <IconBtn onClick={() => adjustPan(10, 0)} disabled={disabled} title="Pan right">
+        →
+      </IconBtn>
+      <IconBtn onClick={() => adjustPan(0, 10)} disabled={disabled} title="Pan down">
+        ↓
+      </IconBtn>
 
       <div style={{ height: 1, background: 'var(--color-border)', margin: '4px 0' }} />
 
-      <IconBtn onClick={() => adjustZoom(0.1)} disabled={disabled} title="Zoom in">＋</IconBtn>
-      <IconBtn onClick={() => adjustZoom(-0.1)} disabled={disabled} title="Zoom out">－</IconBtn>
+      <IconBtn onClick={() => adjustZoom(0.1)} disabled={disabled} title="Zoom in">
+        ＋
+      </IconBtn>
+      <IconBtn onClick={() => adjustZoom(-0.1)} disabled={disabled} title="Zoom out">
+        －
+      </IconBtn>
 
       <div style={{ height: 1, background: 'var(--color-border)', margin: '4px 0' }} />
 
@@ -130,12 +161,21 @@ export default function RightToolbar() {
 
       <div style={{ flex: 1 }} />
 
-      <IconBtn onClick={del} disabled={disabled} title="Delete" danger>✕</IconBtn>
+      <IconBtn onClick={del} disabled={disabled} title="Delete" danger>
+        ✕
+      </IconBtn>
     </div>
   )
 }
 
-function IconBtn({ children, onClick, disabled, title, danger, active }: {
+function IconBtn({
+  children,
+  onClick,
+  disabled,
+  title,
+  danger,
+  active,
+}: {
   children: React.ReactNode
   onClick?: () => void
   disabled?: boolean
@@ -159,10 +199,10 @@ function IconBtn({ children, onClick, disabled, title, danger, active }: {
         background: disabled
           ? 'rgba(255, 255, 255, 0.05)'
           : danger
-          ? 'transparent'
-          : active
-          ? 'rgba(255, 255, 255, 0.2)'
-          : 'linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.06) 100%)',
+            ? 'transparent'
+            : active
+              ? 'rgba(255, 255, 255, 0.2)'
+              : 'linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.06) 100%)',
         border: danger ? '1px dashed rgba(255, 255, 255, 0.3)' : 'none',
         color: disabled ? '#555555' : danger ? '#ff4444' : '#ffffff',
         borderRadius: 8,
@@ -172,10 +212,10 @@ function IconBtn({ children, onClick, disabled, title, danger, active }: {
         boxShadow: disabled
           ? 'none'
           : danger
-          ? 'none'
-          : active
-          ? '0 0 12px rgba(255, 255, 255, 0.3), 0 4px 8px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.15)'
-          : '0 4px 8px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.15)',
+            ? 'none'
+            : active
+              ? '0 0 12px rgba(255, 255, 255, 0.3), 0 4px 8px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.15)'
+              : '0 4px 8px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.15)',
       }}
       onMouseEnter={(e) => {
         if (!disabled) {
@@ -185,10 +225,13 @@ function IconBtn({ children, onClick, disabled, title, danger, active }: {
             e.currentTarget.style.color = '#ff6666'
           } else if (active) {
             e.currentTarget.style.background = 'rgba(255, 255, 255, 0.3)'
-            e.currentTarget.style.boxShadow = '0 0 16px rgba(255, 255, 255, 0.4), 0 6px 12px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.2)'
+            e.currentTarget.style.boxShadow =
+              '0 0 16px rgba(255, 255, 255, 0.4), 0 6px 12px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.2)'
           } else {
-            e.currentTarget.style.background = 'linear-gradient(135deg, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0.1) 100%)'
-            e.currentTarget.style.boxShadow = '0 6px 12px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.2)'
+            e.currentTarget.style.background =
+              'linear-gradient(135deg, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0.1) 100%)'
+            e.currentTarget.style.boxShadow =
+              '0 6px 12px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.2)'
           }
         }
       }}
@@ -200,10 +243,13 @@ function IconBtn({ children, onClick, disabled, title, danger, active }: {
             e.currentTarget.style.color = '#ff4444'
           } else if (active) {
             e.currentTarget.style.background = 'rgba(255, 255, 255, 0.2)'
-            e.currentTarget.style.boxShadow = '0 0 12px rgba(255, 255, 255, 0.3), 0 4px 8px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.15)'
+            e.currentTarget.style.boxShadow =
+              '0 0 12px rgba(255, 255, 255, 0.3), 0 4px 8px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.15)'
           } else {
-            e.currentTarget.style.background = 'linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.06) 100%)'
-            e.currentTarget.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.15)'
+            e.currentTarget.style.background =
+              'linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.06) 100%)'
+            e.currentTarget.style.boxShadow =
+              '0 4px 8px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.15)'
           }
         }
       }}

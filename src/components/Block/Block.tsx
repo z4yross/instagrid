@@ -37,6 +37,7 @@ export default function Block({
   const updateBlock = useStore((s) => s.updateBlock)
   const images = useStore((s) => s.images)
   const gridRows = useStore((s) => s.gridRows)
+  const resizeMode = useStore((s) => s.resizeMode)
   const image = block.imageId ? images.find((i) => i.id === block.imageId) : null
 
   const isSelected = selectedBlockIds.includes(block.id)
@@ -255,7 +256,7 @@ export default function Block({
       {isSelected &&
         selectedBlockIds.length === 1 &&
         !isDragging &&
-        (isMobile ? (
+        (resizeMode === 'buttons' ? (
           <MobileResizeButtons block={block} />
         ) : (
           <>

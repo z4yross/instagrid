@@ -2,7 +2,13 @@ import { create } from 'zustand'
 import { subscribeWithSelector } from 'zustand/middleware'
 import { temporal } from 'zundo'
 import type { AppState, ImageBlock, UploadedImage } from './types'
-import { loadState, saveState, clearImagesFromIDB, getImageCountFromIDB, deleteImageFromIDB } from '@/utils/storage'
+import {
+  loadState,
+  saveState,
+  clearImagesFromIDB,
+  getImageCountFromIDB,
+  deleteImageFromIDB,
+} from '@/utils/storage'
 
 function ensureGridRows(blocks: ImageBlock[], current: number): number {
   const maxRow = blocks.reduce((m, b) => Math.max(m, b.row + b.rowSpan), 0)
@@ -27,160 +33,156 @@ const useStore = create<AppState>()(
         currentProfileId: null,
         sidebarVisible: window.innerWidth > 768,
         dragMode: true, // true = locked (drag disabled), false = unlocked (drag enabled)
+        resizeMode: 'buttons', // V69: default to buttons on all platforms
 
-      addImage: (img: UploadedImage) =>
-        set((s) => ({ images: [...s.images, img] })),
+        addImage: (img: UploadedImage) => set((s) => ({ images: [...s.images, img] })),
 
-      addBlock: (block: ImageBlock) =>
-        set((s) => {
-          const blocks = [...s.blocks, block]
-          return { blocks, gridRows: ensureGridRows(blocks, s.gridRows) }
-        }),
+        addBlock: (block: ImageBlock) =>
+          set((s) => {
+            const blocks = [...s.blocks, block]
+            return { blocks, gridRows: ensureGridRows(blocks, s.gridRows) }
+          }),
 
-      addPlaceholder: () =>
-        set((s) => {
-          // find first free cell
-          for (let r = 0; r < s.gridRows + 3; r++) {
-            for (let c = 0; c < 3; c++) {
-              const occupied = s.blocks.some(
-                (b) => c >= b.col && c < b.col + b.colSpan && r >= b.row && r < b.row + b.rowSpan
-              )
-              if (!occupied) {
-                const placeholder: ImageBlock = {
-                  id: crypto.randomUUID(),
-                  isPlaceholder: true,
-                  col: c,
-                  row: r,
-                  colSpan: 1,
-                  rowSpan: 1,
-                  barsColor: '#1a1a24',
-                  transform: { panX: 0, panY: 0, zoom: 1, rotation: 0 },
+        addPlaceholder: () =>
+          set((s) => {
+            // find first free cell
+            for (let r = 0; r < s.gridRows + 3; r++) {
+              for (let c = 0; c < 3; c++) {
+                const occupied = s.blocks.some(
+                  (b) => c >= b.col && c < b.col + b.colSpan && r >= b.row && r < b.row + b.rowSpan
+                )
+                if (!occupied) {
+                  const placeholder: ImageBlock = {
+                    id: crypto.randomUUID(),
+                    isPlaceholder: true,
+                    col: c,
+                    row: r,
+                    colSpan: 1,
+                    rowSpan: 1,
+                    barsColor: '#1a1a24',
+                    transform: { panX: 0, panY: 0, zoom: 1, rotation: 0 },
+                  }
+                  const blocks = [...s.blocks, placeholder]
+                  return { blocks, gridRows: ensureGridRows(blocks, s.gridRows) }
                 }
-                const blocks = [...s.blocks, placeholder]
-                return { blocks, gridRows: ensureGridRows(blocks, s.gridRows) }
               }
             }
-          }
-          return {}
-        }),
+            return {}
+          }),
 
-      updateBlock: (id: string, patch: Partial<ImageBlock>) =>
-        set((s) => {
-          const blocks = s.blocks.map((b) =>
-            b.id === id ? { ...b, ...patch } : b
-          )
-          return { blocks, gridRows: ensureGridRows(blocks, s.gridRows) }
-        }),
+        updateBlock: (id: string, patch: Partial<ImageBlock>) =>
+          set((s) => {
+            const blocks = s.blocks.map((b) => (b.id === id ? { ...b, ...patch } : b))
+            return { blocks, gridRows: ensureGridRows(blocks, s.gridRows) }
+          }),
 
-      updateBlocks: (ids: string[], patch: Partial<ImageBlock>) =>
-        set((s) => {
-          const blocks = s.blocks.map((b) =>
-            ids.includes(b.id) ? { ...b, ...patch } : b
-          )
-          return { blocks, gridRows: ensureGridRows(blocks, s.gridRows) }
-        }),
+        updateBlocks: (ids: string[], patch: Partial<ImageBlock>) =>
+          set((s) => {
+            const blocks = s.blocks.map((b) => (ids.includes(b.id) ? { ...b, ...patch } : b))
+            return { blocks, gridRows: ensureGridRows(blocks, s.gridRows) }
+          }),
 
-      removeBlock: (id: string) =>
-        set((s) => {
-          const blocks = s.blocks.filter((b) => b.id !== id)
-          return {
-            blocks,
-            gridRows: ensureGridRows(blocks, 3),
-            selectedBlockIds: s.selectedBlockIds.filter((bid) => bid !== id),
-          }
-        }),
+        removeBlock: (id: string) =>
+          set((s) => {
+            const blocks = s.blocks.filter((b) => b.id !== id)
+            return {
+              blocks,
+              gridRows: ensureGridRows(blocks, 3),
+              selectedBlockIds: s.selectedBlockIds.filter((bid) => bid !== id),
+            }
+          }),
 
-      removeBlocks: (ids: string[]) =>
-        set((s) => {
-          const blocks = s.blocks.filter((b) => !ids.includes(b.id))
-          return {
-            blocks,
-            gridRows: ensureGridRows(blocks, 3),
-            selectedBlockIds: s.selectedBlockIds.filter((bid) => !ids.includes(bid)),
-          }
-        }),
+        removeBlocks: (ids: string[]) =>
+          set((s) => {
+            const blocks = s.blocks.filter((b) => !ids.includes(b.id))
+            return {
+              blocks,
+              gridRows: ensureGridRows(blocks, 3),
+              selectedBlockIds: s.selectedBlockIds.filter((bid) => !ids.includes(bid)),
+            }
+          }),
 
-      setSelectedBlocks: (ids) => set({ selectedBlockIds: ids, lastSelectedId: ids[ids.length - 1] || null }),
+        setSelectedBlocks: (ids) =>
+          set({ selectedBlockIds: ids, lastSelectedId: ids[ids.length - 1] || null }),
 
-      toggleBlockSelection: (id) =>
-        set((s) => ({
-          selectedBlockIds: s.selectedBlockIds.includes(id)
-            ? s.selectedBlockIds.filter((bid) => bid !== id)
-            : [...s.selectedBlockIds, id],
-          lastSelectedId: id,
-        })),
+        toggleBlockSelection: (id) =>
+          set((s) => ({
+            selectedBlockIds: s.selectedBlockIds.includes(id)
+              ? s.selectedBlockIds.filter((bid) => bid !== id)
+              : [...s.selectedBlockIds, id],
+            lastSelectedId: id,
+          })),
 
-      setGridRows: (rows) => set({ gridRows: Math.max(rows, 3) }),
+        setGridRows: (rows) => set({ gridRows: Math.max(rows, 3) }),
 
-      toggleGuides: () => set((s) => ({ showGuides: !s.showGuides })),
+        toggleGuides: () => set((s) => ({ showGuides: !s.showGuides })),
 
-      setVisibleRows: (rows) =>
-        set((s) => {
-          const newVisible = Math.max(1, Math.min(10, rows))
+        setVisibleRows: (rows) =>
+          set((s) => {
+            const newVisible = Math.max(1, Math.min(10, rows))
 
-          // V21: shrink gridRows when zooming in if trailing rows empty
-          const highestBlockEnd = s.blocks.reduce((max, b) => Math.max(max, b.row + b.rowSpan), 0)
+            // V21: shrink gridRows when zooming in if trailing rows empty
+            const highestBlockEnd = s.blocks.reduce((max, b) => Math.max(max, b.row + b.rowSpan), 0)
 
-          let newGridRows: number
-          if (newVisible < s.visibleRows) {
-            // Zoom in: shrink to content
-            newGridRows = Math.max(newVisible, highestBlockEnd, 3)
-          } else {
-            // Zoom out: expand to show empty cells (B10)
-            newGridRows = Math.max(s.gridRows, newVisible)
-          }
+            let newGridRows: number
+            if (newVisible < s.visibleRows) {
+              // Zoom in: shrink to content
+              newGridRows = Math.max(newVisible, highestBlockEnd, 3)
+            } else {
+              // Zoom out: expand to show empty cells (B10)
+              newGridRows = Math.max(s.gridRows, newVisible)
+            }
 
-          return { visibleRows: newVisible, gridRows: newGridRows }
-        }),
+            return { visibleRows: newVisible, gridRows: newGridRows }
+          }),
 
-      setGridCellSize: (w, h) => set({ gridCellW: w, gridCellH: h }),
+        setGridCellSize: (w, h) => set({ gridCellW: w, gridCellH: h }),
 
-      clearCanvas: () =>
-        set({ blocks: [], gridRows: 3, selectedBlockIds: [] }),
+        clearCanvas: () => set({ blocks: [], gridRows: 3, selectedBlockIds: [] }),
 
-      clearImages: () => {
-        clearImagesFromIDB()
-        set({ images: [] })
-      },
+        clearImages: () => {
+          clearImagesFromIDB()
+          set({ images: [] })
+        },
 
-      removeImage: (id: string) =>
-        set((s) => {
-          // Remove image from IDB
-          deleteImageFromIDB(id)
+        removeImage: (id: string) =>
+          set((s) => {
+            // Remove image from IDB
+            deleteImageFromIDB(id)
 
-          // Remove image from state and all blocks using it
-          const blocks = s.blocks.filter((b) => b.imageId !== id)
-          return {
-            images: s.images.filter((img) => img.id !== id),
-            blocks,
-            gridRows: ensureGridRows(blocks, 3),
-            selectedBlockIds: s.selectedBlockIds.filter((bid) => {
-              const block = s.blocks.find((b) => b.id === bid)
-              return block && block.imageId !== id
-            }),
-          }
-        }),
+            // Remove image from state and all blocks using it
+            const blocks = s.blocks.filter((b) => b.imageId !== id)
+            return {
+              images: s.images.filter((img) => img.id !== id),
+              blocks,
+              gridRows: ensureGridRows(blocks, 3),
+              selectedBlockIds: s.selectedBlockIds.filter((bid) => {
+                const block = s.blocks.find((b) => b.id === bid)
+                return block && block.imageId !== id
+              }),
+            }
+          }),
 
-      loadProfileState: (blocks: ImageBlock[], gridRows: number) =>
-        set({ blocks, gridRows, selectedBlockIds: [] }),
+        loadProfileState: (blocks: ImageBlock[], gridRows: number) =>
+          set({ blocks, gridRows, selectedBlockIds: [] }),
 
-      setCurrentProfileId: (id: number | null) =>
-        set({ currentProfileId: id }),
+        setCurrentProfileId: (id: number | null) => set({ currentProfileId: id }),
 
-      toggleSidebar: () =>
-        set((s) => ({ sidebarVisible: !s.sidebarVisible })),
+        toggleSidebar: () => set((s) => ({ sidebarVisible: !s.sidebarVisible })),
 
-      toggleDragMode: () =>
-        set((s) => ({ dragMode: !s.dragMode })),
-    }),
-    {
-      // V5: undo/redo only covers canvas mutations, not image uploads
-      partialize: (state) => ({
-        blocks: state.blocks,
-        gridRows: state.gridRows,
+        toggleDragMode: () => set((s) => ({ dragMode: !s.dragMode })),
+
+        toggleResizeMode: () =>
+          set((s) => ({ resizeMode: s.resizeMode === 'buttons' ? 'handles' : 'buttons' })),
       }),
-    }
-  )
+      {
+        // V5: undo/redo only covers canvas mutations, not image uploads
+        partialize: (state) => ({
+          blocks: state.blocks,
+          gridRows: state.gridRows,
+        }),
+      }
+    )
   )
 )
 

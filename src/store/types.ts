@@ -47,6 +47,7 @@ export interface AppState {
   currentProfileId: number | null
   sidebarVisible: boolean
   dragMode: boolean
+  resizeMode: 'buttons' | 'handles'
 
   addImage: (img: UploadedImage) => void
   addBlock: (block: ImageBlock) => void
@@ -68,4 +69,5 @@ export interface AppState {
   setCurrentProfileId: (id: number | null) => void
   toggleSidebar: () => void
   toggleDragMode: () => void
+  toggleResizeMode: () => void
 }

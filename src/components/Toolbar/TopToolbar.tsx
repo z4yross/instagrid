@@ -1,6 +1,6 @@
 import { useStore } from '@/store/useStore'
 import ColorPicker from '@/components/ColorPicker/ColorPicker'
-import { Lock, Menu, Layers } from 'lucide-react'
+import { Lock, Menu, Layers, Maximize2 } from 'lucide-react'
 
 interface Props {
   onToggleFAB?: () => void
@@ -17,6 +17,8 @@ export default function TopToolbar({ onToggleFAB, fabVisible }: Props = {}) {
   const sidebarVisible = useStore((s) => s.sidebarVisible)
   const dragMode = useStore((s) => s.dragMode)
   const toggleDragMode = useStore((s) => s.toggleDragMode)
+  const resizeMode = useStore((s) => s.resizeMode)
+  const toggleResizeMode = useStore((s) => s.toggleResizeMode)
 
   const selectedBlocks = blocks.filter((b) => selectedBlockIds.includes(b.id))
   const block = selectedBlocks.length === 1 ? selectedBlocks[0] : null
@@ -93,6 +95,17 @@ export default function TopToolbar({ onToggleFAB, fabVisible }: Props = {}) {
           {isMobile && onToggleFAB && (
             <IconBtn onClick={onToggleFAB} active={fabVisible} title="Toggle actions">
               <Layers size={18} />
+            </IconBtn>
+          )}
+
+          {/* V71: Resize mode toggle - after FAB toggle on mobile */}
+          {isMobile && (
+            <IconBtn
+              onClick={toggleResizeMode}
+              active={resizeMode === 'buttons'}
+              title={resizeMode === 'buttons' ? 'Resize: Buttons' : 'Resize: Handles'}
+            >
+              <Maximize2 size={18} />
             </IconBtn>
           )}
 
