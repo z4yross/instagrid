@@ -111,6 +111,7 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | V69     | Resize defaults to button mode - resizeMode starts as 'buttons' on all platforms (mobile, tablet, desktop). Handles available via toggle.                                                                             |
 | V70     | Placeholder blocks show only color - no text overlay, just barsColor fill.                                                                                                                                            |
 | V71     | Resize toggle button placement - desktop: after lock button in RightToolbar. Mobile: after FAB toggle in TopToolbar.                                                                                                  |
+| V72     | Sidebar toggle shows logo/branding - no hamburger menu icon. Logo acts as toggle button.                                                                                                                              |
 
 ---
 
@@ -265,6 +266,7 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | T145   | x      | FAB subtle background - change to rgba(255,255,255,0.08) solid (no gradient), keep blur(8px), simplify/remove border. Match grid zoom control style                                                                         | B98, V68             |
 | T146   | x      | Add resize mode toggle - store resizeMode ('buttons' or 'handles'), default 'buttons'. Toggle buttons in toolbars (desktop: after lock, mobile: after FAB toggle). Conditional render in Block.tsx                          | V65, V69, V71        |
 | T147   | x      | Remove placeholder text - delete "Placeholder" text div from Block.tsx isPlaceholder render, show only barsColor background                                                                                                 | B100, V70            |
+| T148   | x      | Replace hamburger with logo - remove Menu icon from sidebar toggle, use logo/branding text (IG or InstaGrid) as clickable toggle button in TopToolbar                                                                       | V72                  |
 
 ---
 

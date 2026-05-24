@@ -1,6 +1,6 @@
 import { useStore } from '@/store/useStore'
 import ColorPicker from '@/components/ColorPicker/ColorPicker'
-import { Lock, Menu, Layers, Maximize2 } from 'lucide-react'
+import { Lock, Layers, Maximize2 } from 'lucide-react'
 
 interface Props {
   onToggleFAB?: () => void
@@ -59,11 +59,24 @@ export default function TopToolbar({ onToggleFAB, fabVisible }: Props = {}) {
       }}
     >
       {isMobile && sidebarVisible ? (
-        /* Menu button + logo when sidebar open on mobile */
+        /* Logo + branding when sidebar open on mobile */
         <>
-          <IconBtn onClick={toggleSidebar} active={sidebarVisible} title="Hide">
-            <Menu size={18} />
-          </IconBtn>
+          <button
+            onClick={toggleSidebar}
+            style={{
+              background: 'none',
+              border: 'none',
+              color: '#ffffff',
+              fontSize: 18,
+              fontWeight: 700,
+              cursor: 'pointer',
+              padding: '8px 12px',
+              letterSpacing: '-0.02em',
+            }}
+            title="Hide"
+          >
+            IG
+          </button>
           <div
             style={{
               fontSize: 20,
@@ -77,14 +90,33 @@ export default function TopToolbar({ onToggleFAB, fabVisible }: Props = {}) {
         </>
       ) : (
         <>
-          {/* Sidebar toggle */}
-          <IconBtn
+          {/* V72: Logo as sidebar toggle */}
+          <button
             onClick={toggleSidebar}
-            active={sidebarVisible}
-            title={sidebarVisible ? 'Hide' : 'Show'}
+            style={{
+              background: sidebarVisible ? 'rgba(255, 255, 255, 0.2)' : 'rgba(255, 255, 255, 0.1)',
+              border: 'none',
+              color: '#ffffff',
+              fontSize: 18,
+              fontWeight: 700,
+              cursor: 'pointer',
+              padding: '8px 12px',
+              borderRadius: 6,
+              letterSpacing: '-0.02em',
+              transition: 'background 0.2s',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = 'rgba(255, 255, 255, 0.25)'
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = sidebarVisible
+                ? 'rgba(255, 255, 255, 0.2)'
+                : 'rgba(255, 255, 255, 0.1)'
+            }}
+            title={sidebarVisible ? 'Hide sidebar' : 'Show sidebar'}
           >
-            <Menu size={18} />
-          </IconBtn>
+            IG
+          </button>
 
           {/* Drag lock - second position for mobile access */}
           <IconBtn onClick={toggleDragMode} active={dragMode} title="Drag mode">
