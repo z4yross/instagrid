@@ -22,13 +22,6 @@ export default function TopToolbar() {
     })
   }
 
-  function adjustPan(dx: number, dy: number) {
-    if (selectedBlocks.length === 0) return
-    selectedBlocks.forEach((b) => {
-      updateBlock(b.id, { transform: { ...b.transform, panX: b.transform.panX + dx, panY: b.transform.panY + dy } })
-    })
-  }
-
   function adjustZoom(delta: number) {
     if (selectedBlocks.length === 0) return
     selectedBlocks.forEach((b) => {
@@ -50,7 +43,7 @@ export default function TopToolbar() {
         top: 0,
         left: 0,
         right: 0,
-        height: 56,
+        height: 64,
         background: `
           linear-gradient(180deg, #0a0a0a 0%, #1a1a1a 100%),
           repeating-linear-gradient(0deg, transparent, transparent 1px, rgba(255,255,255,0.05) 1px, rgba(255,255,255,0.05) 2px),
@@ -61,7 +54,7 @@ export default function TopToolbar() {
         display: 'flex',
         alignItems: 'center',
         padding: '0 12px',
-        gap: 8,
+        gap: 12,
         zIndex: 100,
       }}
     >
@@ -85,13 +78,8 @@ export default function TopToolbar() {
         </div>
       )}
 
-      {/* Essential controls only */}
+      {/* Essential controls only - pan via touch gestures */}
       <IconBtn onClick={rotate} disabled={disabled} title="Rotate">↻</IconBtn>
-
-      <IconBtn onClick={() => adjustPan(0, -10)} disabled={disabled} title="Up">↑</IconBtn>
-      <IconBtn onClick={() => adjustPan(-10, 0)} disabled={disabled} title="Left">←</IconBtn>
-      <IconBtn onClick={() => adjustPan(10, 0)} disabled={disabled} title="Right">→</IconBtn>
-      <IconBtn onClick={() => adjustPan(0, 10)} disabled={disabled} title="Down">↓</IconBtn>
 
       <IconBtn onClick={() => adjustZoom(0.1)} disabled={disabled} title="Zoom in">＋</IconBtn>
       <IconBtn onClick={() => adjustZoom(-0.1)} disabled={disabled} title="Zoom out">－</IconBtn>
@@ -122,12 +110,12 @@ function IconBtn({ children, onClick, disabled, title, danger }: {
       disabled={disabled}
       title={title}
       style={{
-        width: 44,
-        height: 44,
+        width: 48,
+        height: 48,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        fontSize: 16,
+        fontSize: 18,
         fontWeight: 700,
         background: disabled ? 'rgba(255, 255, 255, 0.08)' : danger ? 'rgba(255, 68, 68, 0.15)' : 'rgba(255, 255, 255, 0.15)',
         border: disabled ? '1px solid rgba(255, 255, 255, 0.1)' : danger ? '1px solid rgba(255, 68, 68, 0.4)' : '1px solid rgba(255, 255, 255, 0.25)',

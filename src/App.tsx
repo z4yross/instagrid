@@ -25,7 +25,7 @@ export default function App() {
       <div style={{ display: 'flex', flexDirection: 'column', height: '100%', overflow: 'hidden', background: 'var(--color-bg-base)' }}>
         <TopToolbar />
 
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', marginTop: 56, position: 'relative' }}>
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', marginTop: 64, position: 'relative' }}>
           {lowResWarning.length > 0 && (
             <div style={{
               padding: '6px 12px',
@@ -51,11 +51,11 @@ export default function App() {
                   inset: 0,
                   background: 'rgba(0,0,0,0.5)',
                   zIndex: 99,
-                  top: 56,
+                  top: 64,
                 }}
                 onClick={() => useStore.getState().toggleSidebar()}
               />
-              <div style={{ position: 'fixed', left: 0, top: 56, bottom: 0, right: 0, zIndex: 100 }}>
+              <div style={{ position: 'fixed', left: 0, top: 64, bottom: 0, right: 0, zIndex: 100 }}>
                 <Sidebar onLowRes={setLowResWarning} width="100%" />
               </div>
             </>
