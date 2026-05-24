@@ -112,6 +112,7 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | V70     | Placeholder blocks show only color - no text overlay, just barsColor fill.                                                                                                                                            |
 | V71     | Resize toggle button placement - desktop: after lock button in RightToolbar. Mobile: after FAB toggle in TopToolbar.                                                                                                  |
 | V72     | Sidebar toggle shows favicon as logo - /favicon.svg (3x3 grid icon), not text or hamburger. Favicon acts as toggle button.                                                                                            |
+| V73     | Favicon background transparent - no black background when on gray button. Favicon adapts to button background.                                                                                                        |
 
 ---
 
@@ -268,6 +269,7 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | T147   | x      | Remove placeholder text - delete "Placeholder" text div from Block.tsx isPlaceholder render, show only barsColor background                                                                                                 | B100, V70            |
 | T148   | x      | Replace hamburger with logo - remove Menu icon from sidebar toggle, use logo/branding text (IG or InstaGrid) as clickable toggle button in TopToolbar                                                                       | V72                  |
 | T149   | x      | Use favicon as logo - replace "IG" text with <img src="/favicon.svg" /> in sidebar toggle buttons. 24px size, maintain clickable button styling                                                                             | B101, V72            |
+| T150   | x      | Remove favicon black background - edit /public/favicon.svg, change black rect fill to transparent. Keep white grid squares                                                                                                  | B102, V73            |
 
 ---
 
@@ -376,3 +378,4 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | B99  | 2026-05-24 | Resize handles hard to use on tablet - drag handles too small for touch on tablet devices. Need button-based resize option user can toggle                                                                                    | V65, V69, T146                                                                                                                                                                               |
 | B100 | 2026-05-24 | Placeholder blocks show text - "Placeholder" text overlay distracts from color preview. Should show only barsColor, no text                                                                                                   | V70, T147                                                                                                                                                                                    |
 | B101 | 2026-05-24 | Logo shows text "IG" instead of favicon - T148 used text, should use /favicon.svg image (3x3 grid icon)                                                                                                                       | V72, T149                                                                                                                                                                                    |
+| B102 | 2026-05-24 | Favicon black background clashes with gray button - when sidebar inactive, favicon's black bg on gray button bg looks bad. Need transparent favicon bg                                                                        | V73, T150                                                                                                                                                                                    |
