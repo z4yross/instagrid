@@ -43,10 +43,9 @@ export default function Block({
 	const isSelected = selectedBlockIds.includes(block.id);
 	const isPlaceholder = block.isPlaceholder === true;
 
-	// dragMode: true=locked (disabled), false=unlocked (enabled)
-	// Desktop always draggable, mobile checks lock state
+	// T120: dragMode universal - controls drag on all platforms
 	const isMobile = window.innerWidth <= 768;
-	const isDragEnabled = isMobile ? !dragMode : true;
+	const isDragEnabled = !dragMode; // Locked = no drag, unlocked = drag
 
 	// T110/T113/T114/T118: Touch pan on block when drag locked (mobile only)
 	const blockTouchRef = useRef<HTMLDivElement | null>(null);

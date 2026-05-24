@@ -60,8 +60,24 @@ export default function ResizeHandle({ block, cellW, cellH, edge }: Props) {
     startRef.current = null
   }
 
+  // T121: Touch event handlers to prevent pan/drag interference
+  function onTouchStart(e: React.TouchEvent) {
+    e.stopPropagation() // Prevent pan/drag
+  }
+
+  function onTouchMove(e: React.TouchEvent) {
+    e.stopPropagation() // Prevent pan/drag
+  }
+
+  function onTouchEnd(e: React.TouchEvent) {
+    e.stopPropagation() // Prevent pan/drag
+  }
+
   const cursor = edge === 'right' ? 'ew-resize' : edge === 'bottom' ? 'ns-resize' : 'nwse-resize'
-  const SIZE = 12
+
+  // T121: Larger touch targets on mobile (44px min)
+  const isMobile = window.innerWidth <= 768
+  const SIZE = isMobile ? 22 : 12 // Mobile: 44px handles, Desktop: 12px
 
   const style: React.CSSProperties = {
     position: 'absolute',
@@ -90,6 +106,9 @@ export default function ResizeHandle({ block, cellW, cellH, edge }: Props) {
       onPointerDown={onPointerDown}
       onPointerMove={onPointerMove}
       onPointerUp={onPointerUp}
+      onTouchStart={onTouchStart}
+      onTouchMove={onTouchMove}
+      onTouchEnd={onTouchEnd}
     />
   )
 }

@@ -88,6 +88,8 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | V46 | Mobile image pan via touch when drag locked - swipe on image adjusts transform.panX/panY. No conflict with resize. |
 | V47 | Toolbar button order: sidebar toggle first, drag lock second (most-used controls up front). |
 | V48 | Mobile deselect: regular click on selected block (when only selection) deselects it, restoring scroll. |
+| V49 | Drag lock universal - dragMode controls block position drag on all platforms (mobile and desktop), not platform-specific. |
+| V50 | Mobile resize handles larger touch targets (min 44px), prevent pan/drag interference via event stopPropagation. |
 
 ---
 
@@ -220,6 +222,8 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | T117 | x | Mobile tap to deselect - regular click on already-selected single block deselects (setSelectedBlocks([])), restores scroll | B70, V48 |
 | T118 | x | Debug + fix pan - add console logs to verify listeners attach/fire, try attaching to block root instead of just img element to capture bars area | B71, V46 |
 | T119 | x | Add active state to menu button - pass active={sidebarVisible} to sidebar toggle IconBtn for visual feedback | B72, V47 |
+| T120 | x | Make drag lock universal - remove platform checks, dragMode controls drag on all platforms. Update isDragEnabled, touchAction, pan logic | V49 |
+| T121 | x | Increase resize handle size on mobile (44px min touch target), add stopPropagation to touch/pointer events to prevent pan/drag interference | B73, V50 |
 
 ---
 
@@ -299,4 +303,5 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | B70 | 2026-05-24 | Can't deselect on mobile - once image selected (touchAction="none"), stuck without scroll. Hard to click empty space on mobile to deselect | V48 |
 | B71 | 2026-05-24 | Pan STILL not working - critical core feature. Touch listeners might not attach/fire, or only work on img not bars area | V46 |
 | B72 | 2026-05-24 | Sidebar toggle button no visual feedback - doesn't show active state (glow) when sidebar open | V47 |
+| B73 | 2026-05-24 | Resize handles too small on mobile - very hard to grab without triggering pan or drag gestures. Handles need larger touch targets and gesture priority | V50 |
 
