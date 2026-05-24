@@ -168,7 +168,7 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | T84 | x | Mobile sidebar full width + auto-expand grid rows to fill viewport height | B41 |
 | T85 | x | Replace +/- zoom buttons with clear labels or icons (e.g. "Fit" / "Fill") to avoid confusion | B42 |
 | T86 | x | Desktop sidebar always visible: remove toggle button from RightToolbar, force sidebarVisible=true on desktop | V28 |
-| T87 | . | Fix mobile sidebar width: remove maxWidth constraint in mobile wrapper | B43 |
+| T87 | x | Fix mobile sidebar width: remove maxWidth constraint in mobile wrapper | B43 |
 
 ---
 

@@ -56,9 +56,9 @@ export default function App() {
                 onClick={() => useStore.getState().toggleSidebar()}
               />
               <div style={{ position: 'fixed', left: 0, top: 56, bottom: 0, right: 0, zIndex: 100 }}>
-                <div style={{ width: '100%', height: '100%' }}>
-                  <Sidebar onLowRes={setLowResWarning} />
-                </div>
+                {/* Force Sidebar to full width on mobile */}
+                <style>{`aside { width: 100% !important; }`}</style>
+                <Sidebar onLowRes={setLowResWarning} />
               </div>
             </>
           )}
