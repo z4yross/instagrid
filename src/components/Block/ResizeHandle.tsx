@@ -63,10 +63,12 @@ export default function ResizeHandle({ block, cellW, cellH, edge }: Props) {
   // T121: Touch event handlers to prevent pan/drag interference
   function onTouchStart(e: React.TouchEvent) {
     e.stopPropagation() // Prevent pan/drag
+    e.preventDefault() // Prevent scroll/pan
   }
 
   function onTouchMove(e: React.TouchEvent) {
     e.stopPropagation() // Prevent pan/drag
+    e.preventDefault() // Prevent scroll/pan
   }
 
   function onTouchEnd(e: React.TouchEvent) {
