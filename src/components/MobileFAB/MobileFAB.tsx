@@ -3,12 +3,13 @@ import { useState, useRef, useEffect } from 'react'
 interface Props {
   onToggle: (visible: boolean) => void
   overlayVisible: boolean
+  onPositionChange?: (position: { x: number; y: number }) => void
 }
 
 const FAB_SIZE = 60
 const STORAGE_KEY = 'fab-position'
 
-export default function MobileFAB({ onToggle, overlayVisible }: Props) {
+export default function MobileFAB({ onToggle, overlayVisible, onPositionChange }: Props) {
   const [position, setPosition] = useState(() => {
     const saved = localStorage.getItem(STORAGE_KEY)
     if (saved) {
@@ -25,10 +26,11 @@ export default function MobileFAB({ onToggle, overlayVisible }: Props) {
   const dragStartRef = useRef<{ x: number; y: number; fabX: number; fabY: number } | null>(null)
   const fabRef = useRef<HTMLButtonElement>(null)
 
-  // Save position to localStorage
+  // Save position to localStorage and notify parent
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(position))
-  }, [position])
+    onPositionChange?.(position)
+  }, [position, onPositionChange])
 
   function handlePointerDown(e: React.PointerEvent) {
     e.stopPropagation()
