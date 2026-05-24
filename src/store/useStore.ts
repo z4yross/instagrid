@@ -25,6 +25,7 @@ const useStore = create<AppState>()(
         gridCellW: 400,
         gridCellH: 533,
         currentProfileId: null,
+        sidebarVisible: window.innerWidth > 768,
 
       addImage: (img: UploadedImage) =>
         set((s) => ({ images: [...s.images, img] })),
@@ -164,6 +165,9 @@ const useStore = create<AppState>()(
 
       setCurrentProfileId: (id: number | null) =>
         set({ currentProfileId: id }),
+
+      toggleSidebar: () =>
+        set((s) => ({ sidebarVisible: !s.sidebarVisible })),
     }),
     {
       // V5: undo/redo only covers canvas mutations, not image uploads

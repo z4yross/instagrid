@@ -45,6 +45,7 @@ export interface AppState {
   gridCellW: number
   gridCellH: number
   currentProfileId: number | null
+  sidebarVisible: boolean
 
   addImage: (img: UploadedImage) => void
   addBlock: (block: ImageBlock) => void
@@ -64,4 +65,5 @@ export interface AppState {
   removeImage: (id: string) => void
   loadProfileState: (blocks: ImageBlock[], gridRows: number) => void
   setCurrentProfileId: (id: number | null) => void
+  toggleSidebar: () => void
 }

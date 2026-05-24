@@ -161,8 +161,8 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | T78 | x | Autosave profiles: debounced 2s on blocks/gridRows change, track currentProfileId in store | V27, V15, V22 |
 | T79 | x | Update drag overlay styling to match black/white theme (remove purple gradients) | — |
 | T80 | x | Add custom favicon (grid icon matching app logo) | — |
-| T81 | ~ | Sidebar responsive: desktop (left, toggleable), mobile (fullscreen overlay, hidden by default) | V28 |
-| T82 | ~ | Toolbar responsive: desktop (right vertical), mobile (top horizontal) | V28 |
+| T81 | x | Sidebar responsive: desktop (left, toggleable), mobile (fullscreen overlay, hidden by default) | V28 |
+| T82 | x | Toolbar responsive: desktop (right vertical), mobile (top horizontal) | V28 |
 
 ---
 
