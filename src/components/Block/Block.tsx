@@ -1,9 +1,10 @@
 import type { ImageBlock } from '@/store/types'
 import { useStore } from '@/store/useStore'
-import { cellUploadNumber, COLS } from '@/utils/gridUtils'
+import { cellUploadNumber, COLS, hasCollision } from '@/utils/gridUtils'
 import { useDraggable } from '@dnd-kit/core'
 import { CSS } from '@dnd-kit/utilities'
 import { useRef, useEffect, useCallback } from 'react'
+import { ChevronUp, ChevronDown, ChevronLeft, ChevronRight } from 'lucide-react'
 import ResizeHandle from './ResizeHandle'
 
 interface Props {
@@ -251,14 +252,18 @@ export default function Block({
 
       <CellBadges block={block} cellW={cellW} cellH={cellH} gridRows={gridRows} />
 
-      {isSelected && selectedBlockIds.length === 1 && !isDragging && (
-        <>
-          {/* T133: Show right/corner handles always, offset inward on mobile at right edge */}
-          <ResizeHandle block={block} cellW={cellW} cellH={cellH} edge="right" />
-          <ResizeHandle block={block} cellW={cellW} cellH={cellH} edge="bottom" />
-          <ResizeHandle block={block} cellW={cellW} cellH={cellH} edge="corner-br" />
-        </>
-      )}
+      {isSelected &&
+        selectedBlockIds.length === 1 &&
+        !isDragging &&
+        (isMobile ? (
+          <MobileResizeButtons block={block} />
+        ) : (
+          <>
+            <ResizeHandle block={block} cellW={cellW} cellH={cellH} edge="right" />
+            <ResizeHandle block={block} cellW={cellW} cellH={cellH} edge="bottom" />
+            <ResizeHandle block={block} cellW={cellW} cellH={cellH} edge="corner-br" />
+          </>
+        ))}
     </div>
   )
 }
@@ -327,4 +332,149 @@ function CellBadges({
     }
   }
   return <>{badges}</>
+}
+
+function MobileResizeButtons({ block }: { block: ImageBlock }) {
+  const updateBlock = useStore((s) => s.updateBlock)
+  const blocks = useStore((s) => s.blocks)
+
+  function resize(direction: 'up' | 'down' | 'left' | 'right', delta: 1 | -1) {
+    let newColSpan = block.colSpan
+    let newRowSpan = block.rowSpan
+    let newCol = block.col
+    let newRow = block.row
+
+    if (direction === 'right') {
+      newColSpan = Math.max(1, Math.min(COLS - block.col, block.colSpan + delta))
+    } else if (direction === 'left') {
+      if (delta === 1) {
+        // Expand left: move col left, increase span
+        newCol = Math.max(0, block.col - 1)
+        newColSpan = block.colSpan + (block.col - newCol)
+      } else {
+        // Shrink left: move col right, decrease span
+        if (block.colSpan > 1) {
+          newCol = block.col + 1
+          newColSpan = block.colSpan - 1
+        }
+      }
+    } else if (direction === 'down') {
+      newRowSpan = Math.max(1, block.rowSpan + delta)
+    } else if (direction === 'up') {
+      if (delta === 1) {
+        // Expand up: move row up, increase span
+        newRow = Math.max(0, block.row - 1)
+        newRowSpan = block.rowSpan + (block.row - newRow)
+      } else {
+        // Shrink up: move row down, decrease span
+        if (block.rowSpan > 1) {
+          newRow = block.row + 1
+          newRowSpan = block.rowSpan - 1
+        }
+      }
+    }
+
+    // Check collision
+    if (hasCollision(blocks, newCol, newRow, newColSpan, newRowSpan, block.id)) return
+
+    updateBlock(block.id, {
+      col: newCol,
+      row: newRow,
+      colSpan: newColSpan,
+      rowSpan: newRowSpan,
+    })
+  }
+
+  const btnStyle: React.CSSProperties = {
+    position: 'absolute',
+    width: 32,
+    height: 32,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    background: 'rgba(0, 0, 0, 0.3)',
+    backdropFilter: 'blur(4px)',
+    border: '1px solid rgba(255, 255, 255, 0.2)',
+    borderRadius: 4,
+    color: '#fff',
+    cursor: 'pointer',
+    zIndex: 20,
+    transition: 'all 0.15s',
+  }
+
+  return (
+    <>
+      {/* Top edge: expand up, shrink down */}
+      <button
+        style={{ ...btnStyle, top: 4, left: '50%', transform: 'translateX(-50%)' }}
+        onClick={() => resize('up', 1)}
+        onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(0, 0, 0, 0.5)')}
+        onMouseLeave={(e) => (e.currentTarget.style.background = 'rgba(0, 0, 0, 0.3)')}
+      >
+        <ChevronUp size={18} />
+      </button>
+      <button
+        style={{ ...btnStyle, top: 40, left: '50%', transform: 'translateX(-50%)' }}
+        onClick={() => resize('up', -1)}
+        onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(0, 0, 0, 0.5)')}
+        onMouseLeave={(e) => (e.currentTarget.style.background = 'rgba(0, 0, 0, 0.3)')}
+      >
+        <ChevronDown size={18} />
+      </button>
+
+      {/* Right edge: expand right, shrink left */}
+      <button
+        style={{ ...btnStyle, right: 4, top: '50%', transform: 'translateY(-50%)' }}
+        onClick={() => resize('right', 1)}
+        onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(0, 0, 0, 0.5)')}
+        onMouseLeave={(e) => (e.currentTarget.style.background = 'rgba(0, 0, 0, 0.3)')}
+      >
+        <ChevronRight size={18} />
+      </button>
+      <button
+        style={{ ...btnStyle, right: 40, top: '50%', transform: 'translateY(-50%)' }}
+        onClick={() => resize('right', -1)}
+        onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(0, 0, 0, 0.5)')}
+        onMouseLeave={(e) => (e.currentTarget.style.background = 'rgba(0, 0, 0, 0.3)')}
+      >
+        <ChevronLeft size={18} />
+      </button>
+
+      {/* Bottom edge: expand down, shrink up */}
+      <button
+        style={{ ...btnStyle, bottom: 4, left: '50%', transform: 'translateX(-50%)' }}
+        onClick={() => resize('down', 1)}
+        onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(0, 0, 0, 0.5)')}
+        onMouseLeave={(e) => (e.currentTarget.style.background = 'rgba(0, 0, 0, 0.3)')}
+      >
+        <ChevronDown size={18} />
+      </button>
+      <button
+        style={{ ...btnStyle, bottom: 40, left: '50%', transform: 'translateX(-50%)' }}
+        onClick={() => resize('down', -1)}
+        onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(0, 0, 0, 0.5)')}
+        onMouseLeave={(e) => (e.currentTarget.style.background = 'rgba(0, 0, 0, 0.3)')}
+      >
+        <ChevronUp size={18} />
+      </button>
+
+      {/* Left edge: expand left, shrink right */}
+      <button
+        style={{ ...btnStyle, left: 4, top: '50%', transform: 'translateY(-50%)' }}
+        onClick={() => resize('left', 1)}
+        onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(0, 0, 0, 0.5)')}
+        onMouseLeave={(e) => (e.currentTarget.style.background = 'rgba(0, 0, 0, 0.3)')}
+      >
+        <ChevronLeft size={18} />
+      </button>
+      <button
+        style={{ ...btnStyle, left: 40, top: '50%', transform: 'translateY(-50%)' }}
+        onClick={() => resize('left', -1)}
+        onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(0, 0, 0, 0.5)')}
+        onMouseLeave={(e) => (e.currentTarget.style.background = 'rgba(0, 0, 0, 0.3)')}
+      >
+        <ChevronRight size={18} />
+      </button>
+    </>
+  )
 }

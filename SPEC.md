@@ -104,6 +104,7 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | V62     | Mobile TopToolbar button order: menu toggle, drag lock, FAB toggle, then other controls - most-used mobile interactions up front.                                                                                     |
 | V63     | Mobile export downloads individual JPG files sequentially, not ZIP. Desktop export creates ZIP bundle.                                                                                                                |
 | V64     | Git commit header strictly < 100 chars (not <=). Body lines <= 100 chars. Enforced via explicit commitlint rules.                                                                                                     |
+| V65     | Mobile resize uses button controls (not drag handles). 4 edges (top/right/bottom/left), 2 buttons per edge (expand +, shrink -). Cleaner aesthetic, no offset issues.                                                 |
 
 ---
 
@@ -249,6 +250,7 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | T136   | x      | Use Layers icon in MobileFAB - import Layers from lucide-react, replace ⊕ text with <Layers size={24} /> for consistency with TopToolbar toggle button                                                                      | B85                  |
 | T137   | x      | Conditional export by platform - mobile downloads individual JPGs sequentially (loop exportSingleCell), desktop creates ZIP (current exportAllCells). Detect via window.innerWidth <= 768                                   | B86, V63             |
 | T138   | x      | Strengthen commitlint rules - add explicit rules to commitlint.config.js: header-max-length [2, 'error', 99] for < 100 chars, body-max-line-length [2, 'error', 100]                                                        | B87, V64, C11        |
+| T139   | x      | Mobile button-based resize - replace drag handles with 8 buttons (2 per edge: expand/shrink). Top/right/bottom/left edges, IconBtn style, +/- or ▲▼◀▶ icons. Remove ResizeHandle on mobile                                  | B88, V65, V50        |
 
 ---
 
@@ -343,3 +345,4 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | B85 | 2026-05-24 | FAB icon inconsistent with TopToolbar toggle - FAB uses ⊕ text symbol, TopToolbar uses Layers icon. Should match for visual consistency                                                                                       | T136                                                                                                                                                                                         |
 | B86 | 2026-05-24 | Mobile export creates ZIP download - awkward on mobile, users expect individual image downloads. Desktop ZIP fine, mobile should download JPGs sequentially                                                                   | V63, T137                                                                                                                                                                                    |
 | B87 | 2026-05-24 | Commit message length enforcement not explicit - commitlint.config.js only extends preset, doesn't show rules. Need explicit header-max-length (< 100) and body-max-line-length (100)                                         | V64, T138                                                                                                                                                                                    |
+| B88 | 2026-05-24 | Mobile resize handles ugly with T133 offset - drag handles not aesthetic on mobile, especially with 16px offset. Need cleaner solution: button-based resize (expand/shrink buttons per edge)                                  | V65, T139                                                                                                                                                                                    |
