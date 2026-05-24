@@ -56,16 +56,16 @@ function renderCell(
   // This cell's crop starts at: (relCol * CROP_W, relRow * CROP_H)
   // Block center relative to cell crop: blockCenter - cellStart
   // Add 35px offset for bars to get canvas coords
-  const blockCenterX = 35 + (totalCols * CROP_W / 2 - relCol * CROP_W)
-  const blockCenterY = (totalRows * CROP_H / 2 - relRow * CROP_H)
+  const blockCenterX = 35 + ((totalCols * CROP_W) / 2 - relCol * CROP_W)
+  const blockCenterY = (totalRows * CROP_H) / 2 - relRow * CROP_H
 
   // Apply transforms around block center (like CSS transformOrigin: center center)
-  ctx.translate(blockCenterX, blockCenterY)  // Move origin to block center
-  ctx.rotate((rotation * Math.PI) / 180)     // Rotate around block center
-  ctx.translate(scaledPanX, scaledPanY)      // Pan in rotated system
+  ctx.translate(blockCenterX, blockCenterY) // Move origin to block center
+  ctx.rotate((rotation * Math.PI) / 180) // Rotate around block center
+  ctx.translate(scaledPanX, scaledPanY) // Pan in rotated system
   const flipScaleX = (flipX ? -1 : 1) * zoom
   const flipScaleY = (flipY ? -1 : 1) * zoom
-  ctx.scale(flipScaleX, flipScaleY)          // Scale
+  ctx.scale(flipScaleX, flipScaleY) // Scale
 
   // T71: Scale image to fit within full block CROP area
   const fullW = totalCols * CROP_W
@@ -80,7 +80,9 @@ function renderCell(
 
   ctx.restore()
 
-  return new Promise((res, rej) => canvas.toBlob((b) => b ? res(b) : rej(new Error('canvas toBlob failed')), 'image/jpeg', 0.92))
+  return new Promise((res, rej) =>
+    canvas.toBlob((b) => (b ? res(b) : rej(new Error('canvas toBlob failed'))), 'image/jpeg', 0.92)
+  )
 }
 
 export async function exportAllCells(
@@ -122,6 +124,42 @@ export async function exportAllCells(
   URL.revokeObjectURL(url)
 }
 
+export async function exportAllCellsIndividual(
+  blocks: ImageBlock[],
+  images: UploadedImage[],
+  gridRows: number,
+  gridCellW: number,
+  gridCellH: number
+): Promise<void> {
+  for (let row = 0; row < gridRows; row++) {
+    for (let col = 0; col < COLS; col++) {
+      const block = blocks.find(
+        (b) => col >= b.col && col < b.col + b.colSpan && row >= b.row && row < b.row + b.rowSpan
+      )
+      if (!block) continue
+
+      const image = images.find((i) => i.id === block.imageId)
+      if (!image) continue
+
+      const htmlImg = await loadHTMLImage(image.src)
+      const relCol = col - block.col
+      const relRow = row - block.row
+      const num = cellUploadNumber(col, row, gridRows, blocks, COLS)
+      if (num > 0) {
+        const blob = await renderCell(htmlImg, block, relCol, relRow, gridCellW, gridCellH)
+        const url = URL.createObjectURL(blob)
+        const a = document.createElement('a')
+        a.href = url
+        a.download = `${String(num).padStart(2, '0')}.jpg`
+        a.click()
+        URL.revokeObjectURL(url)
+        // Small delay between downloads to avoid browser blocking
+        await new Promise((resolve) => setTimeout(resolve, 100))
+      }
+    }
+  }
+}
+
 export async function exportSingleCell(
   block: ImageBlock,
   image: UploadedImage,
@@ -133,7 +171,14 @@ export async function exportSingleCell(
   gridCellH: number
 ): Promise<void> {
   const htmlImg = await loadHTMLImage(image.src)
-  const blob = await renderCell(htmlImg, block, absCol - block.col, absRow - block.row, gridCellW, gridCellH)
+  const blob = await renderCell(
+    htmlImg,
+    block,
+    absCol - block.col,
+    absRow - block.row,
+    gridCellW,
+    gridCellH
+  )
   const num = cellUploadNumber(absCol, absRow, gridRows, blocks, COLS)
   const url = URL.createObjectURL(blob)
   const a = document.createElement('a')

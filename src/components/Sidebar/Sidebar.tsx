@@ -1,8 +1,15 @@
 import { useRef, useState, useEffect } from 'react'
 import { useStore } from '@/store/useStore'
 import { loadImageFiles } from '@/utils/imageUtils'
-import { exportAllCells } from '@/utils/exportUtils'
-import { saveProfile, updateProfile, listProfiles, loadProfile, deleteProfile, type Profile } from '@/utils/storage'
+import { exportAllCells, exportAllCellsIndividual } from '@/utils/exportUtils'
+import {
+  saveProfile,
+  updateProfile,
+  listProfiles,
+  loadProfile,
+  deleteProfile,
+  type Profile,
+} from '@/utils/storage'
 import type { ImageBlock } from '@/store/types'
 import Modal, { type ModalType } from '../Modal/Modal'
 
@@ -41,7 +48,7 @@ export default function Sidebar({ onLowRes, width = 210 }: Props) {
   const clearImages = useStore((s) => s.clearImages)
   const removeImage = useStore((s) => s.removeImage)
   const loadProfileState = useStore((s) => s.loadProfileState)
-  const toggleGuides = useStore ((s) => s.toggleGuides)
+  const toggleGuides = useStore((s) => s.toggleGuides)
   const currentProfileId = useStore((s) => s.currentProfileId)
   const setCurrentProfileId = useStore((s) => s.setCurrentProfileId)
 
@@ -140,7 +147,10 @@ export default function Sidebar({ onLowRes, width = 210 }: Props) {
     })
   }
 
-  function findFreeCellInBlocks(currentBlocks: ImageBlock[], rows: number): { col: number; row: number } {
+  function findFreeCellInBlocks(
+    currentBlocks: ImageBlock[],
+    rows: number
+  ): { col: number; row: number } {
     for (let r = 0; r < rows + 3; r++) {
       for (let c = 0; c < 3; c++) {
         const occupied = currentBlocks.some(
@@ -180,32 +190,54 @@ export default function Sidebar({ onLowRes, width = 210 }: Props) {
   async function doExport() {
     if (exporting) return
     setExporting(true)
-    try { await exportAllCells(blocks, images, gridRows, gridCellW, gridCellH) }
-    finally { setExporting(false) }
+    try {
+      const isMobile = window.innerWidth <= 768
+      if (isMobile) {
+        await exportAllCellsIndividual(blocks, images, gridRows, gridCellW, gridCellH)
+      } else {
+        await exportAllCells(blocks, images, gridRows, gridCellW, gridCellH)
+      }
+    } finally {
+      setExporting(false)
+    }
   }
 
   return (
-    <aside style={{
-      width,
-      height: '100%',
-      flexShrink: 0,
-      borderRight: 'none',
-      display: 'flex',
-      flexDirection: 'column',
-      gap: 0,
-      background: `
+    <aside
+      style={{
+        width,
+        height: '100%',
+        flexShrink: 0,
+        borderRight: 'none',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 0,
+        background: `
         linear-gradient(180deg, #0a0a0a 0%, #1a1a1a 50%, #0a0a0a 100%),
         repeating-linear-gradient(0deg, transparent, transparent 1px, rgba(255,255,255,0.05) 1px, rgba(255,255,255,0.05) 2px),
         repeating-linear-gradient(90deg, transparent, transparent 1px, rgba(255,255,255,0.05) 1px, rgba(255,255,255,0.05) 2px)
       `,
-      boxShadow: 'inset -8px 0 12px rgba(0, 0, 0, 0.4)',
-    }}>
+        boxShadow: 'inset -8px 0 12px rgba(0, 0, 0, 0.4)',
+      }}
+    >
       {/* header - desktop only, logo appears in TopToolbar on mobile */}
       {window.innerWidth > 768 && (
-        <div style={{
-          padding: '14px 14px 10px',
-        }}>
-          <div style={{ fontSize: 20, fontWeight: 700, letterSpacing: '-0.5px', color: 'var(--color-text-primary)', display: 'flex', alignItems: 'center', gap: 6 }}>
+        <div
+          style={{
+            padding: '14px 14px 10px',
+          }}
+        >
+          <div
+            style={{
+              fontSize: 20,
+              fontWeight: 700,
+              letterSpacing: '-0.5px',
+              color: 'var(--color-text-primary)',
+              display: 'flex',
+              alignItems: 'center',
+              gap: 6,
+            }}
+          >
             insta<span style={{ color: 'var(--color-accent)' }}>grid</span>
             <svg width="18" height="18" viewBox="0 0 18 18" style={{ opacity: 0.8 }}>
               <rect x="1" y="1" width="4" height="4" fill="var(--color-accent)" />
@@ -219,7 +251,16 @@ export default function Sidebar({ onLowRes, width = 210 }: Props) {
               <rect x="13" y="13" width="4" height="4" fill="var(--color-accent)" />
             </svg>
           </div>
-          <div style={{ fontSize: 11, color: 'var(--color-text-muted)', marginTop: 3, letterSpacing: '0.5px' }}>feed planner</div>
+          <div
+            style={{
+              fontSize: 11,
+              color: 'var(--color-text-muted)',
+              marginTop: 3,
+              letterSpacing: '0.5px',
+            }}
+          >
+            feed planner
+          </div>
         </div>
       )}
 
@@ -245,132 +286,166 @@ export default function Sidebar({ onLowRes, width = 210 }: Props) {
           accept="image/jpeg,image/png,image/webp"
           multiple
           style={{ display: 'none' }}
-          onChange={(e) => { if (e.target.files) handleFiles(e.target.files); e.target.value = '' }}
+          onChange={(e) => {
+            if (e.target.files) handleFiles(e.target.files)
+            e.target.value = ''
+          }}
         />
       </div>
 
       {/* thumbnails - scrollable section */}
       <div style={{ flex: 1, overflowY: 'auto', minHeight: 0 }}>
-      {isLoading ? (
-        <div style={{ padding: '0 10px 8px' }}>
-          <div style={{ fontSize: 10, fontWeight: 600, color: 'var(--color-text-muted)', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 6 }}>
-            Loading{imageCount > 0 ? ` ${imageCount} image${imageCount !== 1 ? 's' : ''}` : ''}...
+        {isLoading ? (
+          <div style={{ padding: '0 10px 8px' }}>
+            <div
+              style={{
+                fontSize: 10,
+                fontWeight: 600,
+                color: 'var(--color-text-muted)',
+                textTransform: 'uppercase',
+                letterSpacing: '0.07em',
+                marginBottom: 6,
+              }}
+            >
+              Loading{imageCount > 0 ? ` ${imageCount} image${imageCount !== 1 ? 's' : ''}` : ''}...
+            </div>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 3 }}>
+              {Array.from({ length: imageCount || 6 }).map((_, i) => (
+                <div
+                  key={i}
+                  style={{
+                    aspectRatio: '3/4',
+                    borderRadius: 5,
+                    background: 'var(--color-bg-elevated)',
+                    border: '1px solid var(--color-border)',
+                    animation: 'pulse 1.5s ease-in-out infinite',
+                    animationDelay: `${i * 0.1}s`,
+                  }}
+                />
+              ))}
+            </div>
+            <style>{`@keyframes pulse { 0%, 100% { opacity: 0.6; } 50% { opacity: 1; } }`}</style>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 3 }}>
-            {Array.from({ length: imageCount || 6 }).map((_, i) => (
-              <div
-                key={i}
-                style={{
-                  aspectRatio: '3/4',
-                  borderRadius: 5,
-                  background: 'var(--color-bg-elevated)',
-                  border: '1px solid var(--color-border)',
-                  animation: 'pulse 1.5s ease-in-out infinite',
-                  animationDelay: `${i * 0.1}s`,
-                }}
-              />
-            ))}
-          </div>
-          <style>{`@keyframes pulse { 0%, 100% { opacity: 0.6; } 50% { opacity: 1; } }`}</style>
-        </div>
-      ) : images.length > 0 ? (
-        <div style={{ padding: '0 10px 8px' }}>
-          <div style={{ fontSize: 10, fontWeight: 600, color: 'var(--color-text-muted)', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 6 }}>
-            {images.length} image{images.length !== 1 ? 's' : ''}
-          </div>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 3 }}>
-            {images.map((img) => (
-              <div
-                key={img.id}
-                onClick={() => {
-                  const pos = findFreeCellInBlocks(blocks, gridRows)
-                  const block: ImageBlock = {
-                    id: crypto.randomUUID(),
-                    imageId: img.id,
-                    col: pos.col,
-                    row: pos.row,
-                    colSpan: 1,
-                    rowSpan: 1,
-                    barsColor: '#000000',
-                    transform: { panX: 0, panY: 0, zoom: 1, rotation: 0 },
-                  }
-                  addBlock(block)
-                }}
-                style={{
-                  position: 'relative',
-                  aspectRatio: '3/4',
-                  borderRadius: 5,
-                  overflow: 'hidden',
-                  boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-                  cursor: 'pointer',
-                  transition: 'transform 0.15s, box-shadow 0.15s',
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = 'scale(1.05)'
-                  e.currentTarget.style.boxShadow = '0 4px 12px rgba(255,255,255,0.15)'
-                  const deleteBtn = e.currentTarget.querySelector('[data-delete-btn]') as HTMLElement
-                  if (deleteBtn) deleteBtn.style.opacity = '1'
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = 'scale(1)'
-                  e.currentTarget.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)'
-                  const deleteBtn = e.currentTarget.querySelector('[data-delete-btn]') as HTMLElement
-                  if (deleteBtn) deleteBtn.style.opacity = '0'
-                }}
-              >
-                <img src={img.src} alt={img.name} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} draggable={false} />
-                <button
-                  data-delete-btn
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    removeImage(img.id)
+        ) : images.length > 0 ? (
+          <div style={{ padding: '0 10px 8px' }}>
+            <div
+              style={{
+                fontSize: 10,
+                fontWeight: 600,
+                color: 'var(--color-text-muted)',
+                textTransform: 'uppercase',
+                letterSpacing: '0.07em',
+                marginBottom: 6,
+              }}
+            >
+              {images.length} image{images.length !== 1 ? 's' : ''}
+            </div>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 3 }}>
+              {images.map((img) => (
+                <div
+                  key={img.id}
+                  onClick={() => {
+                    const pos = findFreeCellInBlocks(blocks, gridRows)
+                    const block: ImageBlock = {
+                      id: crypto.randomUUID(),
+                      imageId: img.id,
+                      col: pos.col,
+                      row: pos.row,
+                      colSpan: 1,
+                      rowSpan: 1,
+                      barsColor: '#000000',
+                      transform: { panX: 0, panY: 0, zoom: 1, rotation: 0 },
+                    }
+                    addBlock(block)
                   }}
                   style={{
-                    position: 'absolute',
-                    top: 2,
-                    right: 2,
-                    width: 18,
-                    height: 18,
-                    borderRadius: '50%',
-                    background: 'rgba(0,0,0,0.75)',
-                    border: '1px solid rgba(255,255,255,0.3)',
-                    color: '#fff',
-                    fontSize: 10,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
+                    position: 'relative',
+                    aspectRatio: '3/4',
+                    borderRadius: 5,
+                    overflow: 'hidden',
+                    boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
                     cursor: 'pointer',
-                    opacity: 0,
-                    transition: 'opacity 0.15s, background 0.15s',
-                    padding: 0,
+                    transition: 'transform 0.15s, box-shadow 0.15s',
                   }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.background = 'rgba(220,38,38,0.9)'
+                    e.currentTarget.style.transform = 'scale(1.05)'
+                    e.currentTarget.style.boxShadow = '0 4px 12px rgba(255,255,255,0.15)'
+                    const deleteBtn = e.currentTarget.querySelector(
+                      '[data-delete-btn]'
+                    ) as HTMLElement
+                    if (deleteBtn) deleteBtn.style.opacity = '1'
                   }}
                   onMouseLeave={(e) => {
-                    e.currentTarget.style.background = 'rgba(0,0,0,0.75)'
+                    e.currentTarget.style.transform = 'scale(1)'
+                    e.currentTarget.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)'
+                    const deleteBtn = e.currentTarget.querySelector(
+                      '[data-delete-btn]'
+                    ) as HTMLElement
+                    if (deleteBtn) deleteBtn.style.opacity = '0'
                   }}
                 >
-                  ✕
-                </button>
-              </div>
-            ))}
+                  <img
+                    src={img.src}
+                    alt={img.name}
+                    style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+                    draggable={false}
+                  />
+                  <button
+                    data-delete-btn
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      removeImage(img.id)
+                    }}
+                    style={{
+                      position: 'absolute',
+                      top: 2,
+                      right: 2,
+                      width: 18,
+                      height: 18,
+                      borderRadius: '50%',
+                      background: 'rgba(0,0,0,0.75)',
+                      border: '1px solid rgba(255,255,255,0.3)',
+                      color: '#fff',
+                      fontSize: 10,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      cursor: 'pointer',
+                      opacity: 0,
+                      transition: 'opacity 0.15s, background 0.15s',
+                      padding: 0,
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.background = 'rgba(220,38,38,0.9)'
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.background = 'rgba(0,0,0,0.75)'
+                    }}
+                  >
+                    ✕
+                  </button>
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
-      ) : (
-        <div style={{
-          margin: '0 10px 8px',
-          padding: '18px 10px',
-          borderRadius: 8,
-          border: '1px dashed var(--color-border)',
-          textAlign: 'center',
-          color: 'var(--color-text-muted)',
-          fontSize: 11,
-          lineHeight: 1.5,
-        }}>
-          Drop images on canvas<br/>or click upload
-        </div>
-      )}
+        ) : (
+          <div
+            style={{
+              margin: '0 10px 8px',
+              padding: '18px 10px',
+              borderRadius: 8,
+              border: '1px dashed var(--color-border)',
+              textAlign: 'center',
+              color: 'var(--color-text-muted)',
+              fontSize: 11,
+              lineHeight: 1.5,
+            }}
+          >
+            Drop images on canvas
+            <br />
+            or click upload
+          </div>
+        )}
       </div>
 
       {/* divider */}
@@ -394,27 +469,57 @@ export default function Sidebar({ onLowRes, width = 210 }: Props) {
             })
           }}
         >
-New profile
+          New profile
         </button>
 
-        <button className="ig-btn" style={{ width: '100%', justifyContent: 'flex-start' }} onClick={handleSaveProfile}>
-Save profile
+        <button
+          className="ig-btn"
+          style={{ width: '100%', justifyContent: 'flex-start' }}
+          onClick={handleSaveProfile}
+        >
+          Save profile
         </button>
 
-        <button className="ig-btn" style={{ width: '100%', justifyContent: 'flex-start' }} onClick={() => setShowProfiles(!showProfiles)}>
-{showProfiles ? 'Hide' : 'Load'} profiles
+        <button
+          className="ig-btn"
+          style={{ width: '100%', justifyContent: 'flex-start' }}
+          onClick={() => setShowProfiles(!showProfiles)}
+        >
+          {showProfiles ? 'Hide' : 'Load'} profiles
         </button>
 
         {showProfiles && (
-          <div style={{ maxHeight: 150, overflowY: 'auto', background: 'var(--color-bg-base)', borderRadius: 6, padding: 4 }}>
+          <div
+            style={{
+              maxHeight: 150,
+              overflowY: 'auto',
+              background: 'var(--color-bg-base)',
+              borderRadius: 6,
+              padding: 4,
+            }}
+          >
             {profiles.length === 0 ? (
-              <div style={{ padding: 8, fontSize: 10, color: 'var(--color-text-muted)', textAlign: 'center' }}>No profiles saved</div>
+              <div
+                style={{
+                  padding: 8,
+                  fontSize: 10,
+                  color: 'var(--color-text-muted)',
+                  textAlign: 'center',
+                }}
+              >
+                No profiles saved
+              </div>
             ) : (
               profiles.map((p) => (
                 <div key={p.id} style={{ display: 'flex', gap: 4, padding: 4 }}>
                   <button
                     className="ig-btn"
-                    style={{ flex: 1, justifyContent: 'flex-start', fontSize: 10, padding: '4px 6px' }}
+                    style={{
+                      flex: 1,
+                      justifyContent: 'flex-start',
+                      fontSize: 10,
+                      padding: '4px 6px',
+                    }}
                     onClick={() => handleLoadProfile(p.id!)}
                   >
                     {p.name}
@@ -434,17 +539,25 @@ Save profile
 
         <div style={{ height: 1, background: 'var(--color-border)', margin: '4px 0' }} />
 
-        <button className="ig-btn" style={{ width: '100%', justifyContent: 'flex-start' }} onClick={toggleGuides}>
-{showGuides ? 'Hide guides' : 'Show guides'}
+        <button
+          className="ig-btn"
+          style={{ width: '100%', justifyContent: 'flex-start' }}
+          onClick={toggleGuides}
+        >
+          {showGuides ? 'Hide guides' : 'Show guides'}
         </button>
 
         <button
           className={`ig-btn${blocks.length > 0 ? ' ig-btn-accent' : ''}`}
-          style={{ width: '100%', justifyContent: 'flex-start', opacity: blocks.length === 0 ? 0.4 : 1 }}
+          style={{
+            width: '100%',
+            justifyContent: 'flex-start',
+            opacity: blocks.length === 0 ? 0.4 : 1,
+          }}
           onClick={doExport}
           disabled={exporting || blocks.length === 0}
         >
-{exporting ? 'Exporting…' : 'Export ZIP'}
+          {exporting ? 'Exporting…' : 'Export ZIP'}
         </button>
 
         <button
@@ -462,12 +575,16 @@ Save profile
             })
           }}
         >
-Clear canvas
+          Clear canvas
         </button>
 
         <button
           className="ig-btn ig-btn-danger"
-          style={{ width: '100%', justifyContent: 'flex-start', opacity: images.length === 0 ? 0.4 : 1 }}
+          style={{
+            width: '100%',
+            justifyContent: 'flex-start',
+            opacity: images.length === 0 ? 0.4 : 1,
+          }}
           onClick={() => {
             setModal({
               type: 'confirm',
@@ -481,7 +598,7 @@ Clear canvas
           }}
           disabled={images.length === 0}
         >
-Clear images
+          Clear images
         </button>
       </div>
 
