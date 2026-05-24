@@ -212,6 +212,7 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | T110 | x | Mobile touch pan on image when drag locked - detect touch on img element, track delta, update transform.panX/panY on touchmove, no conflict with resize handles | B63, V46 |
 | T111 | x | Reorder toolbar buttons - drag lock second position (after sidebar toggle), most-used controls up front | B64, V47 |
 | T112 | x | Change sidebar toggle icon from ‹› arrows to hamburger ☰ (Menu icon from lucide-react) | B65, V47 |
+| T113 | x | Fix touch pan - replace React onTouch handlers with useEffect + native addEventListener({ passive: false }) to allow preventDefault | B66, V46 |
 
 ---
 
@@ -284,4 +285,5 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | B63 | 2026-05-24 | No way to pan image on mobile when drag locked. User can't adjust image position within block on touch devices | V46 |
 | B64 | 2026-05-24 | Drag button not prominent - should be second position (after sidebar toggle) for easy mobile access | V47 |
 | B65 | 2026-05-24 | Sidebar toggle uses arrows ‹›, should use hamburger icon ☰ for better recognition | V47 |
+| B66 | 2026-05-24 | Touch pan doesn't work on mobile - e.preventDefault() fails in touchMove because React synthetic events are passive by default, can't prevent scroll | V46 |
 

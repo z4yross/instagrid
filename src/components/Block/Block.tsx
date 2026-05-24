@@ -3,7 +3,7 @@ import { useStore } from "@/store/useStore";
 import { cellUploadNumber, COLS } from "@/utils/gridUtils";
 import { useDraggable } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
 import ResizeHandle from "./ResizeHandle";
 
 interface Props {
@@ -48,38 +48,54 @@ export default function Block({
 	const isMobile = window.innerWidth <= 768;
 	const isDragEnabled = isMobile ? !dragMode : true;
 
-	// T110: Touch pan on image when drag locked (mobile only)
+	// T110/T113: Touch pan on image when drag locked (mobile only)
+	const imgRef = useRef<HTMLImageElement | null>(null);
 	const touchStartRef = useRef<{ x: number; y: number } | null>(null);
 	const isPanEnabled = isMobile && dragMode; // Pan only when drag locked
 
-	function handleTouchStart(e: React.TouchEvent) {
-		if (!isPanEnabled || !isSelected) return;
-		const touch = e.touches[0];
-		touchStartRef.current = { x: touch.clientX, y: touch.clientY };
-	}
+	// T113: Use native addEventListener with passive:false to allow preventDefault
+	useEffect(() => {
+		const img = imgRef.current;
+		if (!img || !isPanEnabled || !isSelected) return;
 
-	function handleTouchMove(e: React.TouchEvent) {
-		if (!isPanEnabled || !isSelected || !touchStartRef.current) return;
-		e.preventDefault(); // Prevent scroll while panning
-		const touch = e.touches[0];
-		const deltaX = touch.clientX - touchStartRef.current.x;
-		const deltaY = touch.clientY - touchStartRef.current.y;
+		function handleTouchStart(e: TouchEvent) {
+			const touch = e.touches[0];
+			touchStartRef.current = { x: touch.clientX, y: touch.clientY };
+		}
 
-		// Update pan based on delta (scale by 0.5 for smoother control)
-		updateBlock(block.id, {
-			transform: {
-				...block.transform,
-				panX: block.transform.panX + deltaX * 0.5,
-				panY: block.transform.panY + deltaY * 0.5,
-			},
-		});
+		function handleTouchMove(e: TouchEvent) {
+			if (!touchStartRef.current) return;
+			e.preventDefault(); // Prevent scroll while panning
+			const touch = e.touches[0];
+			const deltaX = touch.clientX - touchStartRef.current.x;
+			const deltaY = touch.clientY - touchStartRef.current.y;
 
-		touchStartRef.current = { x: touch.clientX, y: touch.clientY };
-	}
+			// Update pan based on delta (scale by 0.5 for smoother control)
+			updateBlock(block.id, {
+				transform: {
+					...block.transform,
+					panX: block.transform.panX + deltaX * 0.5,
+					panY: block.transform.panY + deltaY * 0.5,
+				},
+			});
 
-	function handleTouchEnd() {
-		touchStartRef.current = null;
-	}
+			touchStartRef.current = { x: touch.clientX, y: touch.clientY };
+		}
+
+		function handleTouchEnd() {
+			touchStartRef.current = null;
+		}
+
+		img.addEventListener('touchstart', handleTouchStart);
+		img.addEventListener('touchmove', handleTouchMove, { passive: false });
+		img.addEventListener('touchend', handleTouchEnd);
+
+		return () => {
+			img.removeEventListener('touchstart', handleTouchStart);
+			img.removeEventListener('touchmove', handleTouchMove);
+			img.removeEventListener('touchend', handleTouchEnd);
+		};
+	}, [isPanEnabled, isSelected, block.id, block.transform, updateBlock]);
 
 	const style: React.CSSProperties = {
 		position: "absolute",
@@ -163,13 +179,11 @@ export default function Block({
 				/>
 				{!isPlaceholder && image && (
 					<img
+						ref={imgRef}
 						src={image.src}
 						alt=""
 						draggable={false}
 						style={buildImgStyle(block)}
-						onTouchStart={handleTouchStart}
-						onTouchMove={handleTouchMove}
-						onTouchEnd={handleTouchEnd}
 					/>
 				)}
 				{isPlaceholder && (
