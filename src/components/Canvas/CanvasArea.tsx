@@ -163,8 +163,9 @@ export default function CanvasArea({ onLowRes }: Props) {
 	}
 
 	function onDragStart(e: DragStartEvent) {
-		// T106: prevent drag when dragMode disabled (all platforms)
-		if (!dragMode) return;
+		// T106: mobile requires dragMode, desktop always draggable
+		const isMobile = window.innerWidth <= 768;
+		if (isMobile && !dragMode) return;
 
 		setActiveId(e.active.id as string);
 
@@ -185,8 +186,9 @@ export default function CanvasArea({ onLowRes }: Props) {
 	function onDragEnd(e: DragEndEvent) {
 		setActiveId(null);
 
-		// T106: also prevent drag processing when dragMode disabled
-		if (!dragMode) return;
+		// T106: mobile requires dragMode, desktop always draggable
+		const isMobile = window.innerWidth <= 768;
+		if (isMobile && !dragMode) return;
 
 		const { active, delta } = e;
 		const draggedBlock = blocks.find((b) => b.id === active.id) as

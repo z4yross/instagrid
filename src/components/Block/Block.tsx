@@ -40,6 +40,11 @@ export default function Block({
 
 	const isSelected = selectedBlockIds.includes(block.id);
 	const isPlaceholder = block.isPlaceholder === true;
+
+	// Desktop always draggable, mobile requires dragMode
+	const isMobile = window.innerWidth <= 768;
+	const isDragEnabled = isMobile ? dragMode : true;
+
 	const style: React.CSSProperties = {
 		position: "absolute",
 		left: isOverlay ? 0 : block.col * cellW,
@@ -109,7 +114,7 @@ export default function Block({
 					setSelectedBlocks([block.id]);
 				}
 			}}
-			{...(dragMode ? listeners : {})}
+			{...(isDragEnabled ? listeners : {})}
 			{...attributes}
 		>
 			<div style={{ position: "absolute", inset: 0, overflow: "hidden" }}>
