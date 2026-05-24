@@ -2,7 +2,7 @@ import { useRef, useState, useEffect } from 'react'
 import { useStore } from '@/store/useStore'
 import { loadImageFiles } from '@/utils/imageUtils'
 import { exportAllCells } from '@/utils/exportUtils'
-import { saveProfile, listProfiles, loadProfile, deleteProfile, type Profile } from '@/utils/storage'
+import { saveProfile, updateProfile, listProfiles, loadProfile, deleteProfile, type Profile } from '@/utils/storage'
 import type { ImageBlock } from '@/store/types'
 import Modal, { type ModalType } from '../Modal/Modal'
 
@@ -41,6 +41,8 @@ export default function Sidebar({ onLowRes }: Props) {
   const removeImage = useStore((s) => s.removeImage)
   const loadProfileState = useStore((s) => s.loadProfileState)
   const toggleGuides = useStore ((s) => s.toggleGuides)
+  const currentProfileId = useStore((s) => s.currentProfileId)
+  const setCurrentProfileId = useStore((s) => s.setCurrentProfileId)
 
   useEffect(() => {
     if (showProfiles) {
@@ -48,35 +50,77 @@ export default function Sidebar({ onLowRes }: Props) {
     }
   }, [showProfiles])
 
-  function handleSaveProfile() {
-    setModal({
-      type: 'prompt',
-      title: 'Save Profile',
-      message: 'Enter a name for this profile:',
-      placeholder: 'Profile name',
-      onConfirm: async (name) => {
-        setModal(null)
-        if (!name) return
-        try {
-          await saveProfile(name, blocks, gridRows)
+  // V27: Autosave profiles (debounced 2s)
+  useEffect(() => {
+    if (currentProfileId === null) return
+
+    const timeout = setTimeout(async () => {
+      try {
+        const profile = await loadProfile(currentProfileId)
+        if (profile) {
+          await updateProfile(currentProfileId, profile.name, blocks, gridRows)
+          console.log('Profile autosaved:', profile.name)
+        }
+      } catch (err) {
+        console.error('Autosave failed:', err)
+      }
+    }, 2000)
+
+    return () => clearTimeout(timeout)
+  }, [blocks, gridRows, currentProfileId])
+
+  async function handleSaveProfile() {
+    // V26: Smart save - update existing profile or prompt for new
+    if (currentProfileId !== null) {
+      // Update existing profile
+      try {
+        const profile = await loadProfile(currentProfileId)
+        if (profile) {
+          await updateProfile(currentProfileId, profile.name, blocks, gridRows)
           const updated = await listProfiles()
           setProfiles(updated)
-        } catch (err) {
-          setModal({
-            type: 'alert',
-            title: 'Error',
-            message: 'Failed to save profile. Check console for details.',
-            onConfirm: () => setModal(null),
-          })
         }
-      },
-    })
+      } catch (err) {
+        setModal({
+          type: 'alert',
+          title: 'Error',
+          message: 'Failed to update profile. Check console for details.',
+          onConfirm: () => setModal(null),
+        })
+      }
+    } else {
+      // Prompt for new profile name
+      setModal({
+        type: 'prompt',
+        title: 'Save Profile',
+        message: 'Enter a name for this profile:',
+        placeholder: 'Profile name',
+        onConfirm: async (name) => {
+          setModal(null)
+          if (!name) return
+          try {
+            const id = await saveProfile(name, blocks, gridRows)
+            setCurrentProfileId(id)
+            const updated = await listProfiles()
+            setProfiles(updated)
+          } catch (err) {
+            setModal({
+              type: 'alert',
+              title: 'Error',
+              message: 'Failed to save profile. Check console for details.',
+              onConfirm: () => setModal(null),
+            })
+          }
+        },
+      })
+    }
   }
 
   async function handleLoadProfile(id: number) {
     const profile = await loadProfile(id)
     if (profile) {
       loadProfileState(profile.blocks, profile.gridRows)
+      setCurrentProfileId(id)
       setShowProfiles(false)
     }
   }
@@ -341,6 +385,7 @@ export default function Sidebar({ onLowRes }: Props) {
               onConfirm: () => {
                 setModal(null)
                 clearCanvas()
+                setCurrentProfileId(null)
               },
             })
           }}

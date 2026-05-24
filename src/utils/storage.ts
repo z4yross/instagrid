@@ -217,7 +217,7 @@ export interface Profile {
   gridRows: number
 }
 
-export async function saveProfile(name: string, blocks: ImageBlock[], gridRows: number): Promise<void> {
+export async function saveProfile(name: string, blocks: ImageBlock[], gridRows: number): Promise<number> {
   try {
     const db = await openDB()
     const tx = db.transaction(PROFILES_STORE, 'readwrite')
@@ -228,12 +228,17 @@ export async function saveProfile(name: string, blocks: ImageBlock[], gridRows: 
       blocks,
       gridRows,
     }
-    store.add(profile)
+    const request = store.add(profile)
 
     return new Promise((resolve, reject) => {
-      tx.oncomplete = () => {
-        console.log('Profile saved successfully:', name)
-        resolve()
+      request.onsuccess = () => {
+        const id = request.result as number
+        console.log('Profile saved successfully:', name, 'ID:', id)
+        resolve(id)
+      }
+      request.onerror = () => {
+        console.error('Add request error:', request.error)
+        reject(request.error)
       }
       tx.onerror = () => {
         console.error('Transaction error:', tx.error)
@@ -242,6 +247,36 @@ export async function saveProfile(name: string, blocks: ImageBlock[], gridRows: 
     })
   } catch (err) {
     console.error('Failed to save profile:', err)
+    throw err
+  }
+}
+
+export async function updateProfile(id: number, name: string, blocks: ImageBlock[], gridRows: number): Promise<void> {
+  try {
+    const db = await openDB()
+    const tx = db.transaction(PROFILES_STORE, 'readwrite')
+    const store = tx.objectStore(PROFILES_STORE)
+    const profile: Profile = {
+      id,
+      name,
+      timestamp: Date.now(),
+      blocks,
+      gridRows,
+    }
+    store.put(profile)
+
+    return new Promise((resolve, reject) => {
+      tx.oncomplete = () => {
+        console.log('Profile updated successfully:', name)
+        resolve()
+      }
+      tx.onerror = () => {
+        console.error('Transaction error:', tx.error)
+        reject(tx.error)
+      }
+    })
+  } catch (err) {
+    console.error('Failed to update profile:', err)
     throw err
   }
 }

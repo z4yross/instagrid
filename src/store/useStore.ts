@@ -24,6 +24,7 @@ const useStore = create<AppState>()(
         imageCount: 0,
         gridCellW: 400,
         gridCellH: 533,
+        currentProfileId: null,
 
       addImage: (img: UploadedImage) =>
         set((s) => ({ images: [...s.images, img] })),
@@ -160,6 +161,9 @@ const useStore = create<AppState>()(
 
       loadProfileState: (blocks: ImageBlock[], gridRows: number) =>
         set({ blocks, gridRows, selectedBlockIds: [] }),
+
+      setCurrentProfileId: (id: number | null) =>
+        set({ currentProfileId: id }),
     }),
     {
       // V5: undo/redo only covers canvas mutations, not image uploads

@@ -44,6 +44,7 @@ export interface AppState {
   imageCount: number
   gridCellW: number
   gridCellH: number
+  currentProfileId: number | null
 
   addImage: (img: UploadedImage) => void
   addBlock: (block: ImageBlock) => void
@@ -62,4 +63,5 @@ export interface AppState {
   clearImages: () => void
   removeImage: (id: string) => void
   loadProfileState: (blocks: ImageBlock[], gridRows: number) => void
+  setCurrentProfileId: (id: number | null) => void
 }

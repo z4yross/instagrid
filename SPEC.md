@@ -156,8 +156,8 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | T74 | x | Add white backgrounds to strategic UI elements (buttons, panels, modals) for true B/W contrast, not just black everywhere | — |
 | T75 | x | Context-aware +/- zoom: if block selected zoom image (transform.zoom), else zoom grid (visibleRows) | V16,V20,V5 |
 | T76 | x | ColorPicker: reduce preset grid to 10 columns (fits 220px container exactly) | V25 |
-| T77 | . | Smart save: update existing profile without prompt, prompt only for new profile | V26, V15, V22 |
-| T78 | . | Autosave profiles: debounced 2s on blocks/gridRows change, track currentProfileId in store | V27, V15, V22 |
+| T77 | x | Smart save: update existing profile without prompt, prompt only for new profile | V26, V15, V22 |
+| T78 | x | Autosave profiles: debounced 2s on blocks/gridRows change, track currentProfileId in store | V27, V15, V22 |
 
 ---
 
