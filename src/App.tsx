@@ -3,6 +3,7 @@ import Sidebar from '@/components/Sidebar/Sidebar'
 import CanvasArea from '@/components/Canvas/CanvasArea'
 import TopToolbar from '@/components/Toolbar/TopToolbar'
 import RightToolbar from '@/components/Toolbar/RightToolbar'
+import MobileFAB from '@/components/MobileFAB/MobileFAB'
 import useKeyboard from '@/hooks/useKeyboard'
 import { useStore } from '@/store/useStore'
 
@@ -11,6 +12,7 @@ export default function App() {
 
   const [lowResWarning, setLowResWarning] = useState<string[]>([])
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768)
+  const [fabOverlayVisible, setFabOverlayVisible] = useState(false)
   const sidebarVisible = useStore((s) => s.sidebarVisible)
 
   useEffect(() => {
@@ -70,6 +72,12 @@ export default function App() {
               <Sidebar onLowRes={setLowResWarning} width="100%" />
             </div>
           </>
+
+          {/* Mobile FAB for actions */}
+          <MobileFAB
+            overlayVisible={fabOverlayVisible}
+            onToggle={setFabOverlayVisible}
+          />
         </div>
       </div>
     )
