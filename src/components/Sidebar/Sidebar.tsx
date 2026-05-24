@@ -23,7 +23,9 @@ interface ModalState {
   title?: string
   message: string
   onConfirm: (value?: string) => void
+  onCancel?: () => void
   placeholder?: string
+  options?: Array<{ label: string; value: string }>
 }
 
 export default function Sidebar({ onLowRes, width = 210 }: Props) {
@@ -187,19 +189,33 @@ export default function Sidebar({ onLowRes, width = 210 }: Props) {
     }
   }
 
-  async function doExport() {
+  function doExport() {
     if (exporting) return
-    setExporting(true)
-    try {
-      const isMobile = window.innerWidth <= 768
-      if (isMobile) {
-        await exportAllCellsIndividual(blocks, images, gridRows, gridCellW, gridCellH)
-      } else {
-        await exportAllCells(blocks, images, gridRows, gridCellW, gridCellH)
-      }
-    } finally {
-      setExporting(false)
-    }
+    // T140: Prompt user for export format
+    setModal({
+      type: 'choice',
+      title: 'Export Format',
+      message: 'Choose how to download your images:',
+      options: [
+        { label: 'ZIP Bundle', value: 'zip' },
+        { label: 'Individual JPGs', value: 'individual' },
+      ],
+      onConfirm: async (choice) => {
+        setModal(null)
+        if (!choice) return
+        setExporting(true)
+        try {
+          if (choice === 'zip') {
+            await exportAllCells(blocks, images, gridRows, gridCellW, gridCellH)
+          } else {
+            await exportAllCellsIndividual(blocks, images, gridRows, gridCellW, gridCellH)
+          }
+        } finally {
+          setExporting(false)
+        }
+      },
+      onCancel: () => setModal(null),
+    })
   }
 
   return (
@@ -608,8 +624,9 @@ export default function Sidebar({ onLowRes, width = 210 }: Props) {
           title={modal.title}
           message={modal.message}
           placeholder={modal.placeholder}
+          options={modal.options}
           onConfirm={modal.onConfirm}
-          onCancel={() => setModal(null)}
+          onCancel={modal.onCancel || (() => setModal(null))}
         />
       )}
     </aside>

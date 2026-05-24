@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react'
 
-export type ModalType = 'alert' | 'confirm' | 'prompt'
+export type ModalType = 'alert' | 'confirm' | 'prompt' | 'choice'
 
 interface Props {
   type: ModalType
@@ -11,6 +11,7 @@ interface Props {
   confirmText?: string
   cancelText?: string
   placeholder?: string
+  options?: Array<{ label: string; value: string }>
 }
 
 export default function Modal({
@@ -22,6 +23,7 @@ export default function Modal({
   confirmText = 'OK',
   cancelText = 'Cancel',
   placeholder = '',
+  options = [],
 }: Props) {
   const inputRef = useRef<HTMLInputElement>(null)
 
@@ -131,25 +133,50 @@ export default function Modal({
           style={{
             display: 'flex',
             gap: 8,
-            justifyContent: 'flex-end',
+            justifyContent: type === 'choice' ? 'center' : 'flex-end',
+            flexDirection: type === 'choice' ? 'column' : 'row',
           }}
         >
-          {type !== 'alert' && (
-            <button
-              className="ig-btn"
-              onClick={onCancel}
-              style={{ padding: '8px 16px', fontSize: 13 }}
-            >
-              {cancelText}
-            </button>
+          {type === 'choice' ? (
+            <>
+              {options.map((opt) => (
+                <button
+                  key={opt.value}
+                  className="ig-btn ig-btn-accent"
+                  onClick={() => onConfirm(opt.value)}
+                  style={{ padding: '12px 16px', fontSize: 14 }}
+                >
+                  {opt.label}
+                </button>
+              ))}
+              <button
+                className="ig-btn"
+                onClick={onCancel}
+                style={{ padding: '8px 16px', fontSize: 13, marginTop: 4 }}
+              >
+                {cancelText}
+              </button>
+            </>
+          ) : (
+            <>
+              {type !== 'alert' && (
+                <button
+                  className="ig-btn"
+                  onClick={onCancel}
+                  style={{ padding: '8px 16px', fontSize: 13 }}
+                >
+                  {cancelText}
+                </button>
+              )}
+              <button
+                className="ig-btn ig-btn-accent"
+                onClick={handleConfirm}
+                style={{ padding: '8px 16px', fontSize: 13 }}
+              >
+                {confirmText}
+              </button>
+            </>
           )}
-          <button
-            className="ig-btn ig-btn-accent"
-            onClick={handleConfirm}
-            style={{ padding: '8px 16px', fontSize: 13 }}
-          >
-            {confirmText}
-          </button>
         </div>
       </div>
     </div>
