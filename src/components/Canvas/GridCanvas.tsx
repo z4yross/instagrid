@@ -18,6 +18,7 @@ export default function GridCanvas({ cellW, cellH, children }: Props) {
 
   const gridW = cellW * COLS
   const totalHeight = cellH * gridRows
+  const isMobile = window.innerWidth <= 768
 
   return (
     <div
@@ -27,7 +28,7 @@ export default function GridCanvas({ cellW, cellH, children }: Props) {
         position: 'relative',
         width: gridW,
         height: totalHeight,
-        background: 'radial-gradient(ellipse at 30% 20%, rgba(124,58,237,0.02) 0%, transparent 60%), var(--color-bg-surface)',
+        background: isMobile ? '#000' : 'radial-gradient(ellipse at 30% 20%, rgba(124,58,237,0.02) 0%, transparent 60%), var(--color-bg-surface)',
         flexShrink: 0,
         margin: '0 auto',
         boxShadow: '0 0 0 1px var(--color-border)',
