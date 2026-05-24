@@ -48,12 +48,18 @@ export default function Block({
 	const isMobile = window.innerWidth <= 768;
 	const isDragEnabled = isMobile ? !dragMode : true;
 
-	// T110/T113: Touch pan on image when drag locked (mobile only)
+	// T110/T113/T114: Touch pan on image when drag locked (mobile only)
 	const imgRef = useRef<HTMLImageElement | null>(null);
 	const touchStartRef = useRef<{ x: number; y: number } | null>(null);
+	const blockRef = useRef(block);
 	const isPanEnabled = isMobile && dragMode; // Pan only when drag locked
 
-	// T113: Use native addEventListener with passive:false to allow preventDefault
+	// T114: Keep blockRef current without triggering effect re-run
+	useEffect(() => {
+		blockRef.current = block;
+	}, [block]);
+
+	// T113/T114: Use native addEventListener with passive:false, stable deps
 	useEffect(() => {
 		const img = imgRef.current;
 		if (!img || !isPanEnabled || !isSelected) return;
@@ -70,12 +76,13 @@ export default function Block({
 			const deltaX = touch.clientX - touchStartRef.current.x;
 			const deltaY = touch.clientY - touchStartRef.current.y;
 
-			// Update pan based on delta (scale by 0.5 for smoother control)
-			updateBlock(block.id, {
+			// T114: Access current block via ref to avoid deps
+			const currentBlock = blockRef.current;
+			updateBlock(currentBlock.id, {
 				transform: {
-					...block.transform,
-					panX: block.transform.panX + deltaX * 0.5,
-					panY: block.transform.panY + deltaY * 0.5,
+					...currentBlock.transform,
+					panX: currentBlock.transform.panX + deltaX * 0.5,
+					panY: currentBlock.transform.panY + deltaY * 0.5,
 				},
 			});
 
@@ -95,7 +102,7 @@ export default function Block({
 			img.removeEventListener('touchmove', handleTouchMove);
 			img.removeEventListener('touchend', handleTouchEnd);
 		};
-	}, [isPanEnabled, isSelected, block.id, block.transform, updateBlock]);
+	}, [isPanEnabled, isSelected, updateBlock]);
 
 	const style: React.CSSProperties = {
 		position: "absolute",
@@ -117,7 +124,7 @@ export default function Block({
 			: "none",
 		overflow: "hidden",
 		userSelect: "none",
-		touchAction: "none",
+		touchAction: (isDragEnabled || (isPanEnabled && isSelected)) ? "none" : "auto", // T115/T116: none for drag/pan, auto for scroll
 		transition: "opacity 0.08s linear, box-shadow 0.2s",
 		borderRadius: 2,
 		opacity: isDragging ? 0 : 1,

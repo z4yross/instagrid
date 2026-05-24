@@ -213,6 +213,9 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | T111 | x | Reorder toolbar buttons - drag lock second position (after sidebar toggle), most-used controls up front | B64, V47 |
 | T112 | x | Change sidebar toggle icon from ‹› arrows to hamburger ☰ (Menu icon from lucide-react) | B65, V47 |
 | T113 | x | Fix touch pan - replace React onTouch handlers with useEffect + native addEventListener({ passive: false }) to allow preventDefault | B66, V46 |
+| T114 | x | Fix pan gesture - remove block.transform from useEffect deps, use ref for stable updateBlock callback to prevent listener churn | B67, V46 |
+| T115 | x | Fix scroll on images - make touchAction conditional (none when drag enabled, auto when drag locked), allow scroll over unselected images | B68, V46 |
+| T116 | x | Fix pan on selected - touchAction="none" when (drag enabled OR (pan enabled AND selected)), else "auto" for scroll | B69, V46 |
 
 ---
 
@@ -286,4 +289,7 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | B64 | 2026-05-24 | Drag button not prominent - should be second position (after sidebar toggle) for easy mobile access | V47 |
 | B65 | 2026-05-24 | Sidebar toggle uses arrows ‹›, should use hamburger icon ☰ for better recognition | V47 |
 | B66 | 2026-05-24 | Touch pan doesn't work on mobile - e.preventDefault() fails in touchMove because React synthetic events are passive by default, can't prevent scroll | V46 |
+| B67 | 2026-05-24 | Pan still broken - useEffect deps include block.transform causing listeners detach/reattach on every pan update, breaks continuous gesture | V46 |
+| B68 | 2026-05-24 | Scroll blocked on images - touchAction: "none" always applied to block, prevents scroll even when image unselected and drag locked | V46 |
+| B69 | 2026-05-24 | Pan doesn't work - swipe on selected image causes scroll instead of pan. touchAction="auto" when drag locked allows browser scroll, need "none" when image selected for pan | V46 |
 
