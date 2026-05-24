@@ -81,6 +81,10 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | V39 | Touch mode exclusivity: when panMode or resizeMode active, block position dragging disabled. Only mode-specific interaction enabled. |
 | V40 | Touch mode button availability: pan/resize buttons only enabled when at least one block selected (modes require selection). |
 | V41 | Sidebar scroll containment: only thumbnail list section scrolls, header and action buttons stay fixed at top/bottom. |
+| V42 | Mobile drag mode toggle: drag disabled by default (prevents scroll conflict), single button enables position drag. Desktop always draggable. Replaces pan/resize modes. |
+| V43 | dragMode controls block position drag on all platforms (mobile and desktop). When dragMode=false, drag disabled globally. |
+| V44 | Drag mode button always enabled - mode is global toggle, not selection-dependent. |
+| V45 | Toolbar icons monochrome white - use Unicode symbols or icon library (react-icons, lucide-react). No color emojis. |
 
 ---
 
@@ -198,6 +202,11 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | T102 | x | Fix drag prevention - add check in onDragStart to prevent drag from starting when panMode/resizeMode active (not just onDragEnd) | B55, V39 |
 | T103 | x | Change pan icon to omnidirectional symbol: use ✥ (crosshair) or ⊕ or text "PAN" instead of ↔ | B56, V36 |
 | T104 | x | Fix sidebar scroll containment: remove overflowY from sidebar root, add flex layout with scrollable thumbnails section only | B57, V41 |
+| T105 | x | Replace pan/resize modes with drag mode: remove panMode/resizeMode from store, add dragMode (default false), replace 2 buttons with 1 drag button, invert onDragStart logic (allow drag only when dragMode true or desktop) | B58, V42 |
+| T106 | x | Fix drag prevention - remove platform check in onDragStart, prevent drag when !dragMode on all platforms (not just mobile) | B59, V43 |
+| T107 | x | Enable drag button always - remove disabled={disabled} from drag IconBtn, make it global toggle available anytime | B60, V44 |
+| T108 | x | Replace drag icon ⤡ with intuitive symbol: use ⊞ (window/drag handle) or ☰ (hamburger) or text "DRAG" | B61 |
+| T109 | . | Replace 🔒 emoji with white lock icon - install lucide-react, use Lock icon component for monochrome white rendering | B62, V45 |
 
 ---
 
@@ -262,4 +271,9 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | B55 | 2026-05-24 | Drag still works when pan mode active - blocks show drag overlay and animate, then snap back. Should prevent drag from starting | V39 |
 | B56 | 2026-05-24 | Pan icon ↔ counterintuitive - left-right arrow implies horizontal only, but pan is omnidirectional movement | V36 |
 | B57 | 2026-05-24 | Sidebar entire container scrolls - should only scroll thumbnail section, header/buttons should stay fixed | V41 |
+| B58 | 2026-05-24 | Pan/resize mode approach too complex, buggy, causes scroll conflicts. Better design: invert logic - default drag OFF, single drag toggle ON. Simpler, saves buttons | V42 |
+| B59 | 2026-05-24 | Drag works on desktop even when dragMode=false (button deactivated). dragMode should control drag globally, not just mobile | V43 |
+| B60 | 2026-05-24 | Drag button disabled when no block selected, but dragMode is global toggle - should be always enabled | V44 |
+| B61 | 2026-05-24 | Drag icon ⤡ not intuitive, hard to understand what button does | — |
+| B62 | 2026-05-24 | Drag icon 🔒 renders as color emoji, not white text. Inconsistent with other toolbar icons (↻ ＋ － ✕) | V45 |
 
