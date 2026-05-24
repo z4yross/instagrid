@@ -195,7 +195,7 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | T100 | x | Disable pan/resize buttons when no selection: add disabled={disabled} (selectedBlocks.length === 0) to pan/resize IconBtn | B53, V40 |
 | T101 | x | Change pan icon from ✋ to white symbol: use ⟷ or ↔ for consistency with other white text icons | B54, V36 |
 | T102 | x | Fix drag prevention - add check in onDragStart to prevent drag from starting when panMode/resizeMode active (not just onDragEnd) | B55, V39 |
-| T103 | . | Change pan icon to omnidirectional symbol: use ✥ (crosshair) or ⊕ or text "PAN" instead of ↔ | B56, V36 |
+| T103 | x | Change pan icon to omnidirectional symbol: use ✥ (crosshair) or ⊕ or text "PAN" instead of ↔ | B56, V36 |
 
 ---
 

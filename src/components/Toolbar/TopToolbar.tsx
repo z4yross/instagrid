@@ -81,7 +81,7 @@ export default function TopToolbar() {
       {/* Essential controls only - pan via touch gestures */}
       <IconBtn onClick={rotate} disabled={disabled} title="Rotate">↻</IconBtn>
 
-      <IconBtn onClick={togglePanMode} disabled={disabled} active={panMode} title="Pan mode">↔</IconBtn>
+      <IconBtn onClick={togglePanMode} disabled={disabled} active={panMode} title="Pan mode">✥</IconBtn>
       <IconBtn onClick={toggleResizeMode} disabled={disabled} active={resizeMode} title="Resize mode">⇱</IconBtn>
 
       <IconBtn onClick={() => adjustZoom(0.1)} disabled={disabled} title="Zoom in">＋</IconBtn>
