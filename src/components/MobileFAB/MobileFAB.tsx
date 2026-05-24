@@ -112,11 +112,9 @@ export default function MobileFAB({ visible, onToggle, overlayVisible, onPositio
         width: FAB_SIZE,
         height: FAB_SIZE,
         borderRadius: '50%',
-        background: overlayVisible
-          ? 'rgba(255, 255, 255, 0.5)'
-          : 'linear-gradient(135deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.25) 100%)',
+        background: 'rgba(255, 255, 255, 0.08)',
         backdropFilter: 'blur(8px)',
-        border: '1px solid rgba(255, 255, 255, 0.2)',
+        border: 'none',
         color: '#ffffff',
         fontSize: 28,
         fontWeight: 700,
