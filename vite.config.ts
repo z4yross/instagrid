@@ -4,7 +4,7 @@ import babel from '@rolldown/plugin-babel'
 import { resolve } from 'path'
 
 export default defineConfig({
-  base: '/insta-grid/',
+  base: '/instagrid/',
   plugins: [
     react(),
     babel({ presets: [reactCompilerPreset()] }),
