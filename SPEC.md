@@ -67,6 +67,7 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | V25 | UI components fit containers. Width/height calculations include padding + gaps. No overflow. |
 | V26 | Save profile button: if current profile exists update it directly. Prompt for name only if unsaved/new profile. |
 | V27 | Autosave: profiles save automatically on state change (debounced 2s). Manual save available. |
+| V28 | Responsive layout: sidebar collapsible, toolbar horizontal on top, touch-friendly controls. |
 
 ---
 
@@ -160,6 +161,8 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | T78 | x | Autosave profiles: debounced 2s on blocks/gridRows change, track currentProfileId in store | V27, V15, V22 |
 | T79 | x | Update drag overlay styling to match black/white theme (remove purple gradients) | — |
 | T80 | x | Add custom favicon (grid icon matching app logo) | — |
+| T81 | . | Make sidebar collapsible with toggle button | V28 |
+| T82 | . | Move right toolbar to horizontal top bar | V28 |
 
 ---
 
