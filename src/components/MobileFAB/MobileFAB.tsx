@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
+import { Layers } from 'lucide-react'
 
 interface Props {
   visible: boolean
@@ -132,7 +133,7 @@ export default function MobileFAB({ visible, onToggle, overlayVisible, onPositio
         justifyContent: 'center',
       }}
     >
-      ⊕
+      <Layers size={24} />
     </button>
   )
 }
