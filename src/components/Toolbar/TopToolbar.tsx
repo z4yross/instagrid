@@ -89,6 +89,13 @@ export default function TopToolbar({ onToggleFAB, fabVisible }: Props = {}) {
             <Lock size={18} />
           </IconBtn>
 
+          {/* T135: FAB toggle - third position for mobile UX */}
+          {isMobile && onToggleFAB && (
+            <IconBtn onClick={onToggleFAB} active={fabVisible} title="Toggle actions">
+              <Layers size={18} />
+            </IconBtn>
+          )}
+
           {/* Selection count badge */}
           {selectedBlocks.length > 1 && (
             <div
@@ -110,13 +117,6 @@ export default function TopToolbar({ onToggleFAB, fabVisible }: Props = {}) {
           <IconBtn onClick={rotate} disabled={disabled} title="Rotate">
             ↻
           </IconBtn>
-
-          {/* T131: FAB toggle button (replaces zoom +/- buttons) */}
-          {isMobile && onToggleFAB && (
-            <IconBtn onClick={onToggleFAB} active={fabVisible} title="Toggle actions">
-              <Layers size={18} />
-            </IconBtn>
-          )}
 
           <ColorPicker
             value={block?.barsColor ?? '#000000'}

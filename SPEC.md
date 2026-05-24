@@ -245,10 +245,10 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | T132   | x      | Fix FAB visibility - increase background opacity or add backdrop-filter blur, fix icon vertical centering (adjust line-height or flexbox alignment)                                                                         | B81                  |
 | T133   | x      | Mobile resize handles offset inward at right edge - when block.col + block.colSpan >= COLS, show right/corner handles but position them offset left to avoid back gesture zone                                              | B82, V60             |
 | T134   | x      | Split FAB/overlay visibility state - add fabVisible to App state, wire FAB toggle to fabVisible, wire FAB tap to overlayVisible. FAB renders only when fabVisible=true                                                      | B83, V61             |
-| T135   | .      | Reorder TopToolbar FAB button - move FAB toggle IconBtn to third position (after menu toggle and drag lock button, before selection count + rotate)                                                                         | B84, V62             |
+| T135   | x      | Reorder TopToolbar FAB button - move FAB toggle IconBtn to third position (after menu toggle and drag lock button, before selection count + rotate)                                                                         | B84, V62             |
 | T136   | .      | Use Layers icon in MobileFAB - import Layers from lucide-react, replace ⊕ text with <Layers size={24} /> for consistency with TopToolbar toggle button                                                                      | B85                  |
 | T137   | .      | Conditional export by platform - mobile downloads individual JPGs sequentially (loop exportSingleCell), desktop creates ZIP (current exportAllCells). Detect via window.innerWidth <= 768                                   | B86, V63             |
-| T138   | ~      | Strengthen commitlint rules - add explicit rules to commitlint.config.js: header-max-length [2, 'error', 99] for < 100 chars, body-max-line-length [2, 'error', 100]                                                        | B87, V64, C11        |
+| T138   | x      | Strengthen commitlint rules - add explicit rules to commitlint.config.js: header-max-length [2, 'error', 99] for < 100 chars, body-max-line-length [2, 'error', 100]                                                        | B87, V64, C11        |
 
 ---
 
