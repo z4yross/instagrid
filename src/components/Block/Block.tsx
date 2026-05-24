@@ -69,33 +69,68 @@ export default function Block({
 		const blockEl = blockTouchRef.current;
 		if (!blockEl || !isPanEnabled || !isSelected) return;
 
+		let initialPinchDistance: number | null = null;
+
+		function getDistance(touch1: Touch, touch2: Touch): number {
+			const dx = touch2.clientX - touch1.clientX;
+			const dy = touch2.clientY - touch1.clientY;
+			return Math.sqrt(dx * dx + dy * dy);
+		}
+
 		function handleTouchStart(e: TouchEvent) {
-			const touch = e.touches[0];
-			touchStartRef.current = { x: touch.clientX, y: touch.clientY };
+			if (e.touches.length === 2) {
+				// T124: Pinch zoom gesture
+				initialPinchDistance = getDistance(e.touches[0], e.touches[1]);
+				touchStartRef.current = null; // Disable pan during pinch
+			} else if (e.touches.length === 1) {
+				// Single touch pan
+				const touch = e.touches[0];
+				touchStartRef.current = { x: touch.clientX, y: touch.clientY };
+				initialPinchDistance = null;
+			}
 		}
 
 		function handleTouchMove(e: TouchEvent) {
-			if (!touchStartRef.current) return;
-			e.preventDefault(); // Prevent scroll while panning
-			const touch = e.touches[0];
-			const deltaX = touch.clientX - touchStartRef.current.x;
-			const deltaY = touch.clientY - touchStartRef.current.y;
+			e.preventDefault(); // Prevent scroll/browser zoom
 
-			// T114: Access current block via ref to avoid deps
-			const currentBlock = blockDataRef.current;
-			updateBlock(currentBlock.id, {
-				transform: {
-					...currentBlock.transform,
-					panX: currentBlock.transform.panX + deltaX * 0.5,
-					panY: currentBlock.transform.panY + deltaY * 0.5,
-				},
-			});
+			if (e.touches.length === 2 && initialPinchDistance !== null) {
+				// T124: Pinch zoom
+				const currentDistance = getDistance(e.touches[0], e.touches[1]);
+				const scale = currentDistance / initialPinchDistance;
+				const currentBlock = blockDataRef.current;
+				const newZoom = Math.max(0.1, Math.min(10, currentBlock.transform.zoom * scale));
 
-			touchStartRef.current = { x: touch.clientX, y: touch.clientY };
+				updateBlock(currentBlock.id, {
+					transform: {
+						...currentBlock.transform,
+						zoom: newZoom,
+					},
+				});
+
+				initialPinchDistance = currentDistance; // Update for next delta
+			} else if (e.touches.length === 1 && touchStartRef.current) {
+				// Single touch pan
+				const touch = e.touches[0];
+				const deltaX = touch.clientX - touchStartRef.current.x;
+				const deltaY = touch.clientY - touchStartRef.current.y;
+
+				// T114: Access current block via ref to avoid deps
+				const currentBlock = blockDataRef.current;
+				updateBlock(currentBlock.id, {
+					transform: {
+						...currentBlock.transform,
+						panX: currentBlock.transform.panX + deltaX * 0.5,
+						panY: currentBlock.transform.panY + deltaY * 0.5,
+					},
+				});
+
+				touchStartRef.current = { x: touch.clientX, y: touch.clientY };
+			}
 		}
 
 		function handleTouchEnd() {
 			touchStartRef.current = null;
+			initialPinchDistance = null;
 		}
 
 		blockEl.addEventListener('touchstart', handleTouchStart);
