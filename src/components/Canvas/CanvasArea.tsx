@@ -164,6 +164,9 @@ export default function CanvasArea({ onLowRes }: Props) {
 	}
 
 	function onDragStart(e: DragStartEvent) {
+		// T102: prevent drag from starting when pan/resize mode active
+		if (panMode || resizeMode) return;
+
 		setActiveId(e.active.id as string);
 
 		if (

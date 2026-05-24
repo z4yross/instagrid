@@ -194,6 +194,8 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | T99 | x | Disable block drag when pan/resize mode active: modify CanvasArea onDragStart/onDragEnd to skip if panMode or resizeMode enabled | B52, V39 |
 | T100 | x | Disable pan/resize buttons when no selection: add disabled={disabled} (selectedBlocks.length === 0) to pan/resize IconBtn | B53, V40 |
 | T101 | x | Change pan icon from ✋ to white symbol: use ⟷ or ↔ for consistency with other white text icons | B54, V36 |
+| T102 | x | Fix drag prevention - add check in onDragStart to prevent drag from starting when panMode/resizeMode active (not just onDragEnd) | B55, V39 |
+| T103 | . | Change pan icon to omnidirectional symbol: use ✥ (crosshair) or ⊕ or text "PAN" instead of ↔ | B56, V36 |
 
 ---
 
@@ -255,4 +257,6 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | B52 | 2026-05-24 | Pan/resize modes don't disable block movement - blocks still draggable for position when modes active, should only allow mode-specific interaction | V39 |
 | B53 | 2026-05-24 | Pan/resize mode buttons always enabled - should be disabled when no block selected (modes only work with selected blocks) | V40 |
 | B54 | 2026-05-24 | Pan icon ✋ renders as color emoji not white text - inconsistent with other toolbar icons | V36 |
+| B55 | 2026-05-24 | Drag still works when pan mode active - blocks show drag overlay and animate, then snap back. Should prevent drag from starting | V39 |
+| B56 | 2026-05-24 | Pan icon ↔ counterintuitive - left-right arrow implies horizontal only, but pan is omnidirectional movement | V36 |
 
