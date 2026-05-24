@@ -377,6 +377,7 @@ export default function CanvasArea({ onLowRes }: Props) {
 								block={block}
 								cellW={cellW}
 								cellH={cellH}
+								dragMode={dragMode}
 								isDragging={
 									isGroupDragging
 										? selectedBlockIds.includes(block.id)

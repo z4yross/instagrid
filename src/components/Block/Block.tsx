@@ -11,6 +11,7 @@ interface Props {
 	cellH: number;
 	isDragging?: boolean;
 	isOverlay?: boolean;
+	dragMode?: boolean;
 }
 
 export default function Block({
@@ -19,6 +20,7 @@ export default function Block({
 	cellH,
 	isDragging,
 	isOverlay = false,
+	dragMode = true,
 }: Props) {
 	const { attributes, listeners, setNodeRef, transform } = useDraggable({
 		id: block.id,
@@ -107,7 +109,7 @@ export default function Block({
 					setSelectedBlocks([block.id]);
 				}
 			}}
-			{...listeners}
+			{...(dragMode ? listeners : {})}
 			{...attributes}
 		>
 			<div style={{ position: "absolute", inset: 0, overflow: "hidden" }}>
