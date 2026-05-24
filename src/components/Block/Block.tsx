@@ -3,7 +3,7 @@ import { useStore } from "@/store/useStore";
 import { cellUploadNumber, COLS } from "@/utils/gridUtils";
 import { useDraggable } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useCallback } from "react";
 import ResizeHandle from "./ResizeHandle";
 
 interface Props {
@@ -48,21 +48,27 @@ export default function Block({
 	const isMobile = window.innerWidth <= 768;
 	const isDragEnabled = isMobile ? !dragMode : true;
 
-	// T110/T113/T114: Touch pan on image when drag locked (mobile only)
-	const imgRef = useRef<HTMLImageElement | null>(null);
+	// T110/T113/T114/T118: Touch pan on block when drag locked (mobile only)
+	const blockTouchRef = useRef<HTMLDivElement | null>(null);
 	const touchStartRef = useRef<{ x: number; y: number } | null>(null);
-	const blockRef = useRef(block);
+	const blockDataRef = useRef(block);
 	const isPanEnabled = isMobile && dragMode; // Pan only when drag locked
 
-	// T114: Keep blockRef current without triggering effect re-run
+	// T118: Combine refs for DndKit and touch pan
+	const setRefs = useCallback((node: HTMLDivElement | null) => {
+		setNodeRef(node);
+		blockTouchRef.current = node;
+	}, [setNodeRef]);
+
+	// T114: Keep blockDataRef current without triggering effect re-run
 	useEffect(() => {
-		blockRef.current = block;
+		blockDataRef.current = block;
 	}, [block]);
 
-	// T113/T114: Use native addEventListener with passive:false, stable deps
+	// T113/T114/T118: Use native addEventListener on block root (not just img)
 	useEffect(() => {
-		const img = imgRef.current;
-		if (!img || !isPanEnabled || !isSelected) return;
+		const blockEl = blockTouchRef.current;
+		if (!blockEl || !isPanEnabled || !isSelected) return;
 
 		function handleTouchStart(e: TouchEvent) {
 			const touch = e.touches[0];
@@ -77,7 +83,7 @@ export default function Block({
 			const deltaY = touch.clientY - touchStartRef.current.y;
 
 			// T114: Access current block via ref to avoid deps
-			const currentBlock = blockRef.current;
+			const currentBlock = blockDataRef.current;
 			updateBlock(currentBlock.id, {
 				transform: {
 					...currentBlock.transform,
@@ -93,14 +99,14 @@ export default function Block({
 			touchStartRef.current = null;
 		}
 
-		img.addEventListener('touchstart', handleTouchStart);
-		img.addEventListener('touchmove', handleTouchMove, { passive: false });
-		img.addEventListener('touchend', handleTouchEnd);
+		blockEl.addEventListener('touchstart', handleTouchStart);
+		blockEl.addEventListener('touchmove', handleTouchMove, { passive: false });
+		blockEl.addEventListener('touchend', handleTouchEnd);
 
 		return () => {
-			img.removeEventListener('touchstart', handleTouchStart);
-			img.removeEventListener('touchmove', handleTouchMove);
-			img.removeEventListener('touchend', handleTouchEnd);
+			blockEl.removeEventListener('touchstart', handleTouchStart);
+			blockEl.removeEventListener('touchmove', handleTouchMove);
+			blockEl.removeEventListener('touchend', handleTouchEnd);
 		};
 	}, [isPanEnabled, isSelected, updateBlock]);
 
@@ -132,7 +138,7 @@ export default function Block({
 
 	return (
 		<div
-			ref={setNodeRef}
+			ref={setRefs}
 			style={style}
 			onClick={(e) => {
 				e.stopPropagation();
@@ -169,8 +175,12 @@ export default function Block({
 						}
 					}
 				} else {
-					// Regular click: select single
-					setSelectedBlocks([block.id]);
+					// T117: Regular click - toggle if already sole selection (mobile deselect)
+					if (isSelected && selectedBlockIds.length === 1) {
+						setSelectedBlocks([]);
+					} else {
+						setSelectedBlocks([block.id]);
+					}
 				}
 			}}
 			{...(isDragEnabled ? listeners : {})}
@@ -186,7 +196,6 @@ export default function Block({
 				/>
 				{!isPlaceholder && image && (
 					<img
-						ref={imgRef}
 						src={image.src}
 						alt=""
 						draggable={false}

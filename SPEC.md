@@ -87,6 +87,7 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | V45 | Toolbar icons monochrome white - use Unicode symbols or icon library (react-icons, lucide-react). No color emojis. |
 | V46 | Mobile image pan via touch when drag locked - swipe on image adjusts transform.panX/panY. No conflict with resize. |
 | V47 | Toolbar button order: sidebar toggle first, drag lock second (most-used controls up front). |
+| V48 | Mobile deselect: regular click on selected block (when only selection) deselects it, restoring scroll. |
 
 ---
 
@@ -216,6 +217,8 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | T114 | x | Fix pan gesture - remove block.transform from useEffect deps, use ref for stable updateBlock callback to prevent listener churn | B67, V46 |
 | T115 | x | Fix scroll on images - make touchAction conditional (none when drag enabled, auto when drag locked), allow scroll over unselected images | B68, V46 |
 | T116 | x | Fix pan on selected - touchAction="none" when (drag enabled OR (pan enabled AND selected)), else "auto" for scroll | B69, V46 |
+| T117 | x | Mobile tap to deselect - regular click on already-selected single block deselects (setSelectedBlocks([])), restores scroll | B70, V48 |
+| T118 | x | Debug + fix pan - add console logs to verify listeners attach/fire, try attaching to block root instead of just img element to capture bars area | B71, V46 |
 
 ---
 
@@ -292,4 +295,6 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | B67 | 2026-05-24 | Pan still broken - useEffect deps include block.transform causing listeners detach/reattach on every pan update, breaks continuous gesture | V46 |
 | B68 | 2026-05-24 | Scroll blocked on images - touchAction: "none" always applied to block, prevents scroll even when image unselected and drag locked | V46 |
 | B69 | 2026-05-24 | Pan doesn't work - swipe on selected image causes scroll instead of pan. touchAction="auto" when drag locked allows browser scroll, need "none" when image selected for pan | V46 |
+| B70 | 2026-05-24 | Can't deselect on mobile - once image selected (touchAction="none"), stuck without scroll. Hard to click empty space on mobile to deselect | V48 |
+| B71 | 2026-05-24 | Pan STILL not working - critical core feature. Touch listeners might not attach/fire, or only work on img not bars area | V46 |
 
