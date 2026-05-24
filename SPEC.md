@@ -275,7 +275,7 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | T150   | x      | Remove favicon black background - edit /public/favicon.svg, change black rect fill to transparent. Keep white grid squares                                                                                                  | B102, V73            |
 | T151   | x      | Match logo button styling - replace custom button with IconBtn component or apply same styles (48x48, gradient bg, hover effects) to logo button in TopToolbar                                                              | B103, V74            |
 | T152   | x      | Add close arrow when sidebar open - IconBtn with left arrow (← or ChevronLeft) on right side of TopToolbar when sidebar visible on mobile. Calls toggleSidebar                                                              | V75                  |
-| T153   | .      | Sidebar auto-close on thumbnail/placeholder action - call toggleSidebar after drag thumbnail to canvas and after add placeholder button click on mobile                                                                     | V76                  |
+| T153   | x      | Sidebar auto-close on thumbnail/placeholder action - call toggleSidebar after drag thumbnail to canvas and after add placeholder button click on mobile                                                                     | V76                  |
 
 ---
 

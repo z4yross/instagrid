@@ -53,6 +53,7 @@ export default function Sidebar({ onLowRes, width = 210 }: Props) {
   const toggleGuides = useStore((s) => s.toggleGuides)
   const currentProfileId = useStore((s) => s.currentProfileId)
   const setCurrentProfileId = useStore((s) => s.setCurrentProfileId)
+  const toggleSidebar = useStore((s) => s.toggleSidebar)
 
   useEffect(() => {
     if (showProfiles) {
@@ -292,7 +293,13 @@ export default function Sidebar({ onLowRes, width = 210 }: Props) {
         <button
           className="ig-btn ig-btn-filled"
           style={{ width: '100%', padding: '7px', fontSize: 11 }}
-          onClick={addPlaceholder}
+          onClick={() => {
+            addPlaceholder()
+            // V76: Close sidebar on mobile after placeholder action
+            if (window.innerWidth <= 768) {
+              toggleSidebar()
+            }
+          }}
         >
           ＋ Add placeholder
         </button>
@@ -373,6 +380,10 @@ export default function Sidebar({ onLowRes, width = 210 }: Props) {
                       transform: { panX: 0, panY: 0, zoom: 1, rotation: 0 },
                     }
                     addBlock(block)
+                    // V76: Close sidebar on mobile after thumbnail action
+                    if (window.innerWidth <= 768) {
+                      toggleSidebar()
+                    }
                   }}
                   style={{
                     position: 'relative',
