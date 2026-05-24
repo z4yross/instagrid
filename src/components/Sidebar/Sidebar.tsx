@@ -187,6 +187,7 @@ export default function Sidebar({ onLowRes, width = 210 }: Props) {
   return (
     <aside style={{
       width,
+      height: '100%',
       flexShrink: 0,
       borderRight: 'none',
       display: 'flex',
