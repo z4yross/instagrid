@@ -191,7 +191,7 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | T96 | x | Mobile pan mode toggle: add toolbar button to enable/disable pan mode (touch drag modifies transform.panX/Y on selected block) | V37 |
 | T97 | x | Mobile resize mode toggle: add toolbar button to enable/disable resize mode (touch drag on block edges changes colSpan/rowSpan) | V37 |
 | T98 | x | Mobile sidebar smooth animation: keep sidebar mounted, add CSS transform transition (translateX) for fast slide in/out under 300ms | B51, V38 |
-| T99 | . | Disable block drag when pan/resize mode active: modify CanvasArea onDragStart/onDragEnd to skip if panMode or resizeMode enabled | B52, V39 |
+| T99 | x | Disable block drag when pan/resize mode active: modify CanvasArea onDragStart/onDragEnd to skip if panMode or resizeMode enabled | B52, V39 |
 | T100 | . | Disable pan/resize buttons when no selection: add disabled={disabled} (selectedBlocks.length === 0) to pan/resize IconBtn | B53, V40 |
 | T101 | . | Change pan icon from ✋ to white symbol: use ⟷ or ↔ for consistency with other white text icons | B54, V36 |
 
