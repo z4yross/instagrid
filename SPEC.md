@@ -68,6 +68,7 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | V26 | Save profile button: if current profile exists update it directly. Prompt for name only if unsaved/new profile. |
 | V27 | Autosave: profiles save automatically on state change (debounced 2s). Manual save available. |
 | V28 | Responsive layout: desktop (>768px) = sidebar left + toolbar right; mobile (≤768px) = sidebar fullscreen overlay + toolbar top. Sidebar toggleable on both. |
+| V29 | Mobile toolbar: no logo, essential controls only, high-contrast buttons, no overflow. |
 
 ---
 
@@ -163,6 +164,7 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | T80 | x | Add custom favicon (grid icon matching app logo) | — |
 | T81 | x | Sidebar responsive: desktop (left, toggleable), mobile (fullscreen overlay, hidden by default) | V28 |
 | T82 | x | Toolbar responsive: desktop (right vertical), mobile (top horizontal) | V28 |
+| T83 | . | Fix mobile TopToolbar: remove logo, show only essential buttons, increase button size/contrast | V29, B40 |
 
 ---
 
@@ -209,4 +211,5 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | B37 | 2026-05-23 | Export multi-cell X offset wrong (zoom/panY correct, panX offset wrong) | cellOffsetX uses CROP_W (1010) but each export cell is EXPORT_W (1080) wide. Cells overlap/gap incorrectly → T70 |
 | B38 | 2026-05-23 | Multi-row block export: panY misaligned | When block spans multiple rows, Y offset breaks. May need image scaling to use crop area dimensions not full canvas. T70 fix for X may have revealed Y coordinate system inconsistency → T71 |
 | B39 | 2026-05-23 | ColorPicker preset grid overflow: 11 cols * (16px + 4px gap) + 24px padding = 240px, container only 220px | V25, T76 |
+| B40 | 2026-05-24 | Mobile TopToolbar buttons invisible/lost. Logo wastes space, too many buttons overflow, low contrast | V29, T83 |
 
