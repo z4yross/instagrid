@@ -165,8 +165,8 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | T81 | x | Sidebar responsive: desktop (left, toggleable), mobile (fullscreen overlay, hidden by default) | V28 |
 | T82 | x | Toolbar responsive: desktop (right vertical), mobile (top horizontal) | V28 |
 | T83 | x | Fix mobile TopToolbar: remove logo, show only essential buttons, increase button size/contrast | V29, B40 |
-| T84 | . | Mobile sidebar full width + auto-expand grid rows to fill viewport height | B41 |
-| T85 | . | Replace +/- zoom buttons with clear labels or icons (e.g. "Fit" / "Fill") to avoid confusion | B42 |
+| T84 | x | Mobile sidebar full width + auto-expand grid rows to fill viewport height | B41 |
+| T85 | x | Replace +/- zoom buttons with clear labels or icons (e.g. "Fit" / "Fill") to avoid confusion | B42 |
 
 ---
 

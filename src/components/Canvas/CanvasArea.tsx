@@ -282,7 +282,7 @@ export default function CanvasArea({ onLowRes }: Props) {
 						opacity: visibleRows >= 10 ? 0.5 : 1,
 					}}
 				>
-					−
+					Fit
 				</button>
 				<span
 					style={{
@@ -312,7 +312,7 @@ export default function CanvasArea({ onLowRes }: Props) {
 						opacity: visibleRows <= 1 ? 0.5 : 1,
 					}}
 				>
-					+
+					Fill
 				</button>
 				<button
 					onClick={(e) => {
