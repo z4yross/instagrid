@@ -33,8 +33,7 @@ export default function CanvasArea({ onLowRes }: Props) {
 	const setSelectedBlocks = useStore((s) => s.setSelectedBlocks);
 	const setVisibleRows = useStore((s) => s.setVisibleRows);
 	const setGridCellSize = useStore((s) => s.setGridCellSize);
-	const panMode = useStore((s) => s.panMode);
-	const resizeMode = useStore((s) => s.resizeMode);
+	const dragMode = useStore((s) => s.dragMode);
 
 	const copiedBlocksRef = useRef<ImageBlock[]>([]);
 
@@ -164,8 +163,8 @@ export default function CanvasArea({ onLowRes }: Props) {
 	}
 
 	function onDragStart(e: DragStartEvent) {
-		// T102: prevent drag from starting when pan/resize mode active
-		if (panMode || resizeMode) return;
+		// T106: prevent drag when dragMode disabled (all platforms)
+		if (!dragMode) return;
 
 		setActiveId(e.active.id as string);
 
@@ -185,9 +184,6 @@ export default function CanvasArea({ onLowRes }: Props) {
 
 	function onDragEnd(e: DragEndEvent) {
 		setActiveId(null);
-
-		// T99: disable position drag when pan/resize mode active
-		if (panMode || resizeMode) return;
 
 		const { active, delta } = e;
 		const draggedBlock = blocks.find((b) => b.id === active.id) as
