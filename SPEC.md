@@ -159,6 +159,7 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | T77 | x | Smart save: update existing profile without prompt, prompt only for new profile | V26, V15, V22 |
 | T78 | x | Autosave profiles: debounced 2s on blocks/gridRows change, track currentProfileId in store | V27, V15, V22 |
 | T79 | x | Update drag overlay styling to match black/white theme (remove purple gradients) | — |
+| T80 | . | Add custom favicon (grid icon matching app logo) | — |
 
 ---
 
