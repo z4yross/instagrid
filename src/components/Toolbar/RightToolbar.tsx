@@ -1,5 +1,6 @@
 import { useStore } from '@/store/useStore'
 import ColorPicker from '@/components/ColorPicker/ColorPicker'
+import { Lock } from 'lucide-react'
 
 export default function RightToolbar() {
   const selectedBlockIds = useStore((s) => s.selectedBlockIds)
@@ -7,6 +8,8 @@ export default function RightToolbar() {
   const updateBlock = useStore((s) => s.updateBlock)
   const removeBlocks = useStore((s) => s.removeBlocks)
   const setSelectedBlocks = useStore((s) => s.setSelectedBlocks)
+  const dragMode = useStore((s) => s.dragMode)
+  const toggleDragMode = useStore((s) => s.toggleDragMode)
 
   const selectedBlocks = blocks.filter((b) => selectedBlockIds.includes(b.id))
   const block = selectedBlocks.length === 1 ? selectedBlocks[0] : null
@@ -93,6 +96,12 @@ export default function RightToolbar() {
         </div>
       )}
 
+      <IconBtn onClick={toggleDragMode} active={dragMode} title="Drag mode">
+        <Lock size={18} />
+      </IconBtn>
+
+      <div style={{ height: 1, background: 'var(--color-border)', margin: '4px 0' }} />
+
       <IconBtn onClick={rotate} disabled={disabled} title="Rotate 90°">↻</IconBtn>
       <IconBtn onClick={flipHorizontal} disabled={disabled} title="Flip horizontal">⇄</IconBtn>
       <IconBtn onClick={flipVertical} disabled={disabled} title="Flip vertical">⇅</IconBtn>
@@ -126,12 +135,13 @@ export default function RightToolbar() {
   )
 }
 
-function IconBtn({ children, onClick, disabled, title, danger }: {
+function IconBtn({ children, onClick, disabled, title, danger, active }: {
   children: React.ReactNode
   onClick?: () => void
   disabled?: boolean
   title?: string
   danger?: boolean
+  active?: boolean
 }) {
   return (
     <button
@@ -153,7 +163,11 @@ function IconBtn({ children, onClick, disabled, title, danger }: {
         cursor: disabled ? 'not-allowed' : 'pointer',
         transition: 'all 0.2s',
         opacity: disabled ? 0.4 : 1,
-        boxShadow: danger ? 'none' : '0 4px 8px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.15)',
+        boxShadow: active
+          ? '0 0 20px var(--color-accent-glow), 0 4px 8px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.15)'
+          : danger
+          ? 'none'
+          : '0 4px 8px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.15)',
       }}
       onMouseEnter={(e) => {
         if (!disabled) {
@@ -163,7 +177,9 @@ function IconBtn({ children, onClick, disabled, title, danger }: {
             e.currentTarget.style.color = '#ff6666'
           } else {
             e.currentTarget.style.background = 'linear-gradient(135deg, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0.1) 100%)'
-            e.currentTarget.style.boxShadow = '0 6px 12px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.2)'
+            e.currentTarget.style.boxShadow = active
+              ? '0 0 24px var(--color-accent-glow), 0 6px 12px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.2)'
+              : '0 6px 12px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.2)'
           }
         }
       }}
@@ -175,7 +191,9 @@ function IconBtn({ children, onClick, disabled, title, danger }: {
             e.currentTarget.style.color = '#ff4444'
           } else {
             e.currentTarget.style.background = 'linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.06) 100%)'
-            e.currentTarget.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.15)'
+            e.currentTarget.style.boxShadow = active
+              ? '0 0 20px var(--color-accent-glow), 0 4px 8px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.15)'
+              : '0 4px 8px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.15)'
           }
         }
       }}
