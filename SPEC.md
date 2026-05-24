@@ -91,6 +91,9 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | V49 | Drag lock universal - dragMode controls block position drag on all platforms (mobile and desktop), not platform-specific. |
 | V50 | Mobile resize handles larger touch targets (min 44px), prevent pan/drag interference via event stopPropagation. |
 | V51 | Toolbar button active states visually distinct - active buttons show lighter background + white glow, consistent styling across mobile/desktop toolbars. |
+| V52 | Mobile toolbar adaptive - when sidebar open, hide all control buttons and show only logo/branding. Full controls when sidebar closed. |
+| V53 | Mobile pinch zoom gestures (2-finger pinch) zoom selected block image (transform.zoom) when drag locked, not grid or browser zoom. |
+| V54 | Resize handle touch events isolated - touch on resize handle never triggers pan, only resize. Event propagation stopped. |
 
 ---
 
@@ -226,6 +229,9 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | T120 | x | Make drag lock universal - remove platform checks, dragMode controls drag on all platforms. Update isDragEnabled, touchAction, pan logic | V49 |
 | T121 | x | Increase resize handle size on mobile (44px min touch target), add stopPropagation to touch/pointer events to prevent pan/drag interference | B73, V50 |
 | T122 | x | Fix RightToolbar IconBtn active state styling - match TopToolbar pattern: rgba white background + white glow when active, remove CSS var dependency | B74, V51 |
+| T123 | . | Hide TopToolbar buttons when sidebar open on mobile - conditional render based on sidebarVisible, show logo only when sidebar visible | B75, V52 |
+| T124 | . | Mobile pinch zoom gesture support - detect 2-finger touch on selected block when drag locked, track pinch distance delta, adjust block transform.zoom (pinch out = zoom in, pinch in = zoom out) | B76, V53 |
+| T125 | . | Debug resize handle pan interference - verify stopPropagation order, check if pan listeners attach to resize handle element or parent, ensure resize touch events don't bubble to pan handlers | B77, V54 |
 
 ---
 
@@ -307,4 +313,7 @@ Build browser-only web app: plan Instagram feed by arranging image blocks on 3-c
 | B72 | 2026-05-24 | Sidebar toggle button no visual feedback - doesn't show active state (glow) when sidebar open | V47 |
 | B73 | 2026-05-24 | Resize handles too small on mobile - very hard to grab without triggering pan or drag gestures. Handles need larger touch targets and gesture priority | V50 |
 | B74 | 2026-05-24 | Lock button active state not visible on desktop RightToolbar - button works but no visual feedback when dragMode active. IconBtn active styling used CSS var --color-accent-glow (may not exist) and background didn't change | V51 |
+| B75 | 2026-05-24 | Mobile toolbar cluttered when sidebar open - buttons overlap/conflict with sidebar fullscreen overlay, should show only logo when sidebar visible | V52 |
+| B76 | 2026-05-24 | Mobile pinch zoom gestures don't work - 2-finger pinch does browser zoom instead of grid zoom (visibleRows adjustment) | V53 |
+| B77 | 2026-05-24 | Pan still triggers when touching resize handle on mobile - T121 stopPropagation not sufficient, pan listeners still fire on resize handle interaction | V54 |
 
