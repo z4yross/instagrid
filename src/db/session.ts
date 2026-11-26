@@ -1,5 +1,6 @@
 import { clampRecipe, isSymmetryRecipe } from '@/core/symmetry'
 import type { SymmetryRecipe } from '@/core/symmetry'
+import { isValidLayout } from '@/core/grid'
 import type { Block, Size } from '@/core/types'
 import { newId } from '@/store/id'
 import { useLibrary } from '@/store/library'
@@ -16,7 +17,9 @@ import type { MigrationResult } from './migrateV1'
  * library and the project list (SPEC V15, V16, V18).
  */
 
-const SAVE_DELAY_MS = 600
+const SAVE_DELAY_MS = 300
+/** Where a change that has not reached the database yet is parked when the page goes away. */
+export const UNSAVED_KEY = 'instagrid.unsaved'
 const ACCEPTED_TYPES = ['image/jpeg', 'image/png', 'image/webp']
 export const DEFAULT_PROJECT_NAME = 'Untitled grid'
 
@@ -24,6 +27,10 @@ const createdAt = new Map<string, number>()
 let saveTimer: ReturnType<typeof setTimeout> | null = null
 let pendingSave: Promise<void> = Promise.resolve()
 let unsubscribe: (() => void) | null = null
+/** A change is waiting for, or in the middle of, its save. */
+let dirty = false
+type RescueStorage = Pick<Storage, 'getItem' | 'setItem' | 'removeItem'>
+let rescueStorage: RescueStorage | null = null
 
 const toLibraryImage = (image: StoredImage): LibraryImage => ({
   id: image.id,
@@ -63,7 +70,14 @@ async function writeCurrent() {
 function save() {
   pendingSave = pendingSave
     .then(writeCurrent)
-    .then(() => useUi.getState().setSaveStatus('saved'))
+    .then(() => {
+      // Nothing newer is waiting: the database now holds the latest state.
+      if (!saveTimer) {
+        dirty = false
+        clearUnsaved()
+      }
+      useUi.getState().setSaveStatus('saved')
+    })
     .catch((error) => {
       console.error('Saving the project failed', error)
       useUi.getState().setSaveStatus('error')
@@ -72,6 +86,7 @@ function save() {
 }
 
 function scheduleSave() {
+  dirty = true
   useUi.getState().setSaveStatus('saving')
   if (saveTimer) clearTimeout(saveTimer)
   saveTimer = setTimeout(() => {
@@ -91,6 +106,81 @@ export async function flushSave() {
   }
 }
 
+function clearUnsaved() {
+  try {
+    rescueStorage?.removeItem(UNSAVED_KEY)
+  } catch {
+    // Storage unavailable: nothing was parked either.
+  }
+}
+
+/**
+ * Called when the page is being hidden or closed. A database write may not
+ * finish in time, so the latest layout is also parked synchronously in
+ * localStorage; the next start picks it up (SPEC V16). Photos are never parked:
+ * they are written to the database the moment they are added.
+ */
+export function stashUnsaved() {
+  if (!dirty) return
+  const { id, name, blocks } = useProject.getState()
+  if (!id) return
+  try {
+    rescueStorage?.setItem(UNSAVED_KEY, JSON.stringify({ id, name, blocks, at: Date.now() }))
+  } catch {
+    // Storage full or blocked: the database write below is the only chance.
+  }
+  void flushSave()
+}
+
+/** Apply a parked layout left by a page that closed before its save finished. */
+async function recoverUnsaved() {
+  let raw: string | null | undefined
+  try {
+    raw = rescueStorage?.getItem(UNSAVED_KEY)
+  } catch {
+    return
+  }
+  if (!raw) return
+  let parked: { id?: unknown; name?: unknown; blocks?: unknown }
+  try {
+    parked = JSON.parse(raw) ?? {}
+  } catch {
+    // Unreadable: drop it so it is not retried on every start.
+    clearUnsaved()
+    return
+  }
+  const { id, name, blocks } = parked
+  const usable =
+    typeof id === 'string' &&
+    typeof name === 'string' &&
+    Array.isArray(blocks) &&
+    blocks.every(isStoredBlock) &&
+    isValidLayout(blocks as Block[])
+  const stored = usable ? await projects.get(id as string) : undefined
+  if (!stored) {
+    clearUnsaved()
+    return
+  }
+  openStored({ ...stored, name: name as string, blocks: blocks as Block[] })
+  dirty = true
+  await save()
+}
+
+function isStoredBlock(value: unknown): value is Block {
+  if (typeof value !== 'object' || value === null) return false
+  const b = value as Record<string, unknown>
+  return (
+    typeof b.id === 'string' &&
+    (b.kind === 'image' || b.kind === 'color') &&
+    typeof b.color === 'string' &&
+    ['col', 'row', 'colSpan', 'rowSpan'].every((key) => Number.isInteger(b[key])) &&
+    typeof b.frame === 'object' &&
+    b.frame !== null &&
+    typeof b.transform === 'object' &&
+    b.transform !== null
+  )
+}
+
 function startAutosave() {
   unsubscribe?.()
   unsubscribe = useProject.subscribe((state, previous) => {
@@ -104,6 +194,7 @@ export function stopAutosave() {
   unsubscribe = null
   if (saveTimer) clearTimeout(saveTimer)
   saveTimer = null
+  dirty = false
 }
 
 async function createAndOpen(name = DEFAULT_PROJECT_NAME) {
@@ -120,7 +211,7 @@ async function createAndOpen(name = DEFAULT_PROJECT_NAME) {
  * through the save status and never block the app (SPEC V16).
  */
 export async function boot(
-  storage: Pick<Storage, 'getItem'> | null,
+  storage: RescueStorage | null,
   viewport: Size
 ): Promise<MigrationResult> {
   const library = useLibrary.getState()
@@ -136,6 +227,8 @@ export async function boot(
       last ?? [...(await projects.all())].sort((a, b) => b.updatedAt - a.updatedAt)[0]
     if (fallback) openStored(fallback)
     else await createAndOpen()
+    rescueStorage = storage
+    await recoverUnsaved()
     useUi.getState().setSaveStatus('saved')
   } catch (error) {
     console.error('Restoring saved work failed', error)

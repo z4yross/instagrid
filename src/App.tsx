@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { boot } from '@/db/session'
+import { boot, stashUnsaved } from '@/db/session'
 import { useLibrary } from '@/store/library'
 import { useProject } from '@/store/project'
 import { useUi } from '@/store/ui'
@@ -66,6 +66,19 @@ export default function App() {
       toast('Changes are not being saved. Browser storage may be full or blocked.', 'error')
     }
   }, [saveStatus])
+
+  // Closing or hiding the page must not lose the last change (SPEC V16).
+  useEffect(() => {
+    const onHidden = () => {
+      if (document.visibilityState === 'hidden') stashUnsaved()
+    }
+    window.addEventListener('pagehide', stashUnsaved)
+    document.addEventListener('visibilitychange', onHidden)
+    return () => {
+      window.removeEventListener('pagehide', stashUnsaved)
+      document.removeEventListener('visibilitychange', onHidden)
+    }
+  }, [])
 
   // Photos pasted from the clipboard join the library (SPEC I.fs).
   useEffect(() => {
