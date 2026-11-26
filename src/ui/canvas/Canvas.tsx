@@ -1,4 +1,4 @@
-import { Minus, Plus } from 'lucide-react'
+import { Hash, Minus, Plus } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { blockAt, gridRows } from '@/core/grid'
 import { numberedCells } from '@/core/numbering'
@@ -15,6 +15,7 @@ import type { Viewport } from './layout'
 import { useCanvasGestures } from './useCanvasGestures'
 
 const MOBILE_MAX = 820
+const NO_NUMBERS: CellNumber[] = []
 
 function useViewport(ref: React.RefObject<HTMLDivElement | null>): Viewport {
   const [viewport, setViewport] = useState<Viewport>({
@@ -56,6 +57,8 @@ export function Canvas() {
   const adjustId = useUi((s) => s.adjustId)
   const zoomRows = useUi((s) => s.zoomRows)
   const flash = useUi((s) => s.flash)
+  const showNumbers = useUi((s) => s.showNumbers)
+  const toggleNumbers = useUi((s) => s.toggleNumbers)
   const setZoomRows = useUi((s) => s.setZoomRows)
 
   const viewport = useViewport(scrollRef)
@@ -103,10 +106,21 @@ export function Canvas() {
   const zoomControl = !preview && !adjusting && (
     <div
       role="group"
-      aria-label="Grid zoom"
+      aria-label="Grid view"
       data-canvas-control
       className="flex items-center gap-0.5 rounded-control border border-line bg-raised p-0.5 text-sm text-ink-2"
     >
+      <button
+        type="button"
+        aria-pressed={showNumbers}
+        aria-label="Post numbers"
+        title={showNumbers ? 'Hide post numbers' : 'Show post numbers'}
+        onClick={toggleNumbers}
+        className="grid size-7 place-items-center rounded-chip transition-colors duration-150 ease-out hover:bg-hover aria-pressed:text-accent-ink pointer-coarse:size-11"
+      >
+        <Hash aria-hidden className="size-4" strokeWidth={1.8} />
+      </button>
+      <span aria-hidden className="mx-0.5 h-4 w-px bg-line" />
       <ZoomButton
         label="Show one fewer row"
         disabled={inView <= MIN_ZOOM_ROWS}
@@ -199,7 +213,7 @@ export function Canvas() {
                   block={block}
                   image={imageById(images, block.imageId)}
                   pitch={pitch}
-                  numbers={numbersByBlock.get(block.id) ?? []}
+                  numbers={showNumbers ? (numbersByBlock.get(block.id) ?? []) : NO_NUMBERS}
                   mode={mode}
                   selected={selected}
                   adjusting={isAdjusting}

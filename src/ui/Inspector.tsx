@@ -1,4 +1,4 @@
-import { Columns2, Copy, Crop, SquareArrowRightEnter, Trash2, TriangleAlert } from 'lucide-react'
+import { Columns2, Copy, Move, SquareArrowRightEnter, Trash2, TriangleAlert } from 'lucide-react'
 import type { ReactNode } from 'react'
 import { orderLabel } from '@/core/numbering'
 import { useProject } from '@/store/project'
@@ -137,16 +137,18 @@ export function Inspector() {
         </Section>
       )}
 
+      {info.canAdjust && single && image && (
+        <Section title="Photo">
+          <Button className="mb-4 w-full" onClick={enterAdjust}>
+            <Move {...ICON} />
+            Move photo in its frame
+          </Button>
+          <AdjustControls block={single} image={image} />
+        </Section>
+      )}
+
       <Section>
         <div className="-mx-2 grid gap-0.5">
-          {info.canAdjust && (
-            <Action
-              icon={<Crop {...ICON} />}
-              label="Adjust"
-              hint="Double-click"
-              onClick={enterAdjust}
-            />
-          )}
           <Action
             icon={<Columns2 {...ICON} />}
             label={

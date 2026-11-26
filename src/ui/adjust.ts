@@ -11,7 +11,10 @@ const UNIT_CELL = { width: 3, height: 4 }
 
 export function adjustTarget(): { block: Block; image: Size } | null {
   const { blocks } = useProject.getState()
-  const block = blocks.find((b) => b.id === useUi.getState().adjustId)
+  const { adjustId, selection } = useUi.getState()
+  // The photo being adjusted, or else the one selected photo.
+  const selected = selection.length === 1 ? selection[0] : null
+  const block = blocks.find((b) => b.id === (adjustId ?? selected))
   const image = imageById(useLibrary.getState().images, block?.imageId)
   return block && image ? { block, image } : null
 }
