@@ -41,3 +41,12 @@ Decisions the owner makes about `design/mockups/remake.html`, in his own words, 
   Gloss: join fuses the selected photos, as they look on the grid, into one new image that also appears in the library. Originals stay in the library.
 - Commits: "Sí, commit y push"
   Gloss: one commit per spec task on `remake`, pushed to origin. Never `main`.
+
+## First hands-on test of the built app (board ticket i1, 2026-11-26)
+
+- "no puedo rotar ni hacer pan a la foto ni zoom"
+  Gloss: he could not find how to rotate, pan or zoom a photo. The controls existed behind double-click; they now show in the inspector as soon as a photo is selected, with a button to move the photo in its frame.
+- "deberia haber aguna forma de esconder los numero en la vista de la grid"
+  Gloss: the post numbers must be hideable while editing. Added a toggle beside the grid zoom.
+- "seriaa interesante subir las fotos desde mi telefono y verlas en el pc"
+  Gloss: an idea, not yet a decision: add photos on the phone and see them on the PC. Conflicts with the no-backend choice; options put to him on the board.

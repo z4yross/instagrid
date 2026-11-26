@@ -10,12 +10,12 @@ Live: [instagrid.z4yross.com](https://instagrid.z4yross.com)
 
 - **Grid.** 3 columns of 3:4 cells, the shape Instagram shows on a profile. Rows grow as you add photos.
 - **Arrange.** Click to select, drag to move, drag a corner to make a photo span more cells. On a phone, press and hold to pick a photo up; a plain swipe scrolls.
-- **Adjust.** Double-click (or double-tap) a photo to move it inside its frame, zoom, rotate, flip, and pick the color of the bars where it does not reach.
+- **Adjust.** Select a photo to zoom, rotate, flip it and pick the color of the bars where it does not reach. Double-click (or double-tap) it to move it inside its frame.
 - **Split.** A photo that spans several cells becomes one piece per cell. The pieces move on their own and keep their crop.
 - **Join.** Pieces of one photo merge back. Different photos are joined into one new image, which is also added to the library.
 - **Color cells.** Solid-color cells for spacing. They are not exported.
 - **Posting order.** Every photo cell carries its upload number. Upload `01` first, from the bottom right, and the profile ends up looking like the grid.
-- **Preview.** Hides numbers and guides to show the grid as it lands on the profile.
+- **Preview.** Hides numbers and guides to show the grid as it lands on the profile. The `#` button beside the grid zoom hides just the numbers while you keep editing.
 - **Export.** One 1080×1350 JPEG per cell, as a ZIP or as separate files. What exports is what the grid shows.
 - **Grids.** Several named grids saved in the browser, with autosave.
 - **Light and dark themes.** Follows the system; the switch remembers your choice.
