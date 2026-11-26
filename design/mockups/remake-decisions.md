@@ -55,3 +55,8 @@ Decisions the owner makes about `design/mockups/remake.html`, in his own words, 
 
 - Chose "Envío directo por código QR" over a project file, a cloud account, or nothing.
   Gloss: one device shows a QR code, the phone scans it and sends photos directly to it. He accepted, in the option's wording, that it needs a small third-party service for the two devices to find each other and that both must be open at once. Nothing is stored in the cloud.
+
+## After publishing (board ticket i1, 2026-11-26)
+
+- "No me gusta que al reflejar se corra la imagen"
+  Gloss: flipping a photo made it jump. The flip mirrored the photo around its own center, so a photo that had been moved in its frame showed a different part afterwards. Flip now mirrors across the middle of the visible cell, and rotate turns around it.

@@ -1,6 +1,6 @@
-import { clampTransform, fitZoom, frameSize } from '@/core/geometry'
+import { clampTransform, fitZoom, flipOnScreen, frameSize, rotateOnScreen } from '@/core/geometry'
 import { IDENTITY_TRANSFORM } from '@/core/types'
-import type { Block, Rotation, Size, Transform } from '@/core/types'
+import type { Block, Size, Transform } from '@/core/types'
 import { imageById, useLibrary } from '@/store/library'
 import { useProject } from '@/store/project'
 import { useUi } from '@/store/ui'
@@ -45,18 +45,16 @@ export function liveAdjust(patch: Partial<Transform>) {
 export const beginAdjustGesture = () => useProject.getState().beginGesture()
 export const commitAdjustGesture = () => useProject.getState().commitGesture()
 
+/** Turn the photo a quarter turn; what sits at the middle of the frame stays there. */
 export function rotateBy(degrees: 90 | -90) {
   const target = adjustTarget()
-  if (!target) return
-  const rotation = ((target.block.transform.rotation + degrees + 360) % 360) as Rotation
-  setAdjust({ rotation })
+  if (target) setAdjust(rotateOnScreen(target.block, target.image, degrees))
 }
 
-export function flip(axis: 'x' | 'y') {
+/** Mirror the photo as seen on screen; what is framed stays framed (SPEC V21). */
+export function flip(direction: 'horizontal' | 'vertical') {
   const target = adjustTarget()
-  if (!target) return
-  const { flipX, flipY } = target.block.transform
-  setAdjust(axis === 'x' ? { flipX: !flipX } : { flipY: !flipY })
+  if (target) setAdjust(flipOnScreen(target.block, direction))
 }
 
 /** Fill the frame edge to edge. */
