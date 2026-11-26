@@ -1,0 +1,108 @@
+/*
+ * Design tokens. Source of truth: DESIGN.md.
+ * One set for both themes, bound with light-dark(). Neutrals are achromatic on
+ * purpose: the surround must never tint a photo.
+ */
+
+@font-face {
+  font-family: 'Hanken Grotesk';
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url('/fonts/hanken-grotesk-latin-ext.woff2') format('woff2');
+  unicode-range:
+    U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329,
+    U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F,
+    U+A720-A7FF;
+}
+
+@font-face {
+  font-family: 'Hanken Grotesk';
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url('/fonts/hanken-grotesk-latin.woff2') format('woff2');
+  unicode-range:
+    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329,
+    U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+:root {
+  color-scheme: light dark;
+
+  --ground: light-dark(oklch(0.917 0 0), oklch(0.225 0 0));
+  --panel: light-dark(oklch(0.961 0 0), oklch(0.265 0 0));
+  --raised: light-dark(oklch(1 0 0), oklch(0.315 0 0));
+  --raised-hover: light-dark(oklch(0.985 0 0), oklch(0.345 0 0));
+  --raised-press: light-dark(oklch(0.95 0 0), oklch(0.29 0 0));
+  --cell-empty: light-dark(oklch(0.946 0 0), oklch(0.275 0 0));
+  --line: light-dark(oklch(0.868 0 0), oklch(0.38 0 0));
+  --line-soft: light-dark(oklch(0.908 0 0), oklch(0.32 0 0));
+  --line-strong: light-dark(oklch(0.77 0 0), oklch(0.5 0 0));
+  --dash: light-dark(oklch(0.78 0 0), oklch(0.48 0 0));
+  --track: light-dark(oklch(0.915 0 0), oklch(0.215 0 0));
+  --ink: light-dark(oklch(0.2 0 0), oklch(0.95 0 0));
+  --ink-2: light-dark(oklch(0.41 0 0), oklch(0.82 0 0));
+  --ink-3: light-dark(oklch(0.49 0 0), oklch(0.7 0 0));
+  --on-ink: light-dark(oklch(1 0 0), oklch(0.18 0 0));
+  --primary-hover: light-dark(oklch(0.32 0 0), oklch(0.86 0 0));
+  --primary-press: light-dark(oklch(0 0 0), oklch(1 0 0));
+  --disabled: light-dark(oklch(0.7 0 0), oklch(0.52 0 0));
+  --hover: light-dark(oklch(0 0 0 / 0.065), oklch(1 0 0 / 0.08));
+  --press: light-dark(oklch(0 0 0 / 0.11), oklch(1 0 0 / 0.14));
+  --swatch-line: light-dark(oklch(0 0 0 / 0.2), oklch(1 0 0 / 0.32));
+
+  /* Vermilion has one job in both themes: posting order. */
+  --accent: oklch(0.56 0.2 36);
+  --on-accent: oklch(1 0 0);
+  --accent-ink: light-dark(oklch(0.5 0.18 36), oklch(0.74 0.16 40));
+
+  /* Amber is reserved for the low-resolution warning. */
+  --warn-bg: light-dark(oklch(0.96 0.035 90), oklch(0.31 0.045 85));
+  --warn-line: light-dark(oklch(0.83 0.1 90), oklch(0.5 0.085 85));
+  --warn-ink: light-dark(oklch(0.42 0.09 80), oklch(0.91 0.08 90));
+
+  --preview: light-dark(oklch(0.985 0 0), oklch(0.13 0 0));
+  --scrim: light-dark(oklch(0.2 0 0 / 0.42), oklch(0 0 0 / 0.6));
+
+  --shadow-dialog: 0 24px 60px -12px rgb(0 0 0 / 0.35), 0 2px 6px rgb(0 0 0 / 0.12);
+  --shadow-thumb: 0 1px 2px rgb(0 0 0 / 0.12);
+
+  --grid-gap: 3px;
+  --topbar-h: 48px;
+  --control-h: 32px;
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --dur-control: 160ms;
+  --dur-layout: 320ms;
+
+  /* Semantic z-index scale. */
+  --z-canvas-overlay: 10;
+  --z-sticky: 20;
+  --z-sheet: 30;
+  --z-scrim: 40;
+  --z-dialog: 50;
+  --z-toast: 60;
+}
+
+:root[data-theme='light'] {
+  color-scheme: light;
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+}
+
+/* Mobile: touch-size controls. Breakpoint matches DESIGN.md (820px). */
+@media (max-width: 820px) {
+  :root {
+    --topbar-h: 56px;
+    --control-h: 44px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dur-control: 0ms;
+    --dur-layout: 0ms;
+  }
+}
