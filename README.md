@@ -2,7 +2,7 @@
 
 Plan an Instagram profile grid in the browser. Lay photos out on a 3-column grid, let one photo span several posts or split it into pieces, adjust each photo inside its frame, and export every post as a numbered 1080×1350 JPEG in the order to upload.
 
-Everything runs in the browser. No account, no server, photos never leave the device.
+Everything runs in the browser. No account, no server of ours, nothing stored online.
 
 Live: [instagrid.z4yross.com](https://instagrid.z4yross.com)
 
@@ -18,6 +18,7 @@ Live: [instagrid.z4yross.com](https://instagrid.z4yross.com)
 - **Preview.** Hides numbers and guides to show the grid as it lands on the profile. The `#` button beside the grid zoom hides just the numbers while you keep editing.
 - **Export.** One 1080×1350 JPEG per cell, as a ZIP or as separate files. What exports is what the grid shows.
 - **Grids.** Several named grids saved in the browser, with autosave.
+- **From your phone.** A QR code on one device, scanned with a phone, lets you send photos straight to that device. They travel encrypted between your two devices; a connection service only helps them find each other.
 - **Light and dark themes.** Follows the system; the switch remembers your choice.
 
 ## Keyboard
@@ -49,7 +50,7 @@ npm run build      # production build in dist/
 
 ## How it is built
 
-React 19, TypeScript, Vite, Tailwind 4, Zustand with zundo for undo history, JSZip for the ZIP export.
+React 19, TypeScript, Vite, Tailwind 4, Zustand with zundo for undo history, JSZip for the ZIP export, PeerJS and `qrcode` for the phone transfer (loaded only when used).
 
 ```
 src/core/     grid rules, image geometry, split and join, posting order (pure, unit-tested)
@@ -57,6 +58,7 @@ src/store/    project state with undo, interface state, image library
 src/db/       IndexedDB storage, autosave, import of data from the previous version
 src/export/   canvas rendering and the export pipeline
 src/ui/       canvas, panels, dialogs, desktop and mobile layouts
+src/transfer/ photo transfer between two devices (WebRTC through PeerJS)
 src/theme/    design tokens and theme switch
 ```
 

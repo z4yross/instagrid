@@ -21,12 +21,12 @@ Success: the exported files, uploaded in number order, produce on the real profi
 
 ## Positioning
 
-Export is numbered in upload order (right to left, bottom to top) and matches the on-screen grid cell for cell, so a multi-cell composition survives the trip to Instagram. Everything runs in the browser: no account, no upload to a server, photos never leave the device.
+Export is numbered in upload order (right to left, bottom to top) and matches the on-screen grid cell for cell, so a multi-cell composition survives the trip to Instagram. Everything runs in the browser: no account, no upload to a server, nothing stored online. Photos stay on the user's own devices; the only time they move is when the user sends them from one of their devices to another, directly and encrypted.
 
 ## Operating Context
 
 - Used on desktop (mouse and keyboard) and on mobile (touch). Both are first-class; neither is a reduced version of the other.
-- Photos come from the device: file picker, drag and drop, paste.
+- Photos come from the device: file picker, drag and drop, paste. Or from the user's phone: the device shows a QR code, the phone opens it and sends photos straight to it.
 - Work persists locally in the browser (IndexedDB) as named projects.
 - Output goes to the Instagram app, posted by hand in file-number order.
 - Hosted as a static site on GitHub Pages at instagrid.z4yross.com.
@@ -44,11 +44,13 @@ Confirmed capabilities (v1 feature set, rebuilt, plus join and split):
 - Upload-order number on each image cell.
 - Undo and redo.
 - Named projects saved in the browser, autosave.
+- Add photos from a phone by scanning a QR code: device to device, nothing stored online.
+- Light and dark themes; post numbers on the grid can be hidden while editing.
 - Export all cells as 1080×1350 JPEG, as a ZIP or as individual files. Low-resolution warning.
 
 Constraints:
 
-- No backend, no auth, no cost to run.
+- No backend of our own, no auth, no cost to run. The phone-to-device transfer relies on a third-party WebRTC connection service to pair the two devices; it cannot read the photos. Owner-approved exception.
 - Rebuilt from scratch on branch `remake`; v1 on `main` stays deployed until the owner approves the swap.
 - Stack: React 19, TypeScript, Vite, Tailwind 4, Zustand.
 - Existing v1 data in users' browsers must be migrated, never deleted.

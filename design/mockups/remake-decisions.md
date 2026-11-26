@@ -50,3 +50,8 @@ Decisions the owner makes about `design/mockups/remake.html`, in his own words, 
   Gloss: the post numbers must be hideable while editing. Added a toggle beside the grid zoom.
 - "seriaa interesante subir las fotos desde mi telefono y verlas en el pc"
   Gloss: an idea, not yet a decision: add photos on the phone and see them on the PC. Conflicts with the no-backend choice; options put to him on the board.
+
+## Phone to PC (board ticket i1, 2026-11-26)
+
+- Chose "Envío directo por código QR" over a project file, a cloud account, or nothing.
+  Gloss: one device shows a QR code, the phone scans it and sends photos directly to it. He accepted, in the option's wording, that it needs a small third-party service for the two devices to find each other and that both must be open at once. Nothing is stored in the cloud.

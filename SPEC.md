@@ -12,34 +12,35 @@ Rebuild browser-only Instagram feed planner from scratch: arrange image blocks o
 
 ## §C — Constraints
 
-| id  | constraint                                                                                                                                                           |
-| --- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| C1  | No backend. 100% browser. No auth. Hosted GitHub Pages (instagrid.z4yross.com).                                                                                      |
-| C2  | Built from scratch on branch `remake`. `main` (v1) stays deployed until owner approves swap.                                                                         |
-| C3  | Desktop + mobile both first-class. Each layout designed on own terms.                                                                                                |
-| C4  | Stack: React 19 + TypeScript + Vite + Tailwind 4. Zustand + zundo for state/history. JSZip for ZIP.                                                                  |
-| C5  | Visual system = `DESIGN.md`. Tokens as CSS custom properties bound with `light-dark()`; Tailwind theme reads them. No inline style objects except computed geometry. |
-| C6  | Domain logic (grid, geometry, join/split, numbering, export math) = pure TS modules, no React, unit-tested (vitest).                                                 |
-| C7  | Grid: 3 cols, cells 3:4. Export cell 1080×1350 (4:5), visible 3:4 center = what profile grid shows.                                                                  |
-| C8  | Icons from lucide-react only, line style.                                                                                                                            |
-| C9  | Reuse from v1 only proven logic: upload numbering, collision check, export crop math, IDB image store.                                                               |
-| C10 | Git: conventional commits, single line, per owner global rules.                                                                                                      |
-| C11 | Font: Hanken Grotesk, self-hosted woff2. No third-party font or script requests at runtime.                                                                          |
+| id  | constraint                                                                                                                                                                                                                                            |
+| --- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| C1  | No backend of our own. No auth. No storage online. Hosted GitHub Pages (instagrid.z4yross.com). One exception, owner-approved: the phone-to-device photo transfer uses a third-party WebRTC connection service to pair the two devices (see V45-V49). |
+| C2  | Built from scratch on branch `remake`. `main` (v1) stays deployed until owner approves swap.                                                                                                                                                          |
+| C3  | Desktop + mobile both first-class. Each layout designed on own terms.                                                                                                                                                                                 |
+| C4  | Stack: React 19 + TypeScript + Vite + Tailwind 4. Zustand + zundo for state/history. JSZip for ZIP.                                                                                                                                                   |
+| C5  | Visual system = `DESIGN.md`. Tokens as CSS custom properties bound with `light-dark()`; Tailwind theme reads them. No inline style objects except computed geometry.                                                                                  |
+| C6  | Domain logic (grid, geometry, join/split, numbering, export math) = pure TS modules, no React, unit-tested (vitest).                                                                                                                                  |
+| C7  | Grid: 3 cols, cells 3:4. Export cell 1080×1350 (4:5), visible 3:4 center = what profile grid shows.                                                                                                                                                   |
+| C8  | Icons from lucide-react only, line style.                                                                                                                                                                                                             |
+| C9  | Reuse from v1 only proven logic: upload numbering, collision check, export crop math, IDB image store.                                                                                                                                                |
+| C10 | Git: conventional commits, single line, per owner global rules.                                                                                                                                                                                       |
+| C11 | Font: Hanken Grotesk, self-hosted woff2. No third-party requests at runtime, except the transfer feature, which contacts the connection service only while its dialog or the send page is in use.                                                     |
 
 ---
 
 ## §I — Interfaces
 
-| id        | surface                                                                              |
-| --------- | ------------------------------------------------------------------------------------ |
-| I.core    | `src/core/*` — pure domain: `grid.ts`, `geometry.ts`, `joinSplit.ts`, `numbering.ts` |
-| I.store   | `src/store/*` — Zustand store + zundo; only caller of I.core mutations               |
-| I.db      | `src/db/*` — IndexedDB: image blobs, projects. v1 DB read for migration              |
-| I.export  | `src/export/*` — Canvas 2D render per cell via I.core geometry; JSZip bundle         |
-| I.gesture | `src/gesture/*` — Pointer Events layer: tap, long-press drag, pan, pinch, wheel      |
-| I.ui      | `src/ui/*` — components; `ui/desktop/*` + `ui/mobile/*` shells over shared canvas    |
-| I.theme   | `src/theme/*` — tokens from `DESIGN.md`, theme resolve + persist                     |
-| I.fs      | File input + drag-drop + paste — JPG/PNG/WEBP in                                     |
+| id         | surface                                                                                                                                                            |
+| ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| I.core     | `src/core/*` — pure domain: `grid.ts`, `geometry.ts`, `joinSplit.ts`, `numbering.ts`                                                                               |
+| I.store    | `src/store/*` — Zustand store + zundo; only caller of I.core mutations                                                                                             |
+| I.db       | `src/db/*` — IndexedDB: image blobs, projects. v1 DB read for migration                                                                                            |
+| I.export   | `src/export/*` — Canvas 2D render per cell via I.core geometry; JSZip bundle                                                                                       |
+| I.gesture  | `src/gesture/*` — Pointer Events layer: tap, long-press drag, pan, pinch, wheel                                                                                    |
+| I.ui       | `src/ui/*` — components; `ui/desktop/*` + `ui/mobile/*` shells over shared canvas                                                                                  |
+| I.theme    | `src/theme/*` — tokens from `DESIGN.md`, theme resolve + persist                                                                                                   |
+| I.fs       | File input + drag-drop + paste — JPG/PNG/WEBP in                                                                                                                   |
+| I.transfer | `src/transfer/*` — device-to-device photo transfer: wire protocol (pure, tested), receiver, sender. PeerJS (WebRTC data channel) loaded on demand; QR via `qrcode` |
 
 ---
 
@@ -114,6 +115,16 @@ Rebuild browser-only Instagram feed planner from scratch: arrange image blocks o
 | V43 | Export dialog asks format (ZIP or individual JPGs) every time, shows strip of numbered cells in posting order. Progress shown; one cell failing reported, rest delivered.                                |
 | V44 | Low-res warning per block when source pixels per exported cell < 1080 wide: badge on cell + note in inspector with fix. Non-blocking.                                                                    |
 
+### Transfer between devices
+
+| id  | invariant                                                                                                                                                                                                                                                                                                                              |
+| --- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| V45 | "Add photos from your phone": a device shows a QR code with a one-time link; a second device that opens it sees a send page (not the editor), chooses photos, and they arrive in the first device's library and on its grid (first free cells). JPG / PNG / WEBP.                                                                      |
+| V46 | The link carries a random one-time address (~124 bits) created when the dialog opens. The device listens only while the dialog is open; closing it destroys the address, and the old link then fails with a clear message.                                                                                                             |
+| V47 | Photos travel over an encrypted WebRTC data channel between the two devices. The third-party connection service pairs them (and may relay encrypted traffic when a direct path is impossible); it cannot read the photos. Nothing is stored online. The dialog and the send page say so in plain words.                                |
+| V48 | Everything received is untrusted: messages are shape-checked; only JPG / PNG / WEBP, at most 40 MB each and 60 per session; chunks must arrive in order and never exceed the announced size; file names are stripped of paths and control characters. A refused file is reported to the sender with the reason; the rest still arrive. |
+| V49 | The transfer code (PeerJS) loads only when the feature is used. Both sides show progress; failure states name the problem and the recovery. When the app was opened at a localhost address, the dialog says a phone cannot follow the code.                                                                                            |
+
 ---
 
 ## §T — Tasks
@@ -145,6 +156,9 @@ Rebuild browser-only Instagram feed planner from scratch: arrange image blocks o
 | T23 | x      | E5: export parity test — render cell on screen-size canvas vs export canvas, compare downscaled pixels                                                                                                                | V4                    |
 | T24 | x      | E5: pass on 320px, 200% zoom, layout switch, touch targets, contrast both themes, reduced motion; Impeccable detect + finish review on built app; fix findings                                                        | V24,V33,V34,V39       |
 | T25 | ~      | E5: README rewritten (done). Owner review of the build and swap `remake` → `main`: waiting for owner OK                                                                                                               | C2                    |
+| T26 | x      | E6: `transfer/protocol.ts` — ids, send link, message validation, file assembly, limits; tests                                                                                                                         | V46,V48,C6            |
+| T27 | x      | E6: receiver + sender over PeerJS data channel with backpressure, per-file ack, timeouts and error mapping                                                                                                            | V45,V46,V47,V48       |
+| T28 | x      | E6: Receive dialog (QR, link, status), send page at `#send=<id>`, entry points in library header and first run; verified end to end between two browser sessions                                                      | V45,V47,V49           |
 
 ---
 
@@ -155,7 +169,7 @@ Rebuild browser-only Instagram feed planner from scratch: arrange image blocks o
 | D1  | Drop v1 grid zoom-by-rows in favor of plain scroll? | T10    | No. Owner: "Dejarlos". Zoom kept, see V32.                          |
 | D2  | Join of different images: what results?             | T4,T14 | Owner: "Una imagen nueva con las dos". Composite new image, see V7. |
 
-Resolved (owner, ticket i1): from scratch on branch; desktop + mobile equal; no backend; public users; join/split meaning = V6/V7; visual direction light studio + dark theme; vermilion order chips; Preview in scope. After first hands-on test (2026-11-26): "no puedo rotar ni hacer pan a la foto ni zoom" → V21 controls on selection; "deberia haber aguna forma de esconder los numero en la vista de la grid" → V38 toggle.
+Resolved (owner, ticket i1): from scratch on branch; desktop + mobile equal; no backend; public users; join/split meaning = V6/V7; visual direction light studio + dark theme; vermilion order chips; Preview in scope. After first hands-on test (2026-11-26): "no puedo rotar ni hacer pan a la foto ni zoom" → V21 controls on selection; "deberia haber aguna forma de esconder los numero en la vista de la grid" → V38 toggle. Phone to PC: "seriaa interesante subir las fotos desde mi telefono y verlas en el pc" → chose "Envío directo por código QR" → V45-V49.
 
 ---
 
