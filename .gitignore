@@ -22,3 +22,10 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Impeccable live-mode runtime (session tokens, locks); config.json is tracked
+.impeccable/live/*
+!.impeccable/live/config.json
+
+# Browser automation output
+.playwright-mcp/

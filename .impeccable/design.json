@@ -1,0 +1,205 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-26T00:00:00Z",
+  "title": "Design System: InstaGrid",
+  "extensions": {
+    "colorMeta": {
+      "accent": {
+        "role": "primary",
+        "displayName": "Safelight Vermilion",
+        "canonical": "oklch(0.56 0.2 36)",
+        "tonalRamp": [
+          "oklch(0.2 0.07 36)",
+          "oklch(0.32 0.12 36)",
+          "oklch(0.44 0.17 36)",
+          "oklch(0.56 0.2 36)",
+          "oklch(0.66 0.17 36)",
+          "oklch(0.76 0.12 36)",
+          "oklch(0.87 0.07 36)",
+          "oklch(0.95 0.03 36)"
+        ]
+      },
+      "ground": {
+        "role": "neutral",
+        "displayName": "Table Ground",
+        "canonical": "oklch(0.917 0 0)",
+        "tonalRamp": [
+          "oklch(0.15 0 0)",
+          "oklch(0.225 0 0)",
+          "oklch(0.38 0 0)",
+          "oklch(0.5 0 0)",
+          "oklch(0.7 0 0)",
+          "oklch(0.868 0 0)",
+          "oklch(0.917 0 0)",
+          "oklch(0.961 0 0)"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Ink",
+        "canonical": "oklch(0.2 0 0)",
+        "tonalRamp": [
+          "oklch(0.15 0 0)",
+          "oklch(0.2 0 0)",
+          "oklch(0.32 0 0)",
+          "oklch(0.41 0 0)",
+          "oklch(0.49 0 0)",
+          "oklch(0.7 0 0)",
+          "oklch(0.82 0 0)",
+          "oklch(0.95 0 0)"
+        ]
+      },
+      "warn-bg": {
+        "role": "tertiary",
+        "displayName": "Amber Warning",
+        "canonical": "oklch(0.96 0.035 90)",
+        "tonalRamp": [
+          "oklch(0.2 0.04 85)",
+          "oklch(0.31 0.045 85)",
+          "oklch(0.42 0.09 80)",
+          "oklch(0.5 0.085 85)",
+          "oklch(0.7 0.1 88)",
+          "oklch(0.83 0.1 90)",
+          "oklch(0.91 0.08 90)",
+          "oklch(0.96 0.035 90)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "title": { "displayName": "Title", "purpose": "Dialog titles and the first-run headline." },
+      "subtitle": {
+        "displayName": "Subtitle",
+        "purpose": "Panel headings and the selected file name."
+      },
+      "body": { "displayName": "Body", "purpose": "Default text; weight 500 for control labels." },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Secondary metadata, hints, keyboard shortcuts."
+      },
+      "number": {
+        "displayName": "Number",
+        "purpose": "Two-digit posting-order chips, tabular figures."
+      }
+    },
+    "shadows": [
+      {
+        "name": "dialog",
+        "value": "0 24px 60px -12px rgba(0, 0, 0, 0.35), 0 2px 6px rgba(0, 0, 0, 0.12)",
+        "purpose": "Modal surfaces over a scrim."
+      },
+      {
+        "name": "segment-thumb",
+        "value": "0 1px 2px rgba(0, 0, 0, 0.12)",
+        "purpose": "Active option in a segmented control."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease",
+        "value": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Every state transition."
+      },
+      { "name": "duration-control", "value": "160ms", "purpose": "Hover and press on controls." },
+      { "name": "duration-layout", "value": "320ms", "purpose": "Split, join and view changes." }
+    ],
+    "breakpoints": [
+      { "name": "mobile-max", "value": "820px" },
+      { "name": "narrow-desktop-max", "value": "1100px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Button",
+      "kind": "button",
+      "refersTo": "button",
+      "description": "Default action; raised fill with a hairline border.",
+      "html": "<button class=\"ds-btn\">Add</button>",
+      "css": ".ds-btn { height: 32px; padding: 0 12px; display: inline-flex; align-items: center; gap: 6px; border: 1px solid light-dark(oklch(0.868 0 0), oklch(0.38 0 0)); border-radius: 6px; background: light-dark(oklch(1 0 0), oklch(0.315 0 0)); color: light-dark(oklch(0.2 0 0), oklch(0.95 0 0)); font: 500 0.8125rem 'Hanken Grotesk', system-ui, sans-serif; transition: background-color 160ms cubic-bezier(0.16, 1, 0.3, 1), border-color 160ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-btn:hover { border-color: light-dark(oklch(0.77 0 0), oklch(0.5 0 0)); background: light-dark(oklch(0.985 0 0), oklch(0.345 0 0)); } .ds-btn:focus-visible { outline: 2px solid light-dark(oklch(0.2 0 0), oklch(0.95 0 0)); outline-offset: 2px; }"
+    },
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The single primary action of a view (Export).",
+      "html": "<button class=\"ds-btn-primary\">Export</button>",
+      "css": ".ds-btn-primary { height: 32px; padding: 0 12px; border: 1px solid light-dark(oklch(0.2 0 0), oklch(0.95 0 0)); border-radius: 6px; background: light-dark(oklch(0.2 0 0), oklch(0.95 0 0)); color: light-dark(oklch(1 0 0), oklch(0.18 0 0)); font: 500 0.8125rem 'Hanken Grotesk', system-ui, sans-serif; transition: background-color 160ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-btn-primary:hover { background: light-dark(oklch(0.32 0 0), oklch(0.86 0 0)); } .ds-btn-primary:focus-visible { outline: 2px solid light-dark(oklch(0.2 0 0), oklch(0.95 0 0)); outline-offset: 2px; }"
+    },
+    {
+      "name": "Order Chip",
+      "kind": "chip",
+      "refersTo": "order-chip",
+      "description": "Posting-order number on every image cell, in the inspector and in export.",
+      "html": "<span class=\"ds-order\">08</span>",
+      "css": ".ds-order { display: inline-grid; place-items: center; min-width: 22px; height: 18px; padding: 0 4px; border-radius: 4px; background: oklch(0.56 0.2 36); color: oklch(1 0 0); font: 700 0.6875rem 'Hanken Grotesk', system-ui, sans-serif; font-variant-numeric: tabular-nums; }"
+    },
+    {
+      "name": "Warning Note",
+      "kind": "card",
+      "refersTo": "warning-note",
+      "description": "Low-resolution notice in the inspector.",
+      "html": "<p class=\"ds-warn\"><strong>Low resolution.</strong> The photo is smaller than this block needs.</p>",
+      "css": ".ds-warn { margin: 0; padding: 12px; border: 1px solid light-dark(oklch(0.83 0.1 90), oklch(0.5 0.085 85)); border-radius: 6px; background: light-dark(oklch(0.96 0.035 90), oklch(0.31 0.045 85)); color: light-dark(oklch(0.42 0.09 80), oklch(0.91 0.08 90)); font: 400 0.75rem/1.4 'Hanken Grotesk', system-ui, sans-serif; }"
+    },
+    {
+      "name": "Inspector Action",
+      "kind": "custom",
+      "refersTo": "button-ghost",
+      "description": "Row action in the inspector: label left, shortcut or hint right.",
+      "html": "<button class=\"ds-action\"><span>Duplicate</span><kbd>Ctrl D</kbd></button>",
+      "css": ".ds-action { width: 260px; height: 36px; padding: 0 8px; display: flex; align-items: center; justify-content: space-between; border: 0; border-radius: 6px; background: transparent; color: light-dark(oklch(0.2 0 0), oklch(0.95 0 0)); font: 500 0.8125rem 'Hanken Grotesk', system-ui, sans-serif; transition: background-color 160ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-action kbd { font: 400 0.75rem 'Hanken Grotesk', system-ui, sans-serif; color: light-dark(oklch(0.49 0 0), oklch(0.7 0 0)); } .ds-action:hover { background: light-dark(oklch(0 0 0 / 0.065), oklch(1 0 0 / 0.08)); } .ds-action:focus-visible { outline: 2px solid light-dark(oklch(0.2 0 0), oklch(0.95 0 0)); outline-offset: 2px; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Light Table",
+    "overview": "A photographer's light table: a neutral, evenly lit surface where prints are laid out, compared and numbered before they go anywhere. The interface is the table and the grease pencil. It carries no hue of its own, so nothing on screen changes how a photo reads. The one mark it makes is the posting-order number, in vermilion, the way a contact sheet gets marked up.\n\nThe tool is dense where the work is (the grid) and sparse everywhere else. One canvas, one library, one inspector. Two canvas states, Arrange and Adjust. Controls are small, flat and exact on desktop, and grow to touch size on mobile without changing character.",
+    "keyCharacteristics": [
+      "Achromatic neutrals in both themes; photos are the only color besides the order numbers.",
+      "One accent with one job: posting order.",
+      "Flat surfaces, hairline borders, small radii.",
+      "One sans family with tabular figures.",
+      "Light and dark themes from one token set; dark is neutral dark gray, never pure black."
+    ],
+    "rules": [
+      {
+        "name": "The No Tint Rule",
+        "body": "Neutrals have chroma 0 in both themes. A surround with any hue shifts how a photo's color is judged.",
+        "section": "colors"
+      },
+      {
+        "name": "The One Job Rule",
+        "body": "Vermilion marks posting order and nothing else. Selection, focus and primary actions use ink.",
+        "section": "colors"
+      },
+      {
+        "name": "The Not Black Rule",
+        "body": "The dark theme's deepest surface is oklch(0.225 0 0). Pure black is v1.",
+        "section": "colors"
+      },
+      {
+        "name": "The Tabular Rule",
+        "body": "font-variant-numeric: tabular-nums is set on the body. Numbers never shift width.",
+        "section": "typography"
+      },
+      {
+        "name": "The Flat Table Rule",
+        "body": "Nothing that is part of the page casts a shadow. Only overlays do.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do keep every neutral at chroma 0, in both themes.",
+      "Do use vermilion only for posting order.",
+      "Do use ink for selection, focus and the single primary action.",
+      "Do keep panels beside the canvas on desktop, never over it.",
+      "Do size touch targets at 44px or more on mobile and keep them out of screen-edge gesture zones.",
+      "Do bind both themes to one token set with light-dark(); default to the system theme, let the toggle override and persist."
+    ],
+    "donts": [
+      "Don't add panels, toolbars or floating buttons to fit a feature; the owner's anti-reference is the cluttered editor.",
+      "Don't use pure black surfaces, gradients, glass or decorative shadows.",
+      "Don't add a second accent color.",
+      "Don't introduce interaction modes beyond Arrange and Adjust.",
+      "Don't round or pad photos inside grid cells."
+    ]
+  }
+}
