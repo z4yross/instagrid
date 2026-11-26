@@ -1,7 +1,7 @@
 import { FlipHorizontal2, FlipVertical2, Pipette, RotateCcw, RotateCw } from 'lucide-react'
 import { useId } from 'react'
 import type { ReactNode } from 'react'
-import { fitZoom, frameSize } from '@/core/geometry'
+import { fitZoom, frameSize, screenFlips } from '@/core/geometry'
 import { MAX_ZOOM, MIN_ZOOM } from '@/core/types'
 import type { Block, Size } from '@/core/types'
 import { useProject } from '@/store/project'
@@ -98,6 +98,7 @@ export function AdjustControls({ block, image, compact }: AdjustControlsProps) {
   const zoomId = useId()
   const { zoom, rotation } = block.transform
   const fit = fitZoom(frameSize(block, { width: 3, height: 4 }), image, rotation)
+  const flips = screenFlips(block.transform)
   const filled = close(zoom, 1)
   const fitted = close(zoom, fit) && !filled
 
@@ -162,8 +163,8 @@ export function AdjustControls({ block, image, compact }: AdjustControlsProps) {
         aria-label="Flip horizontally"
         title="Flip horizontally"
         className="px-0"
-        pressed={block.transform.flipX}
-        onClick={() => flip('x')}
+        pressed={flips.horizontal}
+        onClick={() => flip('horizontal')}
       >
         <FlipHorizontal2 {...ICON} />
       </Button>
@@ -171,8 +172,8 @@ export function AdjustControls({ block, image, compact }: AdjustControlsProps) {
         aria-label="Flip vertically"
         title="Flip vertically"
         className="px-0"
-        pressed={block.transform.flipY}
-        onClick={() => flip('y')}
+        pressed={flips.vertical}
+        onClick={() => flip('vertical')}
       >
         <FlipVertical2 {...ICON} />
       </Button>

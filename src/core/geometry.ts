@@ -142,7 +142,68 @@ export function clampTransform(frame: Size, image: Size, t: Transform): Transfor
   }
 }
 
-/** Rotate a transform a quarter turn clockwise, keeping the pan direction on screen. */
-export function rotateQuarter(t: Transform): Transform {
-  return { ...t, rotation: ((t.rotation + 90) % 360) as Transform['rotation'] }
+/* ---------- Flip and rotate as the user sees them ---------- */
+
+/** Any cell size works here: the results are fractions, so only the 3:4 shape matters. */
+const UNIT_CELL: Size = { width: 3, height: 4 }
+
+type Framed = Pick<Block, 'frame' | 'transform' | 'colSpan' | 'rowSpan'>
+
+/** Center of the block's visible area inside its frame, in UNIT_CELL pixels. */
+function visibleCenter(block: Framed): { x: number; y: number } {
+  return {
+    x: (block.frame.col + block.colSpan / 2) * UNIT_CELL.width,
+    y: (block.frame.row + block.rowSpan / 2) * UNIT_CELL.height,
+  }
+}
+
+/** Which way the photo is mirrored as seen on screen, whatever its rotation. */
+export function screenFlips(t: Transform): { horizontal: boolean; vertical: boolean } {
+  return isQuarterTurn(t.rotation)
+    ? { horizontal: t.flipY, vertical: t.flipX }
+    : { horizontal: t.flipX, vertical: t.flipY }
+}
+
+/**
+ * Mirror the photo left-right ('horizontal') or top-bottom ('vertical') as seen
+ * on screen. The mirror line runs through the middle of the block's visible
+ * area, so what was framed stays framed, mirrored; a photo that had been moved
+ * in its frame does not jump.
+ */
+export function flipOnScreen(block: Framed, direction: 'horizontal' | 'vertical'): Transform {
+  const t = block.transform
+  const frame = frameSize(block, UNIT_CELL)
+  const center = visibleCenter(block)
+  // On a quarter turn the photo's own axes are swapped relative to the screen.
+  const ownAxis = (direction === 'horizontal') !== isQuarterTurn(t.rotation) ? 'flipX' : 'flipY'
+  const next: Transform = { ...t, [ownAxis]: !t[ownAxis] }
+  if (direction === 'horizontal') next.panX = (2 * center.x) / frame.width - 1 - t.panX
+  else next.panY = (2 * center.y) / frame.height - 1 - t.panY
+  return next
+}
+
+/**
+ * Turn the photo a quarter turn on screen (90 clockwise, -90 counterclockwise)
+ * around the middle of the block's visible area: the point of the photo that
+ * sat there stays there.
+ */
+export function rotateOnScreen(block: Framed, image: Size, degrees: 90 | -90): Transform {
+  const t = block.transform
+  const frame = frameSize(block, UNIT_CELL)
+  const center = visibleCenter(block)
+  const rotation = ((t.rotation + degrees + 360) % 360) as Transform['rotation']
+
+  // Offset of the photo's center from the visible center, before the turn.
+  const ox = frame.width / 2 + t.panX * frame.width - center.x
+  const oy = frame.height / 2 + t.panY * frame.height - center.y
+  // The cover fit changes with the turn; scale the offset with it.
+  const k = coverScale(frame, image, rotation) / coverScale(frame, image, t.rotation)
+  const [rx, ry] = degrees === 90 ? [-oy, ox] : [oy, -ox]
+
+  return {
+    ...t,
+    rotation,
+    panX: (center.x + rx * k - frame.width / 2) / frame.width,
+    panY: (center.y + ry * k - frame.height / 2) / frame.height,
+  }
 }
