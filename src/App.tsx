@@ -5,6 +5,7 @@ import { useProject } from '@/store/project'
 import { useUi } from '@/store/ui'
 import { addFiles } from '@/ui/actions'
 import { Canvas } from '@/ui/canvas/Canvas'
+import { ExportDialog } from '@/ui/ExportDialog'
 import { FirstRun } from '@/ui/FirstRun'
 import { Inspector } from '@/ui/Inspector'
 import { Library } from '@/ui/Library'
@@ -127,6 +128,7 @@ export default function App() {
 
       {desktop ? <Inspector /> : <MobileBottom />}
 
+      <ExportDialog />
       <ProjectsDialog />
       <OverlayHost />
     </div>
