@@ -1,4 +1,5 @@
 import {
+  Aperture,
   ChevronDown,
   ChevronUp,
   Columns2,
@@ -28,6 +29,7 @@ import { ICON } from './classes'
 import { Button, IconButton } from './kit'
 import { Thumbs } from './Library'
 import { toast, useOverlays } from './overlays'
+import { openInSymmetry } from './symmetryTarget'
 import { useSelection } from './useSelection'
 
 const TAB_ICON = { className: 'size-5', strokeWidth: 1.6, 'aria-hidden': true } as const
@@ -105,6 +107,15 @@ function SelectionBar() {
           onClick={explain(info.joinBlocker, () => void runJoin())}
         >
           <SquareArrowRightEnter {...TAB_ICON} />
+        </Tab>
+        <Tab
+          label="Symmetry"
+          dim={!image}
+          onClick={explain(image ? null : 'Select one photo to make a pattern from it', () => {
+            if (image) openInSymmetry(image)
+          })}
+        >
+          <Aperture {...TAB_ICON} />
         </Tab>
         <Tab label="Duplicate" onClick={duplicateSelection}>
           <Copy {...TAB_ICON} />

@@ -14,6 +14,7 @@ import { OverlayHost } from '@/ui/OverlayHost'
 import { toast, useOverlays } from '@/ui/overlays'
 import { ProjectsDialog } from '@/ui/ProjectsDialog'
 import { ReceiveDialog } from '@/ui/ReceiveDialog'
+import { SymmetryEditor } from '@/ui/SymmetryEditor'
 import { TopBar } from '@/ui/TopBar'
 import { useIsDesktop } from '@/ui/useIsDesktop'
 import { useKeyboard } from '@/ui/useKeyboard'
@@ -132,6 +133,7 @@ export default function App() {
       <ExportDialog />
       <ProjectsDialog />
       <ReceiveDialog />
+      <SymmetryEditor />
       <OverlayHost />
     </div>
   )

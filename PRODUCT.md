@@ -45,6 +45,7 @@ Confirmed capabilities (v1 feature set, rebuilt, plus join and split):
 - Undo and redo.
 - Named projects saved in the browser, autosave.
 - Add photos from a phone by scanning a QR code: device to device, nothing stored online.
+- Symmetry patterns: mirror a photo across 1 to 12 lines (mirror, four-way, kaleidoscope), choose which part is mirrored, and place the result on the grid. A pattern can be opened and changed again.
 - Light and dark themes; post numbers on the grid can be hidden while editing.
 - Export all cells as 1080×1350 JPEG, as a ZIP or as individual files. Low-resolution warning.
 

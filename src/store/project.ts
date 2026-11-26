@@ -28,6 +28,8 @@ interface ProjectState extends ProjectData {
   addImages: (imageIds: readonly string[]) => string[]
   /** Add an image on a cell if it is free, else on the first free cell. */
   addImageAt: (imageId: string, col: number, row: number) => string
+  /** Add an image as one block of the given span, on the first spot it fits. */
+  addImageSpanning: (imageId: string, colSpan: number, rowSpan: number) => string
   addColorCell: (color?: string) => string
   remove: (ids: readonly string[]) => void
   /** Remove every block that shows the image (SPEC V18). */
@@ -115,6 +117,23 @@ export const useProject = create<ProjectState>()(
           colSpan: 1,
           rowSpan: 1,
           frame: { cols: 1, rows: 1, col: 0, row: 0 },
+          transform: { ...IDENTITY_TRANSFORM },
+        }
+        set({ blocks: [...blocks, block] })
+        return block.id
+      },
+
+      addImageSpanning: (imageId, colSpan, rowSpan) => {
+        const blocks = get().blocks
+        const block: Block = {
+          id: newId(),
+          kind: 'image',
+          imageId,
+          color: DEFAULT_BARS_COLOR,
+          ...firstFreeCell(blocks, colSpan, rowSpan),
+          colSpan,
+          rowSpan,
+          frame: { cols: colSpan, rows: rowSpan, col: 0, row: 0 },
           transform: { ...IDENTITY_TRANSFORM },
         }
         set({ blocks: [...blocks, block] })
