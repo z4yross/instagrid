@@ -1,0 +1,1217 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>InstaGrid remake mockup</title>
+<script>
+// Theme: ?theme=dark|light forces it, else the saved choice, else the OS setting.
+(function () {
+  var root = document.documentElement;
+  if (window.self !== window.top && root.dataset.theme) return;
+  var q = new URLSearchParams(location.search).get('theme');
+  var saved = null;
+  try { saved = localStorage.getItem('instagrid-mock-theme'); } catch (e) {}
+  var t = (q === 'dark' || q === 'light') ? q : (saved === 'dark' || saved === 'light') ? saved : null;
+  if (t) root.dataset.theme = t;
+})();
+</script>
+<style>
+@font-face {
+  font-family: "Hanken Grotesk";
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url("assets/fonts/hanken-grotesk-latin-ext.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: "Hanken Grotesk";
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url("assets/fonts/hanken-grotesk-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+:root {
+  /* One token set for both themes. Neutrals are achromatic on purpose:
+     the surround must never tint a photo. */
+  color-scheme: light dark;
+  --ground: light-dark(oklch(0.917 0 0), oklch(0.225 0 0));
+  --panel: light-dark(oklch(0.961 0 0), oklch(0.265 0 0));
+  --raised: light-dark(oklch(1 0 0), oklch(0.315 0 0));
+  --raised-hover: light-dark(oklch(0.985 0 0), oklch(0.345 0 0));
+  --raised-press: light-dark(oklch(0.95 0 0), oklch(0.29 0 0));
+  --cell-empty: light-dark(oklch(0.946 0 0), oklch(0.275 0 0));
+  --line: light-dark(oklch(0.868 0 0), oklch(0.38 0 0));
+  --line-soft: light-dark(oklch(0.908 0 0), oklch(0.32 0 0));
+  --line-strong: light-dark(oklch(0.77 0 0), oklch(0.5 0 0));
+  --dash: light-dark(oklch(0.78 0 0), oklch(0.48 0 0));
+  --track: light-dark(oklch(0.915 0 0), oklch(0.215 0 0));
+  --ink: light-dark(oklch(0.2 0 0), oklch(0.95 0 0));
+  --ink-2: light-dark(oklch(0.41 0 0), oklch(0.82 0 0));
+  --ink-3: light-dark(oklch(0.49 0 0), oklch(0.7 0 0));
+  --on-ink: light-dark(oklch(1 0 0), oklch(0.18 0 0));
+  --primary-hover: light-dark(oklch(0.32 0 0), oklch(0.86 0 0));
+  --primary-press: light-dark(oklch(0 0 0), oklch(1 0 0));
+  --disabled: light-dark(oklch(0.7 0 0), oklch(0.52 0 0));
+  --hover: light-dark(oklch(0 0 0 / 0.065), oklch(1 0 0 / 0.08));
+  --press: light-dark(oklch(0 0 0 / 0.11), oklch(1 0 0 / 0.14));
+  --swatch-line: light-dark(oklch(0 0 0 / 0.2), oklch(1 0 0 / 0.32));
+  /* Vermilion has one job in both themes: posting order. */
+  --accent: oklch(0.56 0.2 36);
+  --accent-ink: light-dark(oklch(0.5 0.18 36), oklch(0.74 0.16 40));
+  --warn-bg: light-dark(oklch(0.96 0.035 90), oklch(0.31 0.045 85));
+  --warn-line: light-dark(oklch(0.83 0.1 90), oklch(0.5 0.085 85));
+  --warn-ink: light-dark(oklch(0.42 0.09 80), oklch(0.91 0.08 90));
+  --chip: oklch(0.18 0 0 / 0.8);
+  --preview: light-dark(oklch(0.985 0 0), oklch(0.13 0 0));
+  --scrim: light-dark(oklch(0.2 0 0 / 0.42), oklch(0 0 0 / 0.6));
+  --stage: light-dark(oklch(0.88 0 0), oklch(0.17 0 0));
+  --bezel: light-dark(oklch(0.2 0 0), oklch(0.44 0 0));
+
+  --r: 6px;
+  --gap: 3px;
+  --mockbar-h: 32px;
+  --topbar-h: 48px;
+  --control-h: 32px;
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+
+  --fs-xs: 0.6875rem;
+  --fs-sm: 0.75rem;
+  --fs-base: 0.8125rem;
+  --fs-md: 0.9375rem;
+  --fs-lg: 1.25rem;
+}
+
+:root[data-theme="light"] { color-scheme: light; }
+:root[data-theme="dark"] { color-scheme: dark; }
+
+*, *::before, *::after { box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  margin: 0;
+  font-family: "Hanken Grotesk", system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-size: var(--fs-base);
+  line-height: 1.4;
+  color: var(--ink);
+  background: var(--ground);
+  font-variant-numeric: tabular-nums;
+  -webkit-font-smoothing: antialiased;
+  caret-color: var(--accent);
+  overflow: hidden;
+}
+::selection { background: var(--ink); color: var(--on-ink); }
+* { scrollbar-width: thin; scrollbar-color: var(--line-strong) transparent; }
+h1, h2, h3, p { margin: 0; }
+button, input { font: inherit; color: inherit; }
+button { cursor: pointer; }
+img { display: block; }
+:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+.icon { width: 18px; height: 18px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+
+/* ---------- Mockup-only state switcher (not part of the product) ---------- */
+.mockbar {
+  height: var(--mockbar-h);
+  display: flex; align-items: center; gap: 12px;
+  padding: 0 12px;
+  background: #1c1c1c; color: #c9c9c9;
+  font-size: var(--fs-sm);
+  overflow-x: auto; white-space: nowrap;
+}
+.mockbar-label { color: #9a9a9a; }
+.mockbar-tabs { display: flex; gap: 2px; }
+.mockbar button {
+  height: 24px; padding: 0 10px;
+  border: 0; border-radius: 4px;
+  background: transparent; color: #c9c9c9;
+}
+.mockbar button:hover { background: #2e2e2e; color: #fff; }
+.mockbar button[aria-pressed="true"] { background: #f2f2f2; color: #171717; }
+.mockbar-note { margin-left: auto; color: #9a9a9a; }
+
+/* ---------- App shell ---------- */
+.app {
+  height: calc(100dvh - var(--mockbar-h));
+  display: grid;
+  grid-template-columns: 232px minmax(0, 1fr) 280px;
+  grid-template-rows: var(--topbar-h) minmax(0, 1fr);
+  grid-template-areas: "top top top" "lib canvas insp";
+}
+
+/* ---------- Controls ---------- */
+.btn {
+  height: var(--control-h);
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  padding: 0 12px;
+  border: 1px solid var(--line); border-radius: var(--r);
+  background: var(--raised);
+  font-weight: 500; white-space: nowrap;
+  transition: background-color 160ms var(--ease), border-color 160ms var(--ease);
+}
+.btn:hover { border-color: var(--line-strong); background: var(--raised-hover); }
+.btn:active { background: var(--raised-press); }
+.btn-primary { background: var(--ink); border-color: var(--ink); color: var(--on-ink); }
+.btn-primary:hover { background: var(--primary-hover); border-color: var(--primary-hover); }
+.btn-primary:active { background: var(--primary-press); }
+.btn-ghost { border-color: transparent; background: transparent; }
+.btn-ghost:hover { background: var(--hover); border-color: transparent; }
+.btn[disabled], .iconbtn[disabled], .action[disabled] { color: var(--disabled); cursor: not-allowed; }
+.iconbtn {
+  width: var(--control-h); height: var(--control-h);
+  display: inline-grid; place-items: center;
+  border: 0; border-radius: var(--r); background: transparent; color: var(--ink-2);
+  transition: background-color 160ms var(--ease);
+}
+.iconbtn:hover:not([disabled]) { background: var(--hover); color: var(--ink); }
+.iconbtn:active:not([disabled]) { background: var(--press); }
+
+.num {
+  display: inline-grid; place-items: center;
+  min-width: 24px; height: 20px; padding: 0 5px;
+  border-radius: 4px;
+  background: var(--accent); color: #fff;
+  font-size: var(--fs-sm); font-weight: 700; line-height: 1; letter-spacing: 0.01em;
+}
+
+/* ---------- Top bar ---------- */
+.topbar {
+  grid-area: top;
+  display: flex; align-items: center; gap: 8px;
+  padding: 0 12px;
+  background: var(--panel);
+  border-bottom: 1px solid var(--line);
+}
+.brand { display: flex; align-items: center; gap: 8px; font-weight: 600; font-size: var(--fs-md); letter-spacing: -0.01em; }
+.brand svg { width: 20px; height: 20px; }
+.tb-sep { width: 1px; height: 20px; background: var(--line); margin: 0 4px; }
+.project { font-weight: 500; padding: 0 8px; gap: 4px; }
+.project .icon { width: 14px; height: 14px; color: var(--ink-3); }
+.saved { display: inline-flex; align-items: center; gap: 4px; color: var(--ink-3); font-size: var(--fs-sm); }
+.saved .icon { width: 14px; height: 14px; }
+.tb-spacer { flex: 1; }
+.tb-count { color: var(--ink-3); font-size: var(--fs-sm); margin: 0 4px; }
+.tb-title { font-weight: 600; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tb-title span { font-weight: 400; color: var(--ink-3); }
+
+/* ---------- Library (desktop left panel) ---------- */
+.library {
+  grid-area: lib;
+  display: flex; flex-direction: column; min-height: 0;
+  background: var(--panel);
+  border-right: 1px solid var(--line);
+}
+.panel-head {
+  display: flex; align-items: center; gap: 8px;
+  height: 44px; padding: 0 8px 0 16px; flex: none;
+}
+.panel-head h2 { font-size: var(--fs-base); font-weight: 600; }
+.panel-head .count { color: var(--ink-3); }
+.panel-head .btn { margin-left: auto; height: 28px; padding: 0 8px; }
+.thumbs {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+  padding: 4px 16px 16px;
+  overflow-y: auto; min-height: 0;
+  align-content: start;
+}
+.thumb {
+  position: relative; aspect-ratio: 3 / 4;
+  padding: 0; border: 0; border-radius: 4px; overflow: hidden;
+  background: var(--cell-empty);
+  cursor: grab;
+}
+.thumb img { width: 100%; height: 100%; object-fit: cover; }
+.thumb:hover { outline: 1px solid var(--ink-2); outline-offset: 1px; }
+.thumb .used {
+  position: absolute; left: 4px; bottom: 4px;
+  width: 18px; height: 18px; border-radius: 4px;
+  display: grid; place-items: center;
+  background: var(--chip); color: #fff;
+}
+.thumb .used .icon { width: 12px; height: 12px; stroke-width: 2.2; }
+.lib-foot {
+  margin-top: auto; flex: none;
+  padding: 12px 16px;
+  border-top: 1px solid var(--line-soft);
+}
+.lib-foot .btn { width: 100%; justify-content: flex-start; }
+.lib-foot p, .lib-empty p { color: var(--ink-3); font-size: var(--fs-sm); margin-top: 8px; }
+.lib-empty { padding: 4px 16px 16px; }
+.lib-drop {
+  display: grid; place-items: center; gap: 8px; text-align: center;
+  padding: 24px 12px;
+  border: 1px dashed var(--dash); border-radius: var(--r);
+  color: var(--ink-2);
+}
+.lib-drop .icon { width: 22px; height: 22px; color: var(--ink-3); }
+
+/* ---------- Canvas ---------- */
+.canvas {
+  grid-area: canvas;
+  position: relative; min-width: 0; min-height: 0;
+  overflow-y: auto; overflow-x: hidden;
+  background: var(--ground);
+  padding: 32px 24px 64px;
+  --gridw: 432px;
+  --cell: calc((var(--gridw) - 2 * var(--gap)) / 3);
+}
+.grid {
+  width: var(--gridw); margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(3, var(--cell));
+  grid-auto-rows: calc(var(--cell) * 4 / 3);
+  gap: var(--gap);
+}
+.block {
+  position: relative; min-width: 0;
+  background: var(--cell-empty);
+  cursor: grab;
+  transition: opacity 200ms var(--ease);
+}
+.block:hover { outline: 1px solid color-mix(in oklch, var(--ink) 55%, transparent); outline-offset: 0; z-index: 1; }
+.frame { position: absolute; inset: 0; overflow: hidden; }
+.photo { width: 100%; height: 100%; object-fit: cover; transition: transform 240ms var(--ease); }
+.piece { position: absolute; inset: 0; background-repeat: no-repeat; }
+.block > .num { position: absolute; left: 6px; top: 6px; }
+
+/* A 3-cell-wide crop of the 4:3 jars photo, cut into three 1-cell pieces. */
+.jars { background-image: url("assets/sample-jars.jpg"); background-size: 300% 168.75%; }
+.jars-l { background-position: 0% 55%; }
+.jars-m { background-position: 50% 55%; }
+.jars-r { background-position: 100% 55%; }
+/* Quarter crops of the 2x2 cliff block, for thumbnails. */
+.cliff { background-image: url("assets/sample-cliff.jpg"); background-size: 200% 200%; }
+.cliff-tl { background-position: 0 0; }
+.cliff-tr { background-position: 100% 0; }
+.cliff-bl { background-position: 0 100%; }
+.cliff-br { background-position: 100% 100%; }
+
+/* Cell seams inside a multi-cell block: where export will cut. */
+.seams { position: absolute; inset: 0; pointer-events: none; }
+.seams::before, .seams::after {
+  content: ""; position: absolute; background: rgba(255, 255, 255, 0.75);
+  transition: transform 320ms var(--ease), background-color 320ms var(--ease);
+}
+.seams::before { left: 0; right: 0; top: calc(50% - 0.5px); height: 1px; }
+.seams::after { top: 0; bottom: 0; left: calc(50% - 0.5px); width: 1px; }
+/* Split: the cut lines open into real gaps, so the block reads as four pieces. */
+body[data-split="on"] .seams::before { transform: scaleY(3); background: var(--ground); }
+body[data-split="on"] .seams::after { transform: scaleX(3); background: var(--ground); }
+body[data-split="on"] .flag { display: none; }
+
+/* Preview: the grid as it lands on the profile, with every overlay gone. */
+body[data-preview="on"] .canvas { background: var(--preview); }
+body[data-preview="on"] .grid .num,
+body[data-preview="on"] .grid .flag,
+body[data-preview="on"] .grid .color-tag,
+body[data-preview="on"] .grid .handle,
+body[data-preview="on"] .grid .cell-empty,
+body[data-preview="on"] .block.is-selected::after { display: none !important; }
+body[data-preview="on"] .seams::before, body[data-preview="on"] .seams::after { background: var(--preview); }
+body[data-preview="on"] .seams::before { transform: scaleY(3); }
+body[data-preview="on"] .seams::after { transform: scaleX(3); }
+.btn[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: var(--on-ink); }
+
+.flag {
+  position: absolute; right: 6px; top: 6px;
+  display: inline-flex; align-items: center; gap: 4px;
+  height: 18px; padding: 0 5px 0 4px; border-radius: 4px;
+  background: var(--warn-bg); color: var(--warn-ink);
+  font-size: var(--fs-xs); font-weight: 600;
+}
+.flag .icon { width: 12px; height: 12px; stroke-width: 2; }
+
+.block.color { background: #c9b8a3; }
+.color-tag {
+  position: absolute; left: 6px; bottom: 6px;
+  font-size: var(--fs-xs); font-weight: 500; color: rgba(23, 23, 23, 0.72);
+}
+.cell-empty {
+  display: grid; place-items: center;
+  background: var(--cell-empty); color: var(--ink-3);
+  border: 0; padding: 0;
+}
+.cell-empty .icon { opacity: 0; transition: opacity 160ms var(--ease); }
+.cell-empty:hover, .cell-empty:focus-visible { color: var(--ink-2); background: var(--raised-hover); }
+.cell-empty:hover .icon, .cell-empty:focus-visible .icon { opacity: 1; }
+
+/* Selection */
+.handle { display: none; }
+body[data-sel="block"][data-state="editor"] .block.is-selected { z-index: 2; cursor: move; }
+body[data-sel="block"][data-state="editor"] .block.is-selected::after {
+  content: ""; position: absolute; inset: -2px; pointer-events: none;
+  border: 2px solid var(--ink);
+  box-shadow: inset 0 0 0 1px var(--on-ink);
+}
+body[data-sel="block"][data-state="editor"] .block.is-selected:hover { outline: none; }
+body[data-sel="block"][data-state="editor"] .block.is-selected .handle {
+  display: block; position: absolute; z-index: 3;
+  width: 11px; height: 11px;
+  background: var(--on-ink); border: 1.5px solid var(--ink); border-radius: 2px;
+}
+.handle.tl { left: -6px; top: -6px; cursor: nwse-resize; }
+.handle.tr { right: -6px; top: -6px; cursor: nesw-resize; }
+.handle.bl { left: -6px; bottom: -6px; cursor: nesw-resize; }
+.handle.br { right: -6px; bottom: -6px; cursor: nwse-resize; }
+
+/* Adjust state */
+.ghost { display: none; }
+body[data-state="adjust"] .grid > :not(.is-selected) { opacity: 0.22; pointer-events: none; }
+body[data-state="adjust"] .block.is-selected { z-index: 2; cursor: grab; outline: none; }
+body[data-state="adjust"] .block.is-selected .photo,
+body[data-state="adjust"] .block.is-selected .ghost { transform: scale(1.24) translate(-5%, 4%); }
+body[data-state="adjust"] .block.is-selected .ghost {
+  display: block; position: absolute; inset: 0; width: 100%; height: 100%;
+  object-fit: cover; opacity: 0.3; pointer-events: none;
+}
+body[data-state="adjust"] .block.is-selected::after {
+  content: ""; position: absolute; inset: -1px; pointer-events: none;
+  border: 1px solid var(--ink);
+  box-shadow: 0 0 0 1px var(--on-ink);
+}
+body[data-state="adjust"] .flag { display: none; }
+.canvas-hint {
+  position: sticky; bottom: -40px; z-index: 4;
+  width: max-content; max-width: 100%; margin: 20px auto 0;
+  padding: 6px 12px; border-radius: 999px;
+  background: var(--raised); border: 1px solid var(--line);
+  color: var(--ink-2); font-size: var(--fs-sm);
+}
+kbd {
+  font: inherit; font-size: var(--fs-xs); font-weight: 500;
+  padding: 1px 5px; border: 1px solid var(--line); border-radius: 4px;
+  background: var(--raised); color: var(--ink-2);
+}
+
+/* ---------- First run ---------- */
+.firstrun { width: var(--gridw); max-width: 100%; margin: 0 auto; }
+.firstrun h1 { font-size: var(--fs-lg); font-weight: 600; letter-spacing: -0.015em; text-wrap: balance; }
+.firstrun .lede { margin-top: 8px; color: var(--ink-2); font-size: var(--fs-md); max-width: 46ch; text-wrap: pretty; }
+.firstrun-cta { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 12px; margin-top: 20px; }
+.firstrun-cta .btn { height: 40px; padding: 0 16px; font-size: var(--fs-md); }
+.firstrun-cta span { color: var(--ink-3); }
+.ghostgrid {
+  margin-top: 32px;
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--gap);
+}
+.ghostgrid div {
+  position: relative; aspect-ratio: 3 / 4;
+  background: var(--cell-empty);
+  border: 1px dashed var(--dash);
+}
+.ghostgrid .num {
+  position: absolute; left: 6px; top: 6px;
+  animation: count-in 420ms var(--ease) both;
+  animation-delay: calc(500ms + var(--i) * 260ms);
+}
+.ghostgrid div { animation: cell-in 420ms var(--ease) both; animation-delay: calc(500ms + var(--i) * 260ms); }
+@keyframes count-in {
+  from { background: var(--line); color: var(--ink-2); transform: scale(0.82); }
+  to { background: var(--accent); color: #fff; transform: none; }
+}
+@keyframes cell-in {
+  from { background: var(--cell-empty); border-color: var(--dash); }
+  to { background: var(--raised-hover); border-color: var(--ink-3); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ghostgrid .num, .ghostgrid div { animation: none; }
+}
+.firstrun .order { margin-top: 12px; color: var(--ink-2); text-wrap: pretty; }
+.firstrun .private { margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--line); color: var(--ink-3); }
+
+/* ---------- Inspector (desktop right panel) ---------- */
+.inspector {
+  grid-area: insp;
+  min-height: 0; overflow-y: auto;
+  background: var(--panel);
+  border-left: 1px solid var(--line);
+}
+.insp-id { display: flex; align-items: center; gap: 12px; padding: 16px; }
+.insp-id .mini { width: 42px; height: 56px; border-radius: 3px; object-fit: cover; flex: none; }
+.insp-id h2 { font-size: var(--fs-base); font-weight: 600; overflow-wrap: anywhere; }
+.insp-id p { color: var(--ink-3); font-size: var(--fs-sm); }
+.insp-sec { padding: 16px; border-top: 1px solid var(--line-soft); }
+.insp-sec > h3 { font-size: var(--fs-sm); font-weight: 600; color: var(--ink-2); margin-bottom: 10px; }
+.props { display: grid; grid-template-columns: 88px 1fr; gap: 8px 12px; margin: 0; align-items: center; }
+.props dt { color: var(--ink-3); }
+.props dd { margin: 0; display: flex; flex-wrap: wrap; gap: 4px; }
+.notice {
+  display: flex; gap: 8px; align-items: flex-start;
+  margin-top: 14px; padding: 10px 12px;
+  border: 1px solid var(--warn-line); border-radius: var(--r);
+  background: var(--warn-bg); color: var(--warn-ink);
+  font-size: var(--fs-sm);
+}
+.notice .icon { width: 16px; height: 16px; margin-top: 1px; stroke-width: 1.8; }
+.notice strong { font-weight: 600; }
+.notice .link { display: inline; padding: 0; border: 0; background: none; color: inherit; font-weight: 600; text-decoration: underline; text-underline-offset: 2px; }
+.actions { display: grid; gap: 2px; margin: 0 -8px; }
+.action {
+  display: flex; align-items: center; gap: 10px;
+  min-height: 36px; padding: 0 8px;
+  border: 0; border-radius: var(--r); background: transparent;
+  text-align: left; font-weight: 500;
+  transition: background-color 160ms var(--ease);
+}
+.action:hover:not([disabled]) { background: var(--hover); }
+.action:active:not([disabled]) { background: var(--press); }
+.action .hint { margin-left: auto; color: var(--ink-3); font-weight: 400; font-size: var(--fs-sm); }
+.action.danger:hover { color: var(--accent-ink); }
+.action small { display: block; font-size: var(--fs-xs); font-weight: 400; color: var(--ink-3); }
+.insp-blank { padding: 16px; color: var(--ink-2); }
+.insp-blank h2 { font-size: var(--fs-base); font-weight: 600; margin-bottom: 4px; color: var(--ink); }
+.field { display: grid; gap: 6px; }
+.field label { color: var(--ink-3); font-size: var(--fs-sm); }
+.input {
+  height: var(--control-h); width: 100%; padding: 0 10px;
+  border: 1px solid var(--line); border-radius: var(--r); background: var(--raised);
+}
+.input:hover { border-color: var(--line-strong); }
+.keys { display: grid; grid-template-columns: 1fr auto; gap: 8px 12px; margin: 0; color: var(--ink-2); }
+.keys dd { margin: 0; display: flex; gap: 4px; justify-content: flex-end; }
+
+/* Adjust controls (shared by inspector and mobile bar) */
+.zoomrow { display: flex; align-items: center; gap: 8px; }
+.zoomrow output { min-width: 40px; text-align: right; color: var(--ink-2); }
+input[type="range"] {
+  -webkit-appearance: none; appearance: none;
+  flex: 1; min-width: 0; height: 24px; margin: 0; background: transparent; cursor: pointer;
+}
+input[type="range"]::-webkit-slider-runnable-track { height: 2px; background: var(--dash); border-radius: 2px; }
+input[type="range"]::-moz-range-track { height: 2px; background: var(--dash); border-radius: 2px; }
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none; width: 16px; height: 16px; margin-top: -7px;
+  border-radius: 50%; background: var(--ink); border: 2px solid var(--panel);
+}
+input[type="range"]::-moz-range-thumb { width: 12px; height: 12px; border-radius: 50%; background: var(--ink); border: 2px solid var(--panel); }
+.seg { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 2px; padding: 2px; border-radius: var(--r); background: var(--track); }
+.seg button {
+  height: 28px; border: 0; border-radius: 4px; background: transparent;
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px; font-weight: 500; color: var(--ink-2);
+}
+.seg button:hover { color: var(--ink); }
+.seg button[aria-pressed="true"] { background: var(--raised); color: var(--ink); box-shadow: 0 1px 2px rgba(0, 0, 0, 0.12); }
+.row2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.row2 .btn { padding: 0 8px; }
+.swatches { display: flex; flex-wrap: wrap; gap: 8px; }
+.swatch {
+  width: 28px; height: 28px; padding: 0; border-radius: 50%;
+  border: 1px solid var(--swatch-line); background: var(--c);
+  display: grid; place-items: center;
+}
+.swatch[aria-pressed="true"] { outline: 2px solid var(--ink); outline-offset: 2px; }
+.swatch.custom { background: var(--raised); color: var(--ink-2); }
+.swatch.custom .icon { width: 14px; height: 14px; }
+.help { margin-top: 8px; color: var(--ink-3); font-size: var(--fs-sm); }
+
+/* ---------- Mobile bottom areas ---------- */
+.bottom { display: none; }
+.selbar-info {
+  display: flex; align-items: center; gap: 8px;
+  padding: 0 4px 0 16px; min-height: 44px;
+  border-bottom: 1px solid var(--line-soft);
+  font-size: var(--fs-sm); color: var(--ink-2);
+}
+.selbar-info strong { font-weight: 600; color: var(--ink); }
+.selbar-info .flag { position: static; }
+.selbar-info .iconbtn { margin-left: auto; }
+.selbar-actions { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; }
+.tab {
+  min-height: 56px; padding: 6px 2px;
+  display: grid; justify-items: center; align-content: center; gap: 3px;
+  border: 0; background: transparent;
+  font-size: var(--fs-xs); font-weight: 500; color: var(--ink);
+}
+.tab .icon { width: 20px; height: 20px; }
+.tab:active:not([disabled]) { background: var(--press); }
+.tab[disabled] { color: var(--disabled); }
+.sheet-peek { display: flex; align-items: center; gap: 12px; padding: 0 8px 0 16px; min-height: 64px; }
+.sheet-toggle {
+  display: flex; align-items: center; gap: 12px; flex: 1; min-width: 0; min-height: 64px;
+  padding: 0; border: 0; background: transparent; text-align: left;
+}
+.sheet-toggle b { font-weight: 600; }
+.sheet-toggle .count { color: var(--ink-3); }
+.strip { display: flex; gap: 4px; overflow: hidden; flex: 1; min-width: 0; }
+.strip img { width: 30px; height: 40px; object-fit: cover; border-radius: 2px; flex: none; }
+.grabber { width: 36px; height: 4px; border-radius: 2px; background: var(--dash); margin: 6px auto 0; }
+.sheet-full { display: none; padding: 0 16px 16px; }
+.sheet-full .thumbs { grid-template-columns: repeat(4, 1fr); padding: 0; max-height: 42dvh; }
+.sheet-full .btn { width: 100%; margin-top: 12px; justify-content: flex-start; }
+.adjbar { padding: 8px 16px 4px; }
+.adjbar .zoomrow { min-height: 44px; }
+.adjbar .selbar-actions { margin: 0 -16px; }
+.tab .dot { width: 20px; height: 20px; border-radius: 50%; border: 1px solid var(--swatch-line); background: #fff; }
+
+/* ---------- Export dialog ---------- */
+.scrim {
+  position: fixed; inset: 0; z-index: 20;
+  display: none; place-items: center; padding: 24px;
+  background: var(--scrim);
+}
+body[data-dialog="export"] .scrim { display: grid; }
+.dialog {
+  width: min(560px, 100%); max-height: 100%; overflow-y: auto;
+  background: var(--panel); border-radius: 10px;
+  box-shadow: 0 24px 60px -12px rgba(0, 0, 0, 0.35), 0 2px 6px rgba(0, 0, 0, 0.12);
+}
+.dialog-head { display: flex; align-items: center; padding: 16px 12px 0 20px; }
+.dialog-head h2 { font-size: var(--fs-lg); font-weight: 600; letter-spacing: -0.015em; }
+.dialog-head .iconbtn { margin-left: auto; }
+.dialog-body { padding: 4px 20px 20px; }
+.dialog-body > p { color: var(--ink-2); }
+.film {
+  display: flex; gap: 5px; margin: 16px -20px 0; padding: 2px 20px 8px;
+  overflow-x: auto; scroll-snap-type: x proximity; scroll-padding-inline: 20px;
+}
+.film figure { margin: 0; flex: none; width: 38px; display: grid; gap: 4px; justify-items: center; scroll-snap-align: start; }
+.film .f { width: 38px; height: 51px; border-radius: 2px; background-color: var(--cell-empty); background-repeat: no-repeat; }
+.film .f.cover { background-size: cover; background-position: center; }
+.film figcaption { font-size: var(--fs-sm); font-weight: 700; color: var(--accent-ink); }
+.film figure:first-child .f { outline: 2px solid var(--accent); outline-offset: 1px; }
+.film-note { margin-top: 6px; color: var(--ink-3); font-size: var(--fs-sm); }
+.choices { display: grid; gap: 8px; margin-top: 20px; border: 0; padding: 0; min-width: 0; }
+.choices legend { padding: 0; margin-bottom: 8px; font-weight: 600; }
+.choice {
+  display: flex; align-items: center; gap: 12px;
+  min-height: 52px; padding: 8px 12px;
+  border: 1px solid var(--line); border-radius: var(--r); background: var(--raised);
+  cursor: pointer;
+}
+.choice:hover { border-color: var(--line-strong); }
+.choice:has(input:checked) { border-color: var(--ink); box-shadow: inset 0 0 0 1px var(--ink); }
+.choice input { width: 16px; height: 16px; margin: 0; accent-color: var(--ink); flex: none; }
+.choice b { display: block; font-weight: 600; }
+.choice span span { color: var(--ink-3); font-size: var(--fs-sm); }
+.dialog-foot {
+  display: flex; align-items: center; justify-content: flex-end; gap: 8px;
+  padding: 12px 20px; border-top: 1px solid var(--line);
+  position: sticky; bottom: 0; background: var(--panel);
+}
+.dialog-foot .spec { margin-right: auto; color: var(--ink-3); font-size: var(--fs-sm); }
+.dialog-foot .btn { height: 36px; }
+
+/* ---------- Mobile view on a desktop screen (mockup-only frame) ---------- */
+.stage { display: none; }
+body[data-view="mobile"] .app { display: none; }
+body[data-view="mobile"] .stage {
+  height: calc(100dvh - var(--mockbar-h));
+  display: flex; align-items: center; justify-content: center; gap: 40px;
+  background: var(--stage); overflow: hidden;
+}
+.phone-slot { flex: none; }
+.phone {
+  width: 410px; height: 864px; padding: 10px;
+  border-radius: 44px; background: var(--bezel);
+  transform-origin: top left;
+}
+.phone iframe { width: 390px; height: 844px; border: 0; border-radius: 34px; background: var(--ground); display: block; }
+.stage-side { width: 220px; display: grid; gap: 4px; align-content: center; }
+.stage-side h2 { font-size: var(--fs-md); font-weight: 600; margin-bottom: 2px; }
+.stage-side p { color: var(--ink-2); margin-bottom: 12px; }
+.stage-side button {
+  height: 36px; padding: 0 12px; text-align: left;
+  border: 1px solid transparent; border-radius: var(--r); background: transparent; font-weight: 500;
+}
+.stage-side button:hover { background: var(--hover); }
+.stage-side button[aria-pressed="true"] { background: var(--raised); border-color: var(--line); }
+body[data-embed="on"] .mockbar { display: none; }
+body[data-embed="on"] .app { height: 100dvh; }
+@media (max-width: 820px) { body[data-view="mobile"] .stage-side { display: none; } }
+
+/* ---------- Medium widths ---------- */
+@media (max-width: 1100px) {
+  .app { grid-template-columns: 184px minmax(0, 1fr) 256px; }
+  .canvas { --gridw: 372px; }
+  .saved { display: none; }
+}
+
+/* ---------- Mobile layout ---------- */
+@media (max-width: 820px) {
+  :root { --topbar-h: 56px; --control-h: 44px; }
+  .mockbar-note { display: none; }
+  .app {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: var(--topbar-h) minmax(0, 1fr) auto;
+    grid-template-areas: "top" "canvas" "bottom";
+  }
+  .library, .inspector { display: none; }
+  .topbar { padding: 0 8px 0 12px; gap: 2px; }
+  .brand, .tb-sep, .saved, .tb-count { display: none; }
+  .topbar .btn-primary[data-open] .icon { display: none; }
+  .project { padding: 0 6px; min-width: 0; }
+  .project b { overflow: hidden; text-overflow: ellipsis; font-weight: 500; }
+  .topbar .btn-primary { margin-left: 6px; padding: 0 14px; }
+  .canvas { padding: 16px 16px 32px; --gridw: calc(100vw - 32px); }
+  .block > .num, .ghostgrid .num { left: 4px; top: 4px; }
+  .flag { right: 4px; top: 4px; }
+  .flag span { display: none; }
+  .flag { padding: 0 4px; }
+  .block.is-selected > .flag { right: 26px; }
+  /* Handles sit inside the block so they stay clear of the screen-edge gesture zone. */
+  body[data-sel="block"][data-state="editor"] .block.is-selected .handle { width: 16px; height: 16px; border-radius: 3px; border-width: 2px; }
+  .handle.tl { left: 4px; top: 4px; }
+  .handle.tr { right: 4px; top: 4px; }
+  .handle.bl { left: 4px; bottom: 4px; }
+  .handle.br { right: 4px; bottom: 4px; }
+  .block.is-selected > .num.n-tl { left: 26px; }
+  body[data-state="adjust"] .block.is-selected > .num.n-tl { left: 4px; }
+  .canvas-hint { display: none; }
+  .bottom {
+    grid-area: bottom; display: block;
+    background: var(--panel); border-top: 1px solid var(--line);
+    padding-bottom: env(safe-area-inset-bottom);
+    padding-left: env(safe-area-inset-left); padding-right: env(safe-area-inset-right);
+  }
+  body[data-sheet="open"] .sheet-full { display: block; }
+  body[data-sheet="open"] .strip { visibility: hidden; }
+  .firstrun-cta .btn { height: 48px; flex: 1 1 100%; }
+  .firstrun-cta .btn[data-replay] { height: 44px; }
+  .scrim { padding: 0; place-items: end stretch; }
+  .dialog { width: 100%; max-height: 88dvh; border-radius: 14px 14px 0 0; padding-bottom: env(safe-area-inset-bottom); }
+  .dialog-foot .spec { display: none; }
+  .dialog-foot .btn { height: 48px; flex: 1; }
+  .film figure, .film .f { width: 54px; }
+  .film .f { height: 72px; }
+}
+
+/* ---------- State visibility (kept last) ---------- */
+body:not([data-state="editor"]) .only-editor,
+body:not([data-state="adjust"]) .only-adjust,
+body:not([data-state="firstrun"]) .only-firstrun,
+body[data-state="firstrun"] .not-firstrun,
+body[data-state="adjust"] .not-adjust,
+body[data-sel="none"] .only-sel,
+body[data-sel="block"] .only-nosel { display: none !important; }
+@media (min-width: 821px) { .only-mobile { display: none !important; } }
+@media (max-width: 820px) { .only-desktop { display: none !important; } }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition-duration: 0.01ms !important; }
+}
+</style>
+</head>
+<body data-view="editor" data-state="editor" data-sel="block" data-sheet="closed" data-dialog="none" data-split="off" data-preview="off">
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-undo" viewBox="0 0 24 24"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></symbol>
+    <symbol id="i-redo" viewBox="0 0 24 24"><path d="m15 14 5-5-5-5"/><path d="M20 9H9.5a5.5 5.5 0 0 0 0 11H13"/></symbol>
+    <symbol id="i-export" viewBox="0 0 24 24"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="i-minus" viewBox="0 0 24 24"><path d="M5 12h14"/></symbol>
+    <symbol id="i-adjust" viewBox="0 0 24 24"><path d="M6 2v14a2 2 0 0 0 2 2h14"/><path d="M18 22V8a2 2 0 0 0-2-2H2"/></symbol>
+    <symbol id="i-split" viewBox="0 0 24 24"><path d="M9 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h4z"/><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4z"/></symbol>
+    <symbol id="i-join" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="m8 9 3 3-3 3"/><path d="m16 9-3 3 3 3"/></symbol>
+    <symbol id="i-copy" viewBox="0 0 24 24"><rect x="8" y="8" width="13" height="13" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/></symbol>
+    <symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16"/><path d="M9 7V4h6v3"/><path d="m6 7 1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12"/><path d="M10 11v6M14 11v6"/></symbol>
+    <symbol id="i-rotl" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></symbol>
+    <symbol id="i-rotr" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></symbol>
+    <symbol id="i-fliph" viewBox="0 0 24 24"><path d="M12 3v18" stroke-dasharray="2 3"/><path d="M8 7v10l-5-5z"/><path d="M16 7v10l5-5z"/></symbol>
+    <symbol id="i-flipv" viewBox="0 0 24 24"><path d="M3 12h18" stroke-dasharray="2 3"/><path d="M7 8h10l-5-5z"/><path d="M7 16h10l-5 5z"/></symbol>
+    <symbol id="i-chev" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 5 5 9-10"/></symbol>
+    <symbol id="i-warn" viewBox="0 0 24 24"><path d="M12 4 2.5 20h19z"/><path d="M12 10v4"/><path d="M12 17v.4"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+    <symbol id="i-photos" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="m3 16 5-5 4 4 3-3 6 6"/><circle cx="15.5" cy="9" r="1.3"/></symbol>
+    <symbol id="i-theme" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor" stroke="none"/></symbol>
+    <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></symbol>
+    <symbol id="i-color" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M4 13 13 4M9 20 20 9"/></symbol>
+    <symbol id="i-mark" viewBox="0 0 32 32"><g fill="currentColor" stroke="none"><rect x="3" y="3" width="7" height="7"/><rect x="12.5" y="3" width="7" height="7" opacity=".6"/><rect x="22" y="3" width="7" height="7" opacity=".3"/><rect x="3" y="12.5" width="7" height="7" opacity=".6"/><rect x="12.5" y="12.5" width="7" height="7"/><rect x="22" y="12.5" width="7" height="7" opacity=".6"/><rect x="3" y="22" width="7" height="7" opacity=".3"/><rect x="12.5" y="22" width="7" height="7" opacity=".6"/><rect x="22" y="22" width="7" height="7"/></g></symbol>
+  </defs>
+</svg>
+
+<!-- Mockup-only switcher. Not part of the product UI. -->
+<nav class="mockbar" aria-label="Mockup states">
+  <span class="mockbar-label">Mockup</span>
+  <div class="mockbar-tabs">
+    <button type="button" data-view="editor" aria-pressed="true">Editor</button>
+    <button type="button" data-view="adjust" aria-pressed="false">Adjust</button>
+    <button type="button" data-view="firstrun" aria-pressed="false">First run</button>
+    <button type="button" data-view="export" aria-pressed="false">Export</button>
+    <button type="button" data-view="mobile" aria-pressed="false">Mobile</button>
+  </div>
+  <span class="mockbar-note">Sample photos. The Mobile tab shows the phone layout.</span>
+</nav>
+
+<div class="app">
+
+  <header class="topbar">
+    <div class="brand not-adjust"><svg aria-hidden="true"><use href="#i-mark"/></svg><span>InstaGrid</span></div>
+    <span class="tb-sep not-adjust"></span>
+    <button type="button" class="btn btn-ghost project not-adjust" aria-haspopup="menu">
+      <b class="only-firstrun">Untitled grid</b><b class="not-firstrun">Sample grid</b>
+      <svg class="icon" aria-hidden="true"><use href="#i-chev"/></svg>
+    </button>
+    <span class="saved not-adjust not-firstrun"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>Saved on this device</span>
+
+    <p class="tb-title only-adjust">Adjust <span>sample-cliff.jpg</span></p>
+
+    <span class="tb-spacer"></span>
+
+    <button type="button" class="iconbtn not-adjust" data-theme-toggle aria-label="Switch between light and dark theme" title="Light or dark theme"><svg class="icon" aria-hidden="true"><use href="#i-theme"/></svg></button>
+
+    <button type="button" class="iconbtn not-adjust not-firstrun" aria-label="Undo" title="Undo (Ctrl Z)"><svg class="icon" aria-hidden="true"><use href="#i-undo"/></svg></button>
+    <button type="button" class="iconbtn not-adjust not-firstrun" aria-label="Redo" title="Redo (Ctrl Y)" disabled><svg class="icon" aria-hidden="true"><use href="#i-redo"/></svg></button>
+    <button type="button" class="btn btn-ghost not-adjust not-firstrun" data-preview-toggle aria-pressed="false" title="See the grid as it will look on your profile"><svg class="icon" aria-hidden="true"><use href="#i-eye"/></svg><span class="only-desktop">Preview</span></button>
+    <span class="tb-count not-adjust not-firstrun">12 files</span>
+    <button type="button" class="btn btn-primary not-adjust not-firstrun" data-open="export"><svg class="icon" aria-hidden="true"><use href="#i-export"/></svg>Export</button>
+
+    <button type="button" class="btn btn-ghost only-adjust">Reset</button>
+    <button type="button" class="btn btn-primary only-adjust" data-view="editor">Done</button>
+  </header>
+
+  <aside class="library" aria-label="Photos">
+    <div class="panel-head">
+      <h2>Photos <span class="count not-firstrun">8</span></h2>
+      <button type="button" class="btn not-firstrun"><svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg>Add</button>
+    </div>
+    <div class="thumbs not-firstrun">
+      <button type="button" class="thumb" title="sample-dusk.jpg, not on the grid yet"><img src="assets/sample-dusk.jpg" alt="Sample photo: sea at dusk"></button>
+      <button type="button" class="thumb" title="sample-cliff.jpg"><img src="assets/sample-cliff.jpg" alt="Sample photo: cliff over the sea"><span class="used" title="On the grid"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg></span></button>
+      <button type="button" class="thumb" title="sample-pebbles.jpg"><img src="assets/sample-pebbles.jpg" alt="Sample photo: pebble beach"><span class="used" title="On the grid"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg></span></button>
+      <button type="button" class="thumb" title="sample-jars.jpg"><img src="assets/sample-jars.jpg" alt="Sample photo: glass jars on a fence"><span class="used" title="On the grid"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg></span></button>
+      <button type="button" class="thumb" title="sample-pup.jpg"><img src="assets/sample-pup.jpg" alt="Sample photo: black puppy"><span class="used" title="On the grid"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg></span></button>
+      <button type="button" class="thumb" title="sample-honey.jpg"><img src="assets/sample-honey.jpg" alt="Sample photo: honey jar"><span class="used" title="On the grid"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg></span></button>
+      <button type="button" class="thumb" title="sample-clock.jpg"><img src="assets/sample-clock.jpg" alt="Sample photo: clock face"><span class="used" title="On the grid"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg></span></button>
+      <button type="button" class="thumb" title="sample-bay.jpg"><img src="assets/sample-bay.jpg" alt="Sample photo: bay and skyline"><span class="used" title="On the grid"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg></span></button>
+    </div>
+    <div class="lib-foot not-firstrun">
+      <button type="button" class="btn"><svg class="icon" aria-hidden="true"><use href="#i-color"/></svg>Add color cell</button>
+      <p>Drag a photo onto the grid. A checked photo is already placed.</p>
+    </div>
+    <div class="lib-empty only-firstrun">
+      <div class="lib-drop">
+        <svg class="icon" aria-hidden="true"><use href="#i-photos"/></svg>
+        <span>Photos you add appear here.</span>
+      </div>
+    </div>
+  </aside>
+
+  <main class="canvas" id="canvas">
+
+    <div class="grid not-firstrun" aria-label="Feed grid, 3 columns">
+      <!-- Multi-cell image: 2 x 2 cells, selected -->
+      <div class="block is-selected" id="blk-cliff" tabindex="0" style="grid-column: 1 / 3; grid-row: 1 / 3" aria-label="sample-cliff.jpg, 2 by 2 cells, posts 8, 9, 11 and 12">
+        <img class="ghost" src="assets/sample-cliff.jpg" alt="">
+        <div class="frame"><img class="photo" src="assets/sample-cliff.jpg" alt="Sample photo: cliff over the sea"></div>
+        <span class="seams"></span>
+        <span class="num n-tl">12</span>
+        <span class="num" style="left: calc(50% + 6px)">11</span>
+        <span class="num" style="top: calc(50% + 6px)">09</span>
+        <span class="num" style="left: calc(50% + 6px); top: calc(50% + 6px)">08</span>
+        <span class="flag not-adjust" title="Low resolution for this size"><svg class="icon" aria-hidden="true"><use href="#i-warn"/></svg><span>Low res</span></span>
+        <i class="handle tl"></i><i class="handle tr"></i><i class="handle bl"></i><i class="handle br"></i>
+      </div>
+      <div class="block" tabindex="0" style="grid-column: 3; grid-row: 1" aria-label="sample-pebbles.jpg, post 10">
+        <div class="frame"><img class="photo" src="assets/sample-pebbles.jpg" alt="Sample photo: pebble beach"></div>
+        <span class="num">10</span>
+      </div>
+      <!-- Placeholder color cell: not numbered, not exported -->
+      <div class="block color" tabindex="0" style="grid-column: 3; grid-row: 2" aria-label="Color cell, not exported">
+        <span class="color-tag">Color cell</span>
+      </div>
+      <!-- Split set: one photo cut into three 1-cell pieces -->
+      <div class="block" tabindex="0" style="grid-column: 1; grid-row: 3" aria-label="sample-jars.jpg, piece 1 of 3, post 7">
+        <div class="piece jars jars-l" role="img" aria-label="Sample photo: glass jars on a fence, left piece"></div>
+        <span class="num">07</span>
+      </div>
+      <div class="block" tabindex="0" style="grid-column: 2; grid-row: 3" aria-label="sample-jars.jpg, piece 2 of 3, post 6">
+        <div class="piece jars jars-m" role="img" aria-label="Sample photo: glass jars on a fence, middle piece"></div>
+        <span class="num">06</span>
+      </div>
+      <div class="block" tabindex="0" style="grid-column: 3; grid-row: 3" aria-label="sample-jars.jpg, piece 3 of 3, post 5">
+        <div class="piece jars jars-r" role="img" aria-label="Sample photo: glass jars on a fence, right piece"></div>
+        <span class="num">05</span>
+      </div>
+      <div class="block" tabindex="0" style="grid-column: 1; grid-row: 4" aria-label="sample-pup.jpg, post 4">
+        <div class="frame"><img class="photo" src="assets/sample-pup.jpg" alt="Sample photo: black puppy"></div>
+        <span class="num">04</span>
+      </div>
+      <div class="block" tabindex="0" style="grid-column: 2; grid-row: 4" aria-label="sample-honey.jpg, post 3">
+        <div class="frame"><img class="photo" src="assets/sample-honey.jpg" alt="Sample photo: honey jar"></div>
+        <span class="num">03</span>
+      </div>
+      <div class="block" tabindex="0" style="grid-column: 3; grid-row: 4" aria-label="sample-clock.jpg, post 2">
+        <div class="frame"><img class="photo" src="assets/sample-clock.jpg" alt="Sample photo: clock face"></div>
+        <span class="num">02</span>
+      </div>
+      <div class="block" tabindex="0" style="grid-column: 1; grid-row: 5" aria-label="sample-bay.jpg, post 1">
+        <div class="frame"><img class="photo" src="assets/sample-bay.jpg" alt="Sample photo: bay and skyline"></div>
+        <span class="num">01</span>
+      </div>
+      <button type="button" class="cell-empty" style="grid-column: 2; grid-row: 5" aria-label="Empty cell. Add a photo or a color cell"><svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg></button>
+      <button type="button" class="cell-empty" style="grid-column: 3; grid-row: 5" aria-label="Empty cell. Add a photo or a color cell"><svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg></button>
+    </div>
+
+    <p class="canvas-hint only-adjust">Drag to move the photo. Scroll to zoom. <kbd>Esc</kbd> to finish.</p>
+
+    <section class="firstrun only-firstrun" aria-labelledby="fr-title">
+      <h1 id="fr-title">Plan your Instagram grid</h1>
+      <p class="lede">Add your photos, arrange them the way your profile should look, then export numbered files to post in order.</p>
+      <div class="firstrun-cta">
+        <button type="button" class="btn btn-primary" data-view="editor"><svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg>Choose photos</button>
+        <button type="button" class="btn" data-replay>Play the order again</button>
+        <span class="only-desktop">or drop them anywhere. Paste works too.</span>
+      </div>
+      <div class="ghostgrid" aria-hidden="true">
+        <div style="--i: 5"><span class="num">06</span></div><div style="--i: 4"><span class="num">05</span></div><div style="--i: 3"><span class="num">04</span></div>
+        <div style="--i: 2"><span class="num">03</span></div><div style="--i: 1"><span class="num">02</span></div><div style="--i: 0"><span class="num">01</span></div>
+      </div>
+      <p class="order">This is the order you post in. 01 goes up first and ends up last on your profile, so the grid builds from the bottom right.</p>
+      <p class="private">Your photos stay on this device. No account, nothing is uploaded.</p>
+    </section>
+  </main>
+
+  <aside class="inspector" aria-label="Inspector">
+
+    <!-- Editor, block selected -->
+    <div class="only-editor only-sel">
+      <div class="insp-id">
+        <img class="mini" src="assets/sample-cliff.jpg" alt="">
+        <div><h2>sample-cliff.jpg</h2><p>1200 × 1500 px</p></div>
+      </div>
+      <div class="insp-sec">
+        <dl class="props">
+          <dt>Size</dt><dd data-size-label>2 × 2 cells</dd>
+          <dt>Posts</dt><dd><span class="num">08</span><span class="num">09</span><span class="num">11</span><span class="num">12</span></dd>
+          <dt>Exports at</dt><dd>2160 × 2700 px</dd>
+        </dl>
+        <div class="notice" role="status">
+          <svg class="icon" aria-hidden="true"><use href="#i-warn"/></svg>
+          <p><strong>Low resolution.</strong> The photo is smaller than this block needs, so it will export soft. Make the block smaller or use a larger photo.</p>
+        </div>
+      </div>
+      <div class="insp-sec">
+        <div class="actions">
+          <button type="button" class="action" data-view="adjust"><svg class="icon" aria-hidden="true"><use href="#i-adjust"/></svg>Adjust<span class="hint">Double-click</span></button>
+          <button type="button" class="action" data-split-toggle><svg class="icon" aria-hidden="true"><use href="#i-split"/></svg><span data-split-label>Split into 4 cells</span></button>
+          <button type="button" class="action" disabled><svg class="icon" aria-hidden="true"><use href="#i-join"/></svg><span>Join<small>Select two or more adjacent blocks</small></span></button>
+          <button type="button" class="action"><svg class="icon" aria-hidden="true"><use href="#i-copy"/></svg>Duplicate<span class="hint">Ctrl D</span></button>
+          <button type="button" class="action danger"><svg class="icon" aria-hidden="true"><use href="#i-trash"/></svg>Delete<span class="hint">Del</span></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Editor, nothing selected -->
+    <div class="only-editor only-nosel">
+      <div class="insp-sec" style="border-top: 0">
+        <div class="field">
+          <label for="grid-name">Grid name</label>
+          <input class="input" id="grid-name" value="Sample grid">
+        </div>
+        <dl class="props" style="margin-top: 14px">
+          <dt>Photos</dt><dd>7 on the grid, 1 unused</dd>
+          <dt>Export</dt><dd>12 files</dd>
+        </dl>
+      </div>
+      <div class="insp-sec">
+        <h3>Working on the grid</h3>
+        <dl class="keys">
+          <dt>Select</dt><dd>Click</dd>
+          <dt>Select several</dt><dd><kbd>Shift</kbd> click</dd>
+          <dt>Move</dt><dd>Drag</dd>
+          <dt>Adjust inside the frame</dt><dd>Double-click</dd>
+          <dt>Undo</dt><dd><kbd>Ctrl</kbd><kbd>Z</kbd></dd>
+        </dl>
+      </div>
+    </div>
+
+    <!-- Adjust -->
+    <div class="only-adjust">
+      <div class="insp-sec" style="border-top: 0">
+        <h3>Zoom</h3>
+        <div class="zoomrow">
+          <input type="range" min="100" max="400" value="124" aria-label="Zoom">
+          <output>124%</output>
+        </div>
+        <div class="seg" role="group" aria-label="Framing" style="margin-top: 10px">
+          <button type="button" aria-pressed="true">Fill the frame</button>
+          <button type="button" aria-pressed="false">Fit whole photo</button>
+        </div>
+      </div>
+      <div class="insp-sec">
+        <h3>Rotate and flip</h3>
+        <div class="row2">
+          <button type="button" class="btn"><svg class="icon" aria-hidden="true"><use href="#i-rotl"/></svg>Left 90°</button>
+          <button type="button" class="btn"><svg class="icon" aria-hidden="true"><use href="#i-rotr"/></svg>Right 90°</button>
+          <button type="button" class="btn"><svg class="icon" aria-hidden="true"><use href="#i-fliph"/></svg>Mirror</button>
+          <button type="button" class="btn"><svg class="icon" aria-hidden="true"><use href="#i-flipv"/></svg>Flip</button>
+        </div>
+      </div>
+      <div class="insp-sec">
+        <h3>Bars color</h3>
+        <div class="swatches" role="group" aria-label="Bars color">
+          <button type="button" class="swatch" style="--c: #ffffff" aria-pressed="true" aria-label="White"></button>
+          <button type="button" class="swatch" style="--c: #111111" aria-pressed="false" aria-label="Black"></button>
+          <button type="button" class="swatch" style="--c: #8a8a8a" aria-pressed="false" aria-label="Gray"></button>
+          <button type="button" class="swatch" style="--c: #c9b8a3" aria-pressed="false" aria-label="Sand"></button>
+          <button type="button" class="swatch custom" aria-label="Pick a color"><svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg></button>
+        </div>
+        <p class="help">Fills the empty space when the photo does not cover the frame.</p>
+      </div>
+    </div>
+
+    <!-- First run -->
+    <div class="insp-blank only-firstrun">
+      <h2>Nothing selected</h2>
+      <p>Select a photo on the grid to resize, adjust, split or join it.</p>
+    </div>
+  </aside>
+
+  <!-- Mobile bottom area: one of selection bar, library sheet, adjust bar -->
+  <div class="bottom only-mobile not-firstrun">
+
+    <div class="only-editor only-sel">
+      <div class="selbar-info">
+        <strong>sample-cliff.jpg</strong><span>2 × 2 cells</span>
+        <span class="flag"><svg class="icon" aria-hidden="true"><use href="#i-warn"/></svg>Low res</span>
+        <button type="button" class="iconbtn" data-deselect aria-label="Clear selection"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+      </div>
+      <div class="selbar-actions">
+        <button type="button" class="tab" data-view="adjust"><svg class="icon" aria-hidden="true"><use href="#i-adjust"/></svg>Adjust</button>
+        <button type="button" class="tab" data-split-toggle><svg class="icon" aria-hidden="true"><use href="#i-split"/></svg><span data-split-label-short>Split</span></button>
+        <button type="button" class="tab" disabled><svg class="icon" aria-hidden="true"><use href="#i-join"/></svg>Join</button>
+        <button type="button" class="tab"><svg class="icon" aria-hidden="true"><use href="#i-copy"/></svg>Duplicate</button>
+        <button type="button" class="tab"><svg class="icon" aria-hidden="true"><use href="#i-trash"/></svg>Delete</button>
+      </div>
+    </div>
+
+    <div class="only-editor only-nosel">
+      <div class="grabber"></div>
+      <div class="sheet-peek">
+        <button type="button" class="sheet-toggle" data-sheet-toggle aria-expanded="false">
+          <span><b>Photos</b> <span class="count">8</span></span>
+          <span class="strip" aria-hidden="true">
+            <img src="assets/sample-dusk.jpg" alt=""><img src="assets/sample-cliff.jpg" alt=""><img src="assets/sample-pebbles.jpg" alt=""><img src="assets/sample-jars.jpg" alt=""><img src="assets/sample-pup.jpg" alt="">
+          </span>
+        </button>
+        <button type="button" class="btn"><svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg>Add</button>
+      </div>
+      <div class="sheet-full">
+        <div class="thumbs">
+          <button type="button" class="thumb"><img src="assets/sample-dusk.jpg" alt="Sample photo: sea at dusk"></button>
+          <button type="button" class="thumb"><img src="assets/sample-cliff.jpg" alt="Sample photo: cliff over the sea"><span class="used"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg></span></button>
+          <button type="button" class="thumb"><img src="assets/sample-pebbles.jpg" alt="Sample photo: pebble beach"><span class="used"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg></span></button>
+          <button type="button" class="thumb"><img src="assets/sample-jars.jpg" alt="Sample photo: glass jars on a fence"><span class="used"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg></span></button>
+          <button type="button" class="thumb"><img src="assets/sample-pup.jpg" alt="Sample photo: black puppy"><span class="used"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg></span></button>
+          <button type="button" class="thumb"><img src="assets/sample-honey.jpg" alt="Sample photo: honey jar"><span class="used"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg></span></button>
+          <button type="button" class="thumb"><img src="assets/sample-clock.jpg" alt="Sample photo: clock face"><span class="used"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg></span></button>
+          <button type="button" class="thumb"><img src="assets/sample-bay.jpg" alt="Sample photo: bay and skyline"><span class="used"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg></span></button>
+        </div>
+        <button type="button" class="btn"><svg class="icon" aria-hidden="true"><use href="#i-color"/></svg>Add color cell</button>
+      </div>
+    </div>
+
+    <div class="adjbar only-adjust">
+      <div class="zoomrow">
+        <input type="range" min="100" max="400" value="124" aria-label="Zoom">
+        <output>124%</output>
+      </div>
+      <div class="selbar-actions">
+        <button type="button" class="tab"><svg class="icon" aria-hidden="true"><use href="#i-rotl"/></svg>Left</button>
+        <button type="button" class="tab"><svg class="icon" aria-hidden="true"><use href="#i-rotr"/></svg>Right</button>
+        <button type="button" class="tab"><svg class="icon" aria-hidden="true"><use href="#i-fliph"/></svg>Mirror</button>
+        <button type="button" class="tab"><svg class="icon" aria-hidden="true"><use href="#i-flipv"/></svg>Flip</button>
+        <button type="button" class="tab"><span class="dot"></span>Bars</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Mockup-only: the real mobile layout, rendered at phone width inside a frame. -->
+<section class="stage" aria-label="Mobile layout">
+  <div class="phone-slot"><div class="phone"><iframe id="phone" title="InstaGrid at 390 by 844"></iframe></div></div>
+  <div class="stage-side">
+    <h2>Mobile, 390 × 844</h2>
+    <p>The same file at phone width. It is live: tap around inside it.</p>
+    <button type="button" data-phone="editor" aria-pressed="true">Editor, photo selected</button>
+    <button type="button" data-phone="library" aria-pressed="false">Library sheet open</button>
+    <button type="button" data-phone="adjust" aria-pressed="false">Adjust</button>
+    <button type="button" data-phone="export" aria-pressed="false">Export</button>
+    <button type="button" data-phone="firstrun" aria-pressed="false">First run</button>
+  </div>
+</section>
+
+<!-- Export dialog -->
+<div class="scrim" data-close-dialog>
+  <div class="dialog" role="dialog" aria-modal="true" aria-labelledby="ex-title">
+    <div class="dialog-head">
+      <h2 id="ex-title">Export 12 files</h2>
+      <button type="button" class="iconbtn" data-close aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+    </div>
+    <div class="dialog-body">
+      <p>Post them in number order and your profile will match the grid.</p>
+      <div class="film" aria-label="Files in posting order">
+        <figure><div class="f cover" style="background-image: url('assets/sample-bay.jpg')"></div><figcaption>01</figcaption></figure>
+        <figure><div class="f cover" style="background-image: url('assets/sample-clock.jpg')"></div><figcaption>02</figcaption></figure>
+        <figure><div class="f cover" style="background-image: url('assets/sample-honey.jpg')"></div><figcaption>03</figcaption></figure>
+        <figure><div class="f cover" style="background-image: url('assets/sample-pup.jpg')"></div><figcaption>04</figcaption></figure>
+        <figure><div class="f jars jars-r"></div><figcaption>05</figcaption></figure>
+        <figure><div class="f jars jars-m"></div><figcaption>06</figcaption></figure>
+        <figure><div class="f jars jars-l"></div><figcaption>07</figcaption></figure>
+        <figure><div class="f cliff cliff-br"></div><figcaption>08</figcaption></figure>
+        <figure><div class="f cliff cliff-bl"></div><figcaption>09</figcaption></figure>
+        <figure><div class="f cover" style="background-image: url('assets/sample-pebbles.jpg')"></div><figcaption>10</figcaption></figure>
+        <figure><div class="f cliff cliff-tr"></div><figcaption>11</figcaption></figure>
+        <figure><div class="f cliff cliff-tl"></div><figcaption>12</figcaption></figure>
+      </div>
+      <p class="film-note">01 goes up first. The color cell is not exported.</p>
+
+      <fieldset class="choices">
+        <legend>Download as</legend>
+        <label class="choice"><input type="radio" name="pack" checked><span><b>One ZIP file</b><span>sample-grid.zip</span></span></label>
+        <label class="choice"><input type="radio" name="pack"><span><b>Separate files</b><span>01.jpg to 12.jpg, saved one by one</span></span></label>
+      </fieldset>
+
+      <div class="notice" role="status">
+        <svg class="icon" aria-hidden="true"><use href="#i-warn"/></svg>
+        <p><strong>1 photo is low resolution.</strong> sample-cliff.jpg fills files 08, 09, 11 and 12 and will look soft. <button type="button" class="link" data-close>Show it on the grid</button></p>
+      </div>
+    </div>
+    <div class="dialog-foot">
+      <span class="spec">JPEG, 1080 × 1350 px each</span>
+      <button type="button" class="btn" data-close>Cancel</button>
+      <button type="button" class="btn btn-primary"><svg class="icon" aria-hidden="true"><use href="#i-export"/></svg>Export ZIP</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// Mockup-only state switching. No product logic lives here.
+(function () {
+  var body = document.body;
+  var embedded = window.self !== window.top;
+  var tabs = document.querySelectorAll('.mockbar [data-view]');
+  var VIEWS = ['editor', 'adjust', 'firstrun', 'export', 'library', 'mobile'];
+  var phone = document.getElementById('phone');
+  var phoneView = 'editor';
+  if (embedded) body.dataset.embed = 'on';
+
+  function show(view) {
+    if (view === 'mobile' && (embedded || window.innerWidth <= 820)) view = 'editor';
+    body.dataset.view = view;
+    tabs.forEach(function (t) { t.setAttribute('aria-pressed', String(t.dataset.view === view)); });
+    if (!embedded) { try { history.replaceState(null, '', '#' + view); } catch (e) {} }
+    if (view === 'mobile') { loadPhone(); fitPhone(); return; }
+    body.dataset.dialog = view === 'export' ? 'export' : 'none';
+    body.dataset.state = (view === 'export' || view === 'library') ? 'editor' : view;
+    body.dataset.sel = (view === 'firstrun' || view === 'library') ? 'none' : 'block';
+    body.dataset.sheet = view === 'library' ? 'open' : 'closed';
+    body.dataset.preview = 'off';
+  }
+  function currentTheme() {
+    return document.documentElement.dataset.theme || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+  }
+  function setTheme(t, persist) {
+    document.documentElement.dataset.theme = t;
+    if (persist) { try { localStorage.setItem('instagrid-mock-theme', t); } catch (e) {} }
+    if (!embedded && phone.contentWindow) phone.contentWindow.postMessage({ mockTheme: t }, '*');
+  }
+  function select(on) {
+    body.dataset.sel = on ? 'block' : 'none';
+    body.dataset.sheet = 'closed';
+  }
+  function setSplit(on) {
+    body.dataset.split = on ? 'on' : 'off';
+    document.querySelectorAll('[data-split-label]').forEach(function (n) { n.textContent = on ? 'Join into one block' : 'Split into 4 cells'; });
+    document.querySelectorAll('[data-split-label-short]').forEach(function (n) { n.textContent = on ? 'Join' : 'Split'; });
+    document.querySelectorAll('[data-size-label]').forEach(function (n) { n.textContent = on ? '4 pieces, 1 cell each' : '2 × 2 cells'; });
+  }
+
+  // Phone frame: the same document at 390px, without the live-mode overlay.
+  function sendPhone() {
+    if (phone.contentWindow) phone.contentWindow.postMessage({ mockView: phoneView }, '*');
+    document.querySelectorAll('[data-phone]').forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.phone === phoneView)); });
+  }
+  function loadPhone() {
+    if (phone.dataset.loaded) { sendPhone(); return; }
+    phone.dataset.loaded = '1';
+    phone.addEventListener('load', sendPhone);
+    var url = location.href.split('#')[0];
+    fetch(url).then(function (r) { return r.text(); }).then(function (html) {
+      var doc = new DOMParser().parseFromString(html, 'text/html');
+      doc.querySelectorAll('script[src*="live.js"]').forEach(function (n) { n.remove(); });
+      doc.querySelectorAll('[data-impeccable-variants]').forEach(function (w) {
+        w.querySelectorAll(':scope > style, :scope > [data-impeccable-variant]:not([data-impeccable-variant="original"])').forEach(function (n) { n.remove(); });
+      });
+      doc.documentElement.setAttribute('data-theme', currentTheme());
+      var base = doc.createElement('base');
+      base.href = url;
+      doc.head.prepend(base);
+      phone.srcdoc = '<!doctype html>' + doc.documentElement.outerHTML;
+    }).catch(function () { phone.src = url; });
+  }
+  function fitPhone() {
+    var el = document.querySelector('.phone');
+    var slot = el.parentNode;
+    var k = Math.min(1, (window.innerHeight - 32 - 32) / 864);
+    el.style.transform = 'scale(' + k + ')';
+    slot.style.width = 410 * k + 'px';
+    slot.style.height = 864 * k + 'px';
+  }
+  window.addEventListener('resize', function () { if (body.dataset.view === 'mobile') fitPhone(); });
+  window.addEventListener('message', function (e) {
+    if (!e.data) return;
+    if (embedded && e.data.mockView) show(e.data.mockView);
+    if (embedded && e.data.mockTheme) setTheme(e.data.mockTheme, false);
+    if (!embedded && e.data.mockThemeFromPhone) setTheme(e.data.mockThemeFromPhone, true);
+  });
+
+  document.addEventListener('click', function (e) {
+    var t = e.target.closest('[data-view],[data-phone],[data-open],[data-close],[data-deselect],[data-sheet-toggle],[data-split-toggle],[data-preview-toggle],[data-replay],[data-theme-toggle]');
+    if (t) {
+      if (t.dataset.view) show(t.dataset.view);
+      else if (t.dataset.phone) { phoneView = t.dataset.phone; sendPhone(); }
+      else if (t.hasAttribute('data-theme-toggle')) {
+        var next = currentTheme() === 'dark' ? 'light' : 'dark';
+        if (embedded) window.parent.postMessage({ mockThemeFromPhone: next }, '*');
+        setTheme(next, !embedded);
+      }
+      else if (t.hasAttribute('data-open')) show('export');
+      else if (t.hasAttribute('data-close')) show('editor');
+      else if (t.hasAttribute('data-deselect')) select(false);
+      else if (t.hasAttribute('data-split-toggle')) setSplit(body.dataset.split !== 'on');
+      else if (t.hasAttribute('data-preview-toggle')) {
+        var on = body.dataset.preview !== 'on';
+        body.dataset.preview = on ? 'on' : 'off';
+        t.setAttribute('aria-pressed', String(on));
+      }
+      else if (t.hasAttribute('data-replay')) {
+        var g = document.querySelector('.ghostgrid');
+        g.style.display = 'none'; void g.offsetWidth; g.style.display = '';
+      }
+      else if (t.hasAttribute('data-sheet-toggle')) {
+        var open = body.dataset.sheet !== 'open';
+        body.dataset.sheet = open ? 'open' : 'closed';
+        t.setAttribute('aria-expanded', String(open));
+      }
+      return;
+    }
+    if (e.target.hasAttribute('data-close-dialog')) { show('editor'); return; }
+    if (body.dataset.state !== 'editor') return;
+    if (e.target.closest('#blk-cliff')) select(true);
+    else if (e.target.closest('#canvas')) select(false);
+  });
+  document.getElementById('blk-cliff').addEventListener('dblclick', function () {
+    if (body.dataset.state === 'editor') show('adjust');
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key !== 'Escape') return;
+    if (body.dataset.dialog === 'export' || body.dataset.state === 'adjust') show('editor');
+    else select(false);
+  });
+
+  var initial = location.hash.slice(1);
+  show(VIEWS.indexOf(initial) > -1 ? initial : 'editor');
+
+  // A hash-only navigation (pasting a #mobile link into an open tab) does not reload the page.
+  window.addEventListener('hashchange', function () {
+    var next = location.hash.slice(1);
+    if (VIEWS.indexOf(next) > -1) show(next);
+  });
+})();
+</script>
+</body>
+</html>

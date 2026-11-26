@@ -1,3 +1,4 @@
+/// <reference types="vitest/config" />
 import { defineConfig } from 'vite'
 import react, { reactCompilerPreset } from '@vitejs/plugin-react'
 import babel from '@rolldown/plugin-babel'
@@ -5,13 +6,14 @@ import { resolve } from 'path'
 
 export default defineConfig({
   base: '/',
-  plugins: [
-    react(),
-    babel({ presets: [reactCompilerPreset()] }),
-  ],
+  plugins: [react(), babel({ presets: [reactCompilerPreset()] })],
   resolve: {
     alias: {
       '@': resolve(__dirname, 'src'),
     },
+  },
+  test: {
+    environment: 'node',
+    include: ['src/**/*.test.ts'],
   },
 })
