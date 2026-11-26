@@ -136,6 +136,7 @@ Rebuild browser-only Instagram feed planner from scratch: arrange image blocks o
 | V53 | The recipe (source photo, lines, angle, size, position, zoom, turn) is stored with the image. A pattern opens again with its recipe; saving replaces the image in place, so every block that shows it, in every grid, updates. If the source photo was deleted the pattern stays as an ordinary image and a new pattern can be made from it.        |
 | V54 | The photo always covers the whole result: no empty area. A move stops at the photo's edge and slides along it; zooming out, turning, changing the lines or the size zooms the photo in just enough when it would otherwise open a gap. Checked against every wedge's slice of the rectangle, not only the first.                                    |
 | V55 | The mirror lines can be shown over the preview while editing; they are never part of the saved image.                                                                                                                                                                                                                                               |
+| V56 | Symmetry editor: both angle controls (line angle, photo turn) keep their slider and also have minus / plus buttons that change the angle by exactly one degree, wrapping around the full turn. A step that would uncover the result is refused like any other change (V54).                                                                         |
 
 ---
 
@@ -174,6 +175,7 @@ Rebuild browser-only Instagram feed planner from scratch: arrange image blocks o
 | T29 | x      | E7: `core/symmetry.ts` — recipe, wedge transforms, fold definition, source placement, coverage constraint; tests incl. drawing-vs-definition and point-by-point no-empty-area                                         | V50,V53,V54,C6        |
 | T30 | x      | E7: `export/renderSymmetry.ts` (preview + full size), recipe stored with the image, in-place update, block placement by span                                                                                          | V50,V52,V53           |
 | T31 | x      | E7: Symmetry editor screen, entry points (inspector, library, mobile bar); verified in browser on desktop and touch                                                                                                   | V51,V52,V55           |
+| T32 | x      | One-degree minus / plus buttons on the symmetry angle sliders (owner request 2026-11-26)                                                                                                                              | V56                   |
 
 ---
 
