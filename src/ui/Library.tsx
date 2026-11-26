@@ -1,4 +1,4 @@
-import { Check, ImagePlus, Plus, SquareDashed, X } from 'lucide-react'
+import { Check, Plus, SquareDashed, X } from 'lucide-react'
 import { deleteImage } from '@/db/session'
 import { useLibrary } from '@/store/library'
 import type { LibraryImage } from '@/store/library'
@@ -127,19 +127,7 @@ export function Library() {
 
       <div className="min-h-0 flex-1 overflow-y-auto px-4 pt-1 pb-4">
         {!loading && count === 0 ? (
-          <button
-            type="button"
-            onClick={pickFiles}
-            className="grid w-full place-items-center gap-2 rounded-control border border-dashed border-dash px-3 py-6 text-center text-ink-2 transition-colors duration-150 ease-out hover:border-line-strong hover:bg-hover"
-          >
-            <ImagePlus aria-hidden className="size-[22px] text-ink-3" strokeWidth={1.6} />
-            <span>
-              Add photos
-              <small className="block text-sm text-ink-3">
-                or drop them anywhere. JPG, PNG, WEBP.
-              </small>
-            </span>
-          </button>
+          <p className="text-ink-3">No photos yet.</p>
         ) : (
           <Thumbs columns="grid-cols-2" />
         )}

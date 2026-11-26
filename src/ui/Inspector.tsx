@@ -58,7 +58,7 @@ export function Inspector() {
             <Key name="Duplicate" keys={['Ctrl D']} />
             <Key name="Copy / Paste" keys={['Ctrl C', 'Ctrl V']} />
             <Key name="Delete" keys={['Del']} />
-            <Key name="Add to selection" keys={['Ctrl', 'Shift']} />
+            <Key name="Add to selection" keys={['Ctrl click', 'Shift click']} />
             <Key name="Deselect" keys={['Esc']} />
           </dl>
         </Section>

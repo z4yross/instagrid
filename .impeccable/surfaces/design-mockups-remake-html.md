@@ -19,7 +19,7 @@ Anti-references: "Editor recargado — Mil paneles y botones tipo Canva o Photos
 
 THESIS: A quiet light studio where the grid of photos is the only colored thing on screen. It refuses the crowded-editor arrangement of stacked toolbars, floating buttons and gesture modes: one canvas, one thin inspector, two states.
 
-OWN-WORLD: Achromatic neutral grays (zero chroma, so the surround never tints a photo): canvas ground, a lighter panel layer, white controls, near-black ink. One accent, a safelight vermilion, reserved for selection, handles and focus. One sans family with tabular figures. Hairline borders, 6px radii, no decorative shadow. Signature move: the upload-order frame number, the same two-digit chip on every image cell, in the inspector, and as the filmstrip and file names in export.
+OWN-WORLD: Achromatic neutral grays (zero chroma, so the surround never tints a photo): canvas ground, a lighter panel layer, white controls, near-black ink. One accent, a safelight vermilion, reserved for posting order; selection, handles and focus use ink. One sans family with tabular figures. Hairline borders, 6px radii, no decorative shadow. Signature move: the upload-order frame number, the same two-digit chip on every image cell, in the inspector, and as the filmstrip and file names in export.
 
 STORY: The visitor sees their feed as it will look, understands that numbers are the posting order, trusts that export matches the screen, and exports.
 
@@ -29,8 +29,10 @@ FORM: seed: none (pinned) "Estudio claro — Gris neutro claro, la foto al centr
 
 FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance
 
-## Unresolved
+## Resolved since the mockup
 
-- Whether grid zoom by row count stays or plain scroll replaces it (mockup shows plain scroll).
-- On join of different images, which image is kept.
-- Finish review and DESIGN.md are deferred until the owner converges in the live session.
+- Grid zoom by row count stays (owner: "Dejarlos"): `+` adds a visible row, `-` removes one.
+- Joining different photos creates a new combined image that also joins the library (owner: "Una imagen nueva con las dos").
+- Preview toggle is in scope (owner: "Sí, entra").
+- Light and dark themes from one token set; on mobile the theme switch lives in the grids dialog so the grid name has room in the top bar.
+- The built app under `src/` is the artifact now; this mockup is the critique reference.

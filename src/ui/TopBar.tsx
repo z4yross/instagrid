@@ -16,6 +16,7 @@ import { toggleTheme, useTheme } from '@/theme/theme'
 import { redo, undo } from './actions'
 import { ICON } from './classes'
 import { Button, IconButton } from './kit'
+import { ThemeIcon } from './ThemeIcon'
 import { useIsDesktop } from './useIsDesktop'
 import { useOverlays } from './overlays'
 
@@ -34,20 +35,6 @@ function GridMark() {
           />
         ))
       )}
-    </svg>
-  )
-}
-
-function ThemeIcon() {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      aria-hidden
-      className="size-[18px] fill-none stroke-current"
-      strokeWidth={1.6}
-    >
-      <circle cx="12" cy="12" r="9" />
-      <path d="M12 3a9 9 0 0 1 0 18z" className="fill-current stroke-none" />
     </svg>
   )
 }
@@ -86,7 +73,7 @@ export function TopBar() {
 
       <Button
         variant="ghost"
-        className="min-w-11 gap-1 px-1.5 desk:px-2"
+        className="min-w-11 flex-1 justify-start gap-1 px-1.5 desk:flex-none desk:px-2"
         onClick={() => openDialog('projects')}
         aria-haspopup="dialog"
         title="Your grids"
@@ -108,14 +95,16 @@ export function TopBar() {
         {SAVE_LABEL[saveStatus]}
       </span>
 
-      <span className="flex-1" />
+      <span className="hidden flex-1 desk:block" />
 
-      <IconButton
-        label={theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'}
-        onClick={toggleTheme}
-      >
-        <ThemeIcon />
-      </IconButton>
+      {desktop && (
+        <IconButton
+          label={theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'}
+          onClick={toggleTheme}
+        >
+          <ThemeIcon />
+        </IconButton>
+      )}
       <IconButton label="Undo" disabled={!canUndo || preview} onClick={undo}>
         <Undo2 {...ICON} />
       </IconButton>

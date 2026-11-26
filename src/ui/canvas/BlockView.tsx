@@ -98,7 +98,7 @@ export function BlockView({
       className={[
         'group absolute select-none outline-offset-0',
         dragOffset ? 'opacity-85' : 'transition-opacity duration-200 ease-out',
-        dimmed ? 'pointer-events-none opacity-20' : '',
+        dimmed ? 'pointer-events-none opacity-10' : '',
         preview
           ? 'cursor-default'
           : adjusting
@@ -160,27 +160,28 @@ export function BlockView({
 
       {!preview && (
         <>
-          {numbers.map((n) => (
-            <span
-              key={`${n.col},${n.row}`}
-              className="pointer-events-none absolute grid h-5 min-w-6 place-items-center rounded-chip bg-accent px-1 text-sm leading-none font-bold text-on-accent"
-              style={{
-                left: (n.col - block.col) * pitch.width + 6,
-                top: (n.row - block.row) * pitch.height + 6,
-              }}
-            >
-              {orderLabel(n.number)}
-            </span>
-          ))}
+          {!dimmed &&
+            numbers.map((n) => (
+              <span
+                key={`${n.col},${n.row}`}
+                className="pointer-events-none absolute grid h-5 min-w-6 place-items-center rounded-chip bg-accent px-1 text-sm leading-none font-bold text-on-accent"
+                style={{
+                  left: (n.col - block.col) * pitch.width + 6,
+                  top: (n.row - block.row) * pitch.height + 6,
+                }}
+              >
+                {orderLabel(n.number)}
+              </span>
+            ))}
 
-          {lowRes && !adjusting && (
+          {lowRes && !adjusting && !dimmed && (
             <span className="pointer-events-none absolute top-1.5 right-1.5 inline-flex h-[18px] items-center gap-1 rounded-chip bg-warn-bg pr-1.5 pl-1 text-xs font-semibold text-warn-ink">
               <TriangleAlert aria-hidden className="size-3" strokeWidth={2} />
               {box.width > 130 ? 'Low res' : <span className="sr-only">Low resolution</span>}
             </span>
           )}
 
-          {block.kind === 'color' && box.height > 60 && (
+          {block.kind === 'color' && box.height > 60 && !dimmed && (
             <span className="pointer-events-none absolute bottom-1.5 left-1.5 text-xs font-medium text-black/70 mix-blend-luminosity">
               Color cell
             </span>

@@ -9,9 +9,12 @@ import {
 } from '@/db/session'
 import type { ProjectSummary } from '@/db/session'
 import { useProject } from '@/store/project'
+import { toggleTheme, useTheme } from '@/theme/theme'
 import { ICON } from './classes'
 import { Button, Dialog, IconButton } from './kit'
 import { confirm, toast, useOverlays } from './overlays'
+import { ThemeIcon } from './ThemeIcon'
+import { useIsDesktop } from './useIsDesktop'
 
 const dateFormat = new Intl.DateTimeFormat(undefined, { dateStyle: 'medium', timeStyle: 'short' })
 
@@ -24,6 +27,8 @@ export function ProjectsDialog() {
   const rename = useProject((s) => s.rename)
   const [projects, setProjects] = useState<ProjectSummary[]>([])
   const [draft, setDraft] = useState(name)
+  const theme = useTheme()
+  const desktop = useIsDesktop()
 
   const refresh = async () => {
     try {
@@ -118,6 +123,13 @@ export function ProjectsDialog() {
           className="h-(--control-h) w-full rounded-control border border-line bg-raised px-2.5 hover:border-line-strong"
         />
       </div>
+
+      {!desktop && (
+        <Button className="mt-3 w-full justify-start" onClick={toggleTheme}>
+          <ThemeIcon />
+          {theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'}
+        </Button>
+      )}
 
       <h3 className="mt-5 mb-2 font-semibold">Saved on this device</h3>
       <ul className="grid gap-1">

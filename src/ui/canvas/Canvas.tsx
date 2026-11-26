@@ -240,12 +240,20 @@ export function Canvas() {
           )}
         </div>
 
-        {!desktop && zoomControl && (
+        {!desktop && zoomControl && selection.length === 0 && (
           <div className="mx-auto mt-3 flex justify-end" style={{ width: COLS * pitch.width }}>
             {zoomControl}
           </div>
         )}
       </div>
+
+      {/* While adjusting, the photo's overflow fades out before the top bar instead of ending on a hard cut. */}
+      {adjusting && (
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-x-0 top-0 z-(--z-canvas-overlay) h-8 bg-linear-to-b from-ground to-transparent"
+        />
+      )}
 
       {adjusting && (
         <p
