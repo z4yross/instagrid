@@ -1,6 +1,6 @@
 # SPEC — InstaGrid v2 (remake)
 
-Status: APPROVED by owner 2026-11-26 (board ticket i1). Build in progress on branch `remake`.
+Status: SHIPPED 2026-11-26. v2 is live at instagrid.z4yross.com (PR #1). Further work goes through new branches and PRs.
 v1 spec (V1-V76, T1-T153, B1-B103) lives in git history: `main@2ef5b8c:SPEC.md`. Ids here restart; cite v1 ids as `v1.Vn`.
 Companion docs: `PRODUCT.md` (product truth), `DESIGN.md` (visual system), `design/mockups/remake.html` (approved mockup), `design/mockups/remake-decisions.md` (owner decisions, verbatim).
 
@@ -15,7 +15,7 @@ Rebuild browser-only Instagram feed planner from scratch: arrange image blocks o
 | id  | constraint                                                                                                                                                                                                                                            |
 | --- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | C1  | No backend of our own. No auth. No storage online. Hosted GitHub Pages (instagrid.z4yross.com). One exception, owner-approved: the phone-to-device photo transfer uses a third-party WebRTC connection service to pair the two devices (see V45-V49). |
-| C2  | Built from scratch on branch `remake`. `main` (v1) stays deployed until owner approves swap.                                                                                                                                                          |
+| C2  | Built from scratch on branch `remake`, merged to `main` on owner approval (PR #1, 2026-11-26). `main` deploys on push.                                                                                                                                |
 | C3  | Desktop + mobile both first-class. Each layout designed on own terms.                                                                                                                                                                                 |
 | C4  | Stack: React 19 + TypeScript + Vite + Tailwind 4. Zustand + zundo for state/history. JSZip for ZIP.                                                                                                                                                   |
 | C5  | Visual system = `DESIGN.md`. Tokens as CSS custom properties bound with `light-dark()`; Tailwind theme reads them. No inline style objects except computed geometry.                                                                                  |
@@ -155,7 +155,7 @@ Rebuild browser-only Instagram feed planner from scratch: arrange image blocks o
 | T22 | x      | E5: export pipeline on geometry fn — dialog with numbered strip, format choice, progress, per-cell error, low-res warning                                                                                             | V41,V42,V43,V44       |
 | T23 | x      | E5: export parity test — render cell on screen-size canvas vs export canvas, compare downscaled pixels                                                                                                                | V4                    |
 | T24 | x      | E5: pass on 320px, 200% zoom, layout switch, touch targets, contrast both themes, reduced motion; Impeccable detect + finish review on built app; fix findings                                                        | V24,V33,V34,V39       |
-| T25 | ~      | E5: README rewritten (done). Owner review of the build and swap `remake` → `main`: waiting for owner OK                                                                                                               | C2                    |
+| T25 | x      | E5: README rewritten. Owner chose to publish (ticket i1, 2026-11-26): PR #1 `remake` → `main` merged, deploy green, live site verified (first run, add photos, phone transfer, export)                                | C2                    |
 | T26 | x      | E6: `transfer/protocol.ts` — ids, send link, message validation, file assembly, limits; tests                                                                                                                         | V46,V48,C6            |
 | T27 | x      | E6: receiver + sender over PeerJS data channel with backpressure, per-file ack, timeouts and error mapping                                                                                                            | V45,V46,V47,V48       |
 | T28 | x      | E6: Receive dialog (QR, link, status), send page at `#send=<id>`, entry points in library header and first run; verified end to end between two browser sessions                                                      | V45,V47,V49           |
