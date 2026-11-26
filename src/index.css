@@ -94,3 +94,36 @@ button:disabled {
   outline: 2px solid var(--ink);
   outline-offset: 2px;
 }
+
+/* Split and join: pieces settle apart, a joined block settles together (SPEC V29). */
+@theme inline {
+  --animate-cut-open: cut-open var(--dur-layout) var(--ease) both;
+  --animate-cut-close: cut-close var(--dur-layout) var(--ease) both;
+  --animate-skeleton: skeleton 1.4s ease-in-out infinite;
+}
+
+@keyframes cut-open {
+  from {
+    scale: 1.03;
+  }
+}
+
+@keyframes cut-close {
+  from {
+    scale: 0.985;
+  }
+}
+
+@keyframes skeleton {
+  50% {
+    opacity: 0.55;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-cut-open,
+  .animate-cut-close,
+  .animate-skeleton {
+    animation: none;
+  }
+}
