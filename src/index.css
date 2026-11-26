@@ -54,9 +54,15 @@
 }
 
 html,
-body,
-#root {
+body {
   height: 100%;
+  overflow: hidden;
+}
+
+/* The document never scrolls; only the canvas and the panels do. */
+#root {
+  position: fixed;
+  inset: 0;
 }
 
 body {
@@ -126,4 +132,75 @@ button:disabled {
   .animate-skeleton {
     animation: none;
   }
+}
+
+/* First run: the sample grid counts the posting order in (SPEC V40). */
+@theme inline {
+  --animate-order-chip: order-chip 420ms var(--ease) both;
+  --animate-order-cell: order-cell 420ms var(--ease) both;
+}
+
+@keyframes order-chip {
+  from {
+    background: var(--line);
+    color: var(--ink-2);
+    scale: 0.82;
+  }
+}
+
+@keyframes order-cell {
+  to {
+    background: var(--raised-hover);
+    border-color: var(--ink-3);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-order-chip,
+  .animate-order-cell {
+    animation: none;
+  }
+}
+
+/* Range input in the system's own vocabulary. */
+.slider {
+  appearance: none;
+  height: 24px;
+  margin: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.slider::-webkit-slider-runnable-track {
+  height: 2px;
+  border-radius: 2px;
+  background: var(--dash);
+}
+
+.slider::-moz-range-track {
+  height: 2px;
+  border-radius: 2px;
+  background: var(--dash);
+}
+
+.slider::-webkit-slider-thumb {
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  margin-top: -7px;
+  border: 2px solid var(--panel);
+  border-radius: 50%;
+  background: var(--ink);
+}
+
+.slider::-moz-range-thumb {
+  width: 12px;
+  height: 12px;
+  border: 2px solid var(--panel);
+  border-radius: 50%;
+  background: var(--ink);
+}
+
+dialog::backdrop {
+  background: var(--scrim);
 }

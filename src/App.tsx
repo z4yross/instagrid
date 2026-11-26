@@ -1,77 +1,134 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { boot } from '@/db/session'
+import { useLibrary } from '@/store/library'
 import { useProject } from '@/store/project'
 import { useUi } from '@/store/ui'
-import {
-  addColorCell,
-  addFiles,
-  deleteSelection,
-  duplicateSelection,
-  enterAdjust,
-  joinSelection,
-  redo,
-  splitSelection,
-  undo,
-} from '@/ui/actions'
+import { addFiles } from '@/ui/actions'
 import { Canvas } from '@/ui/canvas/Canvas'
+import { FirstRun } from '@/ui/FirstRun'
+import { Inspector } from '@/ui/Inspector'
+import { Library } from '@/ui/Library'
+import { MobileBottom } from '@/ui/MobileBottom'
+import { OverlayHost } from '@/ui/OverlayHost'
+import { toast, useOverlays } from '@/ui/overlays'
+import { ProjectsDialog } from '@/ui/ProjectsDialog'
+import { TopBar } from '@/ui/TopBar'
+import { useIsDesktop } from '@/ui/useIsDesktop'
+import { useKeyboard } from '@/ui/useKeyboard'
 
 let booted = false
 
-function Action({ label, run }: { label: string; run: () => void }) {
-  return (
-    <button
-      type="button"
-      onClick={run}
-      className="h-8 rounded-control border border-line bg-raised px-3 font-medium hover:bg-raised-hover"
-    >
-      {label}
-    </button>
-  )
+async function importAndReport(files: File[]) {
+  if (files.length === 0) return
+  try {
+    const { rejected } = await addFiles(files)
+    if (rejected.length === 1) toast(`${rejected[0]} was skipped. Use JPG, PNG or WEBP.`, 'error')
+    else if (rejected.length > 1) {
+      toast(`${rejected.length} files were skipped. Use JPG, PNG or WEBP.`, 'error')
+    }
+  } catch (error) {
+    console.error('Adding photos failed', error)
+    toast('The photos could not be saved on this device.', 'error')
+  }
 }
 
-/** Temporary shell for stage 3. The desktop and mobile shells replace it in stage 4. */
 export default function App() {
   const input = useRef<HTMLInputElement>(null)
-  const name = useProject((s) => s.name)
-  const mode = useUi((s) => s.mode)
+  const [dropping, setDropping] = useState(false)
+  const hasBlocks = useProject((s) => s.blocks.length > 0)
+  const hasImages = useLibrary((s) => s.images.length > 0)
+  const loading = useLibrary((s) => s.loading)
+  const saveStatus = useUi((s) => s.saveStatus)
+
+  const desktop = useIsDesktop()
+  useKeyboard()
 
   useEffect(() => {
+    useOverlays.getState().setPickFiles(() => input.current?.click())
     if (booted) return
     booted = true
-    void boot(window.localStorage, { width: window.innerWidth, height: window.innerHeight })
+    void boot(window.localStorage, { width: window.innerWidth, height: window.innerHeight }).then(
+      (migration) => {
+        if (migration.imported) {
+          toast(
+            `Brought over ${migration.images} photos and ${migration.projects} grids from the previous version. Photo framing may differ slightly.`
+          )
+        }
+      }
+    )
   }, [])
 
+  useEffect(() => {
+    if (saveStatus === 'error') {
+      toast('Changes are not being saved. Browser storage may be full or blocked.', 'error')
+    }
+  }, [saveStatus])
+
+  // Photos pasted from the clipboard join the library (SPEC I.fs).
+  useEffect(() => {
+    const onPaste = (event: ClipboardEvent) => {
+      const files = [...(event.clipboardData?.files ?? [])].filter((f) =>
+        f.type.startsWith('image/')
+      )
+      if (files.length) {
+        event.preventDefault()
+        void importAndReport(files)
+      }
+    }
+    window.addEventListener('paste', onPaste)
+    return () => window.removeEventListener('paste', onPaste)
+  }, [])
+
+  const hasFiles = (event: React.DragEvent) => event.dataTransfer.types.includes('Files')
+  const firstRun = !loading && !hasBlocks && !hasImages
+
   return (
-    <div className="grid h-full grid-rows-[auto_minmax(0,1fr)]">
-      <header className="flex flex-wrap items-center gap-2 border-b border-line bg-panel px-3 py-2">
-        <strong className="mr-2 text-md font-semibold">{name}</strong>
-        <input
-          ref={input}
-          type="file"
-          accept="image/jpeg,image/png,image/webp"
-          multiple
-          hidden
-          onChange={(e) => {
-            void addFiles([...(e.target.files ?? [])])
-            e.target.value = ''
-          }}
-        />
-        <Action label="Add photos" run={() => input.current?.click()} />
-        <Action label="Add color cell" run={addColorCell} />
-        <Action label="Adjust" run={enterAdjust} />
-        <Action label="Split" run={splitSelection} />
-        <Action label="Join" run={() => void joinSelection()} />
-        <Action label="Duplicate" run={duplicateSelection} />
-        <Action label="Delete" run={deleteSelection} />
-        <Action label="Undo" run={undo} />
-        <Action label="Redo" run={redo} />
-        <Action
-          label={mode === 'preview' ? 'Exit preview' : 'Preview'}
-          run={() => useUi.getState().togglePreview()}
-        />
-        {mode === 'adjust' && <Action label="Done" run={() => useUi.getState().exitAdjust()} />}
-      </header>
-      <Canvas />
+    <div
+      className="grid h-full grid-cols-[minmax(0,1fr)] grid-rows-[auto_minmax(0,1fr)_auto] desk:grid-cols-[184px_minmax(0,1fr)_256px] desk:grid-rows-[auto_minmax(0,1fr)] wide:grid-cols-[232px_minmax(0,1fr)_280px]"
+      onDragOver={(event) => {
+        if (!hasFiles(event)) return
+        event.preventDefault()
+        setDropping(true)
+      }}
+      onDragLeave={(event) => {
+        if (event.currentTarget === event.target) setDropping(false)
+      }}
+      onDrop={(event) => {
+        if (!hasFiles(event)) return
+        event.preventDefault()
+        setDropping(false)
+        void importAndReport([...event.dataTransfer.files])
+      }}
+    >
+      <input
+        ref={input}
+        type="file"
+        accept="image/jpeg,image/png,image/webp"
+        multiple
+        hidden
+        onChange={(event) => {
+          void importAndReport([...(event.target.files ?? [])])
+          event.target.value = ''
+        }}
+      />
+
+      <TopBar />
+
+      {desktop && <Library />}
+
+      <main className="relative min-h-0 min-w-0">
+        {firstRun ? <FirstRun /> : <Canvas />}
+        {dropping && (
+          <div className="pointer-events-none absolute inset-3 z-(--z-sticky) grid place-items-center rounded-control border-2 border-dashed border-ink bg-ground/85 text-md font-semibold">
+            Drop to add photos
+          </div>
+        )}
+      </main>
+
+      {desktop ? <Inspector /> : <MobileBottom />}
+
+      <ProjectsDialog />
+      <OverlayHost />
     </div>
   )
 }
