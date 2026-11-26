@@ -86,10 +86,11 @@ export function TopBar() {
 
       <Button
         variant="ghost"
-        className="min-w-0 gap-1 px-1.5 desk:px-2"
+        className="min-w-11 gap-1 px-1.5 desk:px-2"
         onClick={() => openDialog('projects')}
         aria-haspopup="dialog"
         title="Your grids"
+        aria-label={`${name}, your grids`}
       >
         <span className="truncate">{name}</span>
         <ChevronDown aria-hidden className="size-3.5 flex-none text-ink-3" strokeWidth={1.6} />

@@ -48,7 +48,7 @@ export function OverlayHost() {
               type="button"
               aria-label="Dismiss"
               onClick={() => dismissToast(t.id)}
-              className="grid size-6 flex-none place-items-center rounded-chip hover:bg-hover"
+              className="grid size-6 flex-none place-items-center rounded-chip hover:bg-hover pointer-coarse:size-11"
             >
               <X aria-hidden className="size-3.5" strokeWidth={2} />
             </button>

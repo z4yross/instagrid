@@ -63,6 +63,17 @@ export function Canvas() {
   const pitch = cellPitch(viewport, zoomRows)
   const { visual, handlers } = useCanvasGestures(scrollRef, gridRef, pitch)
 
+  // The adjust bar shrinks the canvas on a phone; keep the photo being adjusted in view.
+  useEffect(() => {
+    if (!adjustId) return
+    const frame = requestAnimationFrame(() => {
+      scrollRef.current
+        ?.querySelector(`[data-block-id="${CSS.escape(adjustId)}"]`)
+        ?.scrollIntoView({ block: 'nearest' })
+    })
+    return () => cancelAnimationFrame(frame)
+  }, [adjustId, viewport.height])
+
   const selection = liveSelection(selectionIds, blocks)
   const rows = gridRows(blocks)
   const inView = rowsInView(viewport, pitch)
@@ -107,7 +118,7 @@ export function Canvas() {
         type="button"
         title="Reset to fit the width"
         onClick={() => setZoomRows(null)}
-        className="h-7 min-w-14 rounded-chip px-1.5 tabular-nums transition-colors duration-150 ease-out hover:bg-hover pointer-coarse:h-10"
+        className="h-7 min-w-14 rounded-chip px-1.5 tabular-nums transition-colors duration-150 ease-out hover:bg-hover pointer-coarse:h-11"
       >
         {inView} rows
       </button>
@@ -276,7 +287,7 @@ function ZoomButton({
       title={label}
       disabled={disabled}
       onClick={onClick}
-      className="grid size-7 place-items-center rounded-chip transition-colors duration-150 ease-out hover:bg-hover disabled:text-disabled disabled:hover:bg-transparent pointer-coarse:size-10"
+      className="grid size-7 place-items-center rounded-chip transition-colors duration-150 ease-out hover:bg-hover disabled:text-disabled disabled:hover:bg-transparent pointer-coarse:size-11"
     >
       {children}
     </button>

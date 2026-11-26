@@ -173,13 +173,11 @@ button:disabled {
 
 .slider::-webkit-slider-runnable-track {
   height: 2px;
-  border-radius: 2px;
   background: var(--dash);
 }
 
 .slider::-moz-range-track {
   height: 2px;
-  border-radius: 2px;
   background: var(--dash);
 }
 
@@ -199,6 +197,23 @@ button:disabled {
   border: 2px solid var(--panel);
   border-radius: 50%;
   background: var(--ink);
+}
+
+@media (pointer: coarse) {
+  .slider {
+    height: 44px;
+  }
+
+  .slider::-webkit-slider-thumb {
+    width: 24px;
+    height: 24px;
+    margin-top: -11px;
+  }
+
+  .slider::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+  }
 }
 
 dialog::backdrop {

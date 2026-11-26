@@ -94,9 +94,11 @@ export function Thumbs({ columns, onPlaced }: ThumbsProps) {
               aria-label={`Delete ${image.name}`}
               title="Delete photo"
               onClick={() => void removeImage(image)}
-              className="absolute top-1 right-1 grid size-6 place-items-center rounded-chip bg-black/80 text-white opacity-0 transition-opacity duration-150 ease-out group-focus-within:opacity-100 group-hover:opacity-100 pointer-coarse:size-8 pointer-coarse:opacity-100"
+              className="absolute top-0 right-0 grid size-8 place-items-center opacity-0 transition-opacity duration-150 ease-out group-focus-within:opacity-100 group-hover:opacity-100 pointer-coarse:opacity-100 pointer-coarse:size-11"
             >
-              <X aria-hidden className="size-3.5" strokeWidth={2} />
+              <span className="grid size-6 place-items-center rounded-chip bg-black/80 text-white">
+                <X aria-hidden className="size-3.5" strokeWidth={2} />
+              </span>
             </button>
           </li>
         )

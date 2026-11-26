@@ -84,7 +84,39 @@ export function useKeyboard() {
           event.preventDefault()
           deleteSelection()
         }
-      } else if (key === 'Enter' && event.target === document.body) enterAdjust()
+      } else if (key in ARROWS && selectedBlocks().length) {
+        // Arrows move the selection one cell; with Shift they resize a single block.
+        event.preventDefault()
+        const [dx, dy] = ARROWS[key]
+        const selection = selectedBlocks()
+        const project = useProject.getState()
+        if (event.shiftKey && selection.length === 1) {
+          const block = selection[0]
+          project.resize(block.id, {
+            col: block.col,
+            row: block.row,
+            colSpan: Math.max(1, block.colSpan + dx),
+            rowSpan: Math.max(1, block.rowSpan + dy),
+          })
+        } else {
+          project.move(
+            selection.map((b) => b.id),
+            dx,
+            dy
+          )
+        }
+      } else if (key === 'Enter' || key === ' ') {
+        // On a focused block: select it; Enter on the selected block opens Adjust.
+        const id = event.target instanceof HTMLElement ? event.target.dataset.blockId : undefined
+        if (id) {
+          event.preventDefault()
+          if (key === 'Enter' && ui.selection.length === 1 && ui.selection[0] === id) enterAdjust()
+          else if (event.shiftKey || mod) ui.toggleSelected(id)
+          else ui.select([id])
+        } else if (key === 'Enter' && event.target === document.body) {
+          enterAdjust()
+        }
+      }
     }
 
     window.addEventListener('keydown', onKeyDown)

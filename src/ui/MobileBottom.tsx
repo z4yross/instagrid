@@ -122,9 +122,9 @@ function AdjustBar() {
   const exitAdjust = useUi((s) => s.exitAdjust)
   if (!info.single || !info.image) return null
   return (
-    <div className="px-4 pt-3 pb-2">
+    <div className="px-4 pt-1 pb-2">
       <AdjustControls block={info.single} image={info.image} compact />
-      <div className="mt-3 grid grid-cols-2 gap-2">
+      <div className="mt-2 grid grid-cols-2 gap-2">
         <Button onClick={resetAdjust}>Reset</Button>
         <Button variant="primary" onClick={exitAdjust}>
           Done
