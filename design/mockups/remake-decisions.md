@@ -32,3 +32,12 @@ Decisions the owner makes about `design/mockups/remake.html`, in his own words, 
   Gloss: the mockup design is approved; next is DESIGN.md and the new SPEC for his OK, then code on `remake`.
 - Preview button: "Sí, entra"
   Gloss: the Preview toggle (hide overlays, show the grid as it lands on the profile) is in scope. It was not in v1.
+
+## Product decisions before build (board ticket i1, 2026-11-26)
+
+- Grid + / − buttons: "Dejarlos"
+  Gloss: keep the grid zoom that changes how many rows fit on screen. The approved mockup does not show it yet; the app adds it at the canvas edge.
+- Joining two different photos: "no seria como una nueva?" then chose "Una imagen nueva con las dos"
+  Gloss: join fuses the selected photos, as they look on the grid, into one new image that also appears in the library. Originals stay in the library.
+- Commits: "Sí, commit y push"
+  Gloss: one commit per spec task on `remake`, pushed to origin. Never `main`.
