@@ -21,6 +21,8 @@ interface UiState {
   zoomRows: number | null
   saveStatus: SaveStatus
   clipboard: Block[]
+  /** Blocks that just came out of a split or a join; drives a short transition (SPEC V29). */
+  flash: { ids: string[]; kind: 'split' | 'join' } | null
 
   select: (ids: readonly string[], anchorId?: string | null) => void
   toggleSelected: (id: string) => void
@@ -34,6 +36,7 @@ interface UiState {
   setZoomRows: (rows: number | null) => void
   setSaveStatus: (status: SaveStatus) => void
   setClipboard: (blocks: Block[]) => void
+  setFlash: (flash: UiState['flash']) => void
 }
 
 export const useUi = create<UiState>()((set, get) => ({
@@ -45,6 +48,7 @@ export const useUi = create<UiState>()((set, get) => ({
   zoomRows: null,
   saveStatus: 'saved',
   clipboard: [],
+  flash: null,
 
   select: (ids, anchorId) =>
     set({
@@ -84,6 +88,7 @@ export const useUi = create<UiState>()((set, get) => ({
 
   setSaveStatus: (saveStatus) => set({ saveStatus }),
   setClipboard: (clipboard) => set({ clipboard }),
+  setFlash: (flash) => set({ flash }),
 }))
 
 /** Selection limited to blocks that still exist (an undo can remove selected blocks). */
