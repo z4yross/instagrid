@@ -1,6 +1,7 @@
 import { create } from 'zustand'
+import type { SymmetryRecipe } from '@/core/symmetry'
 
-export type ImageOrigin = 'upload' | 'composite' | 'v1'
+export type ImageOrigin = 'upload' | 'composite' | 'symmetry' | 'v1'
 
 /** An image in the library. `url` is an object URL owned by this store (SPEC V15). */
 export interface LibraryImage {
@@ -11,6 +12,8 @@ export interface LibraryImage {
   origin: ImageOrigin
   createdAt: number
   url: string
+  /** How a symmetry pattern was made, when this image is one (SPEC V53). */
+  symmetry?: SymmetryRecipe
 }
 
 interface LibraryState {
@@ -23,6 +26,8 @@ interface LibraryState {
   setImages: (images: LibraryImage[]) => void
   addImages: (images: LibraryImage[]) => void
   removeImage: (id: string) => void
+  /** Swap an image for a new version with the same id. */
+  replaceImage: (image: LibraryImage) => void
 }
 
 export const useLibrary = create<LibraryState>()((set, get) => ({
@@ -39,6 +44,12 @@ export const useLibrary = create<LibraryState>()((set, get) => ({
   },
 
   addImages: (images) => set({ images: [...get().images, ...images] }),
+
+  replaceImage: (image) => {
+    const old = get().images.find((i) => i.id === image.id)
+    if (old && old.url !== image.url) URL.revokeObjectURL(old.url)
+    set({ images: get().images.map((i) => (i.id === image.id ? image : i)) })
+  },
 
   removeImage: (id) => {
     const image = get().images.find((i) => i.id === id)

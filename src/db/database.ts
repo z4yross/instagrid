@@ -1,3 +1,4 @@
+import type { SymmetryRecipe } from '@/core/symmetry'
 import type { Block } from '@/core/types'
 import type { ImageOrigin } from '@/store/library'
 import { countAll, deleteOne, getAll, getOne, openDatabase, putAll } from './idb'
@@ -17,6 +18,8 @@ export interface StoredImage {
   origin: ImageOrigin
   createdAt: number
   blob: Blob
+  /** Recipe of a symmetry pattern, so it can be opened again (SPEC V53). */
+  symmetry?: SymmetryRecipe
 }
 
 export interface StoredProject {
@@ -53,6 +56,7 @@ export async function closeDb() {
 
 export const images = {
   all: async () => getAll<StoredImage>(await openDb(), IMAGES),
+  get: async (id: string) => getOne<StoredImage>(await openDb(), IMAGES, id),
   count: async () => countAll(await openDb(), IMAGES),
   put: async (items: readonly StoredImage[]) => putAll(await openDb(), IMAGES, items),
   delete: async (id: string) => deleteOne(await openDb(), IMAGES, id),

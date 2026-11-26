@@ -1,3 +1,5 @@
+import { clampRecipe, isSymmetryRecipe } from '@/core/symmetry'
+import type { SymmetryRecipe } from '@/core/symmetry'
 import type { Block, Size } from '@/core/types'
 import { newId } from '@/store/id'
 import { useLibrary } from '@/store/library'
@@ -31,6 +33,7 @@ const toLibraryImage = (image: StoredImage): LibraryImage => ({
   origin: image.origin,
   createdAt: image.createdAt,
   url: URL.createObjectURL(image.blob),
+  symmetry: isSymmetryRecipe(image.symmetry) ? clampRecipe(image.symmetry) : undefined,
 })
 
 /** Drop image blocks whose image is not in the library any more. */
@@ -168,7 +171,8 @@ async function storeImage(
   blob: Blob,
   name: string,
   origin: ImageOrigin,
-  size?: Size
+  size?: Size,
+  symmetry?: SymmetryRecipe
 ): Promise<LibraryImage> {
   const { width, height } = size ?? (await measure(blob))
   const stored: StoredImage = {
@@ -179,6 +183,7 @@ async function storeImage(
     origin,
     createdAt: Date.now(),
     blob,
+    symmetry,
   }
   await images.put([stored])
   const image = toLibraryImage(stored)
@@ -213,6 +218,36 @@ export async function importFiles(files: readonly File[]): Promise<ImportResult>
 /** Store the image a composite join produced (SPEC V7). */
 export function addCompositeImage(blob: Blob, size: Size, name: string) {
   return storeImage(blob, name, 'composite', size)
+}
+
+/** Store a new symmetry pattern with its recipe (SPEC V52, V53). */
+export function addSymmetryImage(blob: Blob, size: Size, name: string, recipe: SymmetryRecipe) {
+  return storeImage(blob, name, 'symmetry', size, clampRecipe(recipe))
+}
+
+/**
+ * Replace a symmetry pattern with a new version. The image keeps its id, so
+ * every block that shows it, in every grid, shows the new version (SPEC V53).
+ */
+export async function updateSymmetryImage(
+  id: string,
+  blob: Blob,
+  size: Size,
+  recipe: SymmetryRecipe
+): Promise<LibraryImage | null> {
+  const existing = await images.get(id)
+  if (!existing) return null
+  const stored: StoredImage = {
+    ...existing,
+    width: size.width,
+    height: size.height,
+    blob,
+    symmetry: clampRecipe(recipe),
+  }
+  await images.put([stored])
+  const image = toLibraryImage(stored)
+  useLibrary.getState().replaceImage(image)
+  return image
 }
 
 /** Delete an image and every block that shows it, in every project (SPEC V18). */
