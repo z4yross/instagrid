@@ -60,3 +60,11 @@ Decisions the owner makes about `design/mockups/remake.html`, in his own words, 
 
 - "No me gusta que al reflejar se corra la imagen"
   Gloss: flipping a photo made it jump. The flip mirrored the photo around its own center, so a photo that had been moved in its frame showed a different part afterwards. Flip now mirrors across the middle of the visible cell, and rotate turns around it.
+
+## Symmetry editor (board ticket i1, 2026-11-26)
+
+- "hay otro tipo de uniones que quiero poder hacer pero son menos triviales y son uniones pero por fuera de la grid, normalmente me gusta el efecto de coger una foto reflejarla y unirla con la original porque crea patrones pero para poder hacer eso bien debo poder recortarla más bien deberíamos es tener otra sección como de editor de simetría donde pueda elegir cuántos ejes de simetría y mover la imagen"
+  Gloss: he wants a separate symmetry editor: mirror a photo and join it with itself to make patterns, choosing how many symmetry lines and moving the photo under them.
+- Chose "Espejo y caleidoscopio", "Sí, guardando la receta", "Desde la biblioteca también".
+  Gloss: both plain mirrors and kaleidoscopes in the first version; a pattern can be opened and changed again; it opens from the library as well as from a selected photo.
+- Added by the build, not asked for: the photo always covers the whole result, so a pattern never has empty areas.

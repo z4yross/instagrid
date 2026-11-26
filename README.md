@@ -13,6 +13,7 @@ Live: [instagrid.z4yross.com](https://instagrid.z4yross.com)
 - **Adjust.** Select a photo to zoom, rotate, flip it and pick the color of the bars where it does not reach. Double-click (or double-tap) it to move it inside its frame.
 - **Split.** A photo that spans several cells becomes one piece per cell. The pieces move on their own and keep their crop.
 - **Join.** Pieces of one photo merge back. Different photos are joined into one new image, which is also added to the library.
+- **Symmetry.** Open a photo in the symmetry editor to mirror it across 1 to 12 lines: a plain mirror, a four-way mirror, or a kaleidoscope. Drag to choose which part is mirrored, pick the size in cells, and the pattern lands on the grid as a new image you can open and change again.
 - **Color cells.** Solid-color cells for spacing. They are not exported.
 - **Posting order.** Every photo cell carries its upload number. Upload `01` first, from the bottom right, and the profile ends up looking like the grid.
 - **Preview.** Hides numbers and guides to show the grid as it lands on the profile. The `#` button beside the grid zoom hides just the numbers while you keep editing.

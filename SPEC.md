@@ -41,6 +41,7 @@ Rebuild browser-only Instagram feed planner from scratch: arrange image blocks o
 | I.theme    | `src/theme/*` — tokens from `DESIGN.md`, theme resolve + persist                                                                                                   |
 | I.fs       | File input + drag-drop + paste — JPG/PNG/WEBP in                                                                                                                   |
 | I.transfer | `src/transfer/*` — device-to-device photo transfer: wire protocol (pure, tested), receiver, sender. PeerJS (WebRTC data channel) loaded on demand; QR via `qrcode` |
+| I.symmetry | `src/core/symmetry.ts` (math), `src/export/renderSymmetry.ts` (drawing), `src/ui/SymmetryEditor.tsx` (screen)                                                      |
 
 ---
 
@@ -125,6 +126,17 @@ Rebuild browser-only Instagram feed planner from scratch: arrange image blocks o
 | V48 | Everything received is untrusted: messages are shape-checked; only JPG / PNG / WEBP, at most 40 MB each and 60 per session; chunks must arrive in order and never exceed the announced size; file names are stripped of paths and control characters. A refused file is reported to the sender with the reason; the rest still arrive. |
 | V49 | The transfer code (PeerJS) loads only when the feature is used. Both sides show progress; failure states name the problem and the recovery. When the app was opened at a localhost address, the dialog says a phone cannot follow the code.                                                                                            |
 
+### Symmetry patterns
+
+| id  | invariant                                                                                                                                                                                                                                                                                                                                           |
+| --- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| V50 | Symmetry editor: a photo is placed under N mirror lines (1..12) that all pass through the middle of the result. They cut it into 2N wedges; the first shows the photo, the others its reflections. 1 line = mirror, 2 = four-way, 3+ = kaleidoscope. The line angle is adjustable. One drawing routine paints the live preview and the saved image. |
+| V51 | It is its own full-screen screen, opened from a selected photo (inspector on desktop, action bar on mobile) and from any photo in the library. The main editor gains no panel.                                                                                                                                                                      |
+| V52 | In the editor: drag the preview to move the photo under the lines, wheel or pinch to zoom, slider to turn it; arrow keys nudge. Result size is chosen in grid cells (1..3 columns, 1..4 rows) and rendered at 1080×1440 px per cell. Saving a new pattern adds it to the library and places it on the grid as one block of that size.               |
+| V53 | The recipe (source photo, lines, angle, size, position, zoom, turn) is stored with the image. A pattern opens again with its recipe; saving replaces the image in place, so every block that shows it, in every grid, updates. If the source photo was deleted the pattern stays as an ordinary image and a new pattern can be made from it.        |
+| V54 | The photo always covers the whole result: no empty area. A move stops at the photo's edge and slides along it; zooming out, turning, changing the lines or the size zooms the photo in just enough when it would otherwise open a gap. Checked against every wedge's slice of the rectangle, not only the first.                                    |
+| V55 | The mirror lines can be shown over the preview while editing; they are never part of the saved image.                                                                                                                                                                                                                                               |
+
 ---
 
 ## §T — Tasks
@@ -159,6 +171,9 @@ Rebuild browser-only Instagram feed planner from scratch: arrange image blocks o
 | T26 | x      | E6: `transfer/protocol.ts` — ids, send link, message validation, file assembly, limits; tests                                                                                                                         | V46,V48,C6            |
 | T27 | x      | E6: receiver + sender over PeerJS data channel with backpressure, per-file ack, timeouts and error mapping                                                                                                            | V45,V46,V47,V48       |
 | T28 | x      | E6: Receive dialog (QR, link, status), send page at `#send=<id>`, entry points in library header and first run; verified end to end between two browser sessions                                                      | V45,V47,V49           |
+| T29 | x      | E7: `core/symmetry.ts` — recipe, wedge transforms, fold definition, source placement, coverage constraint; tests incl. drawing-vs-definition and point-by-point no-empty-area                                         | V50,V53,V54,C6        |
+| T30 | x      | E7: `export/renderSymmetry.ts` (preview + full size), recipe stored with the image, in-place update, block placement by span                                                                                          | V50,V52,V53           |
+| T31 | x      | E7: Symmetry editor screen, entry points (inspector, library, mobile bar); verified in browser on desktop and touch                                                                                                   | V51,V52,V55           |
 
 ---
 
@@ -169,7 +184,7 @@ Rebuild browser-only Instagram feed planner from scratch: arrange image blocks o
 | D1  | Drop v1 grid zoom-by-rows in favor of plain scroll? | T10    | No. Owner: "Dejarlos". Zoom kept, see V32.                          |
 | D2  | Join of different images: what results?             | T4,T14 | Owner: "Una imagen nueva con las dos". Composite new image, see V7. |
 
-Resolved (owner, ticket i1): from scratch on branch; desktop + mobile equal; no backend; public users; join/split meaning = V6/V7; visual direction light studio + dark theme; vermilion order chips; Preview in scope. After first hands-on test (2026-11-26): "no puedo rotar ni hacer pan a la foto ni zoom" → V21 controls on selection; "deberia haber aguna forma de esconder los numero en la vista de la grid" → V38 toggle. Phone to PC: "seriaa interesante subir las fotos desde mi telefono y verlas en el pc" → chose "Envío directo por código QR" → V45-V49. After publishing: "No me gusta que al reflejar se corra la imagen" → V21 flip / rotate keep the framing.
+Resolved (owner, ticket i1): from scratch on branch; desktop + mobile equal; no backend; public users; join/split meaning = V6/V7; visual direction light studio + dark theme; vermilion order chips; Preview in scope. After first hands-on test (2026-11-26): "no puedo rotar ni hacer pan a la foto ni zoom" → V21 controls on selection; "deberia haber aguna forma de esconder los numero en la vista de la grid" → V38 toggle. Phone to PC: "seriaa interesante subir las fotos desde mi telefono y verlas en el pc" → chose "Envío directo por código QR" → V45-V49. After publishing: "No me gusta que al reflejar se corra la imagen" → V21 flip / rotate keep the framing. Symmetry editor: "normalmente me gusta el efecto de coger una foto reflejarla y unirla con la original porque crea patrones ... tener otra sección como de editor de simetría donde pueda elegir cuántos ejes de simetría y mover la imagen" → chose mirror + kaleidoscope, re-editable recipe, openable from the library → V50-V55.
 
 ---
 
