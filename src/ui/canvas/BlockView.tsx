@@ -176,7 +176,7 @@ export function BlockView({
           {lowRes && !adjusting && (
             <span className="pointer-events-none absolute top-1.5 right-1.5 inline-flex h-[18px] items-center gap-1 rounded-chip bg-warn-bg pr-1.5 pl-1 text-xs font-semibold text-warn-ink">
               <TriangleAlert aria-hidden className="size-3" strokeWidth={2} />
-              {box.width > 110 ? 'Low res' : <span className="sr-only">Low resolution</span>}
+              {box.width > 130 ? 'Low res' : <span className="sr-only">Low resolution</span>}
             </span>
           )}
 

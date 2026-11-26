@@ -191,6 +191,7 @@ export function useCanvasGestures(
     if (event.pointerType === 'mouse' && event.button !== 0) return
 
     const target = event.target as Element
+    if (target.closest('[data-canvas-control]')) return
     const blockId = target.closest<HTMLElement>('[data-block-id]')?.dataset.blockId ?? null
     const corner = target.closest<HTMLElement>('[data-handle]')?.dataset.handle as
       | Corner

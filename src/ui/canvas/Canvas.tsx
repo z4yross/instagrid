@@ -6,9 +6,11 @@ import { COLS } from '@/core/types'
 import { imageById, useLibrary } from '@/store/library'
 import { useProject } from '@/store/project'
 import { liveSelection, MAX_ZOOM_ROWS, MIN_ZOOM_ROWS, useUi } from '@/store/ui'
+import { IMAGE_DRAG_TYPE } from '../dragTypes'
+import { useIsDesktop } from '../useIsDesktop'
 import { BlockView } from './BlockView'
 import type { CellNumber } from './BlockView'
-import { cellPitch, rectToPixels, rowsInView } from './layout'
+import { cellAtPoint, cellPitch, rectToPixels, rowsInView } from './layout'
 import type { Viewport } from './layout'
 import { useCanvasGestures } from './useCanvasGestures'
 
@@ -57,6 +59,7 @@ export function Canvas() {
   const setZoomRows = useUi((s) => s.setZoomRows)
 
   const viewport = useViewport(scrollRef)
+  const desktop = useIsDesktop()
   const pitch = cellPitch(viewport, zoomRows)
   const { visual, handlers } = useCanvasGestures(scrollRef, gridRef, pitch)
 
@@ -85,11 +88,58 @@ export function Canvas() {
   const single = selection.length === 1
   const marquee = visual.marquee
 
+  // Grid zoom: how many rows fit in view (SPEC V32). Never drawn over the photos.
+  const zoomControl = !preview && !adjusting && (
+    <div
+      role="group"
+      aria-label="Grid zoom"
+      data-canvas-control
+      className="flex items-center gap-0.5 rounded-control border border-line bg-raised p-0.5 text-sm text-ink-2"
+    >
+      <ZoomButton
+        label="Show one fewer row"
+        disabled={inView <= MIN_ZOOM_ROWS}
+        onClick={() => setZoomRows(inView - 1)}
+      >
+        <Minus aria-hidden className="size-4" strokeWidth={1.6} />
+      </ZoomButton>
+      <button
+        type="button"
+        title="Reset to fit the width"
+        onClick={() => setZoomRows(null)}
+        className="h-7 min-w-14 rounded-chip px-1.5 tabular-nums transition-colors duration-150 ease-out hover:bg-hover pointer-coarse:h-10"
+      >
+        {inView} rows
+      </button>
+      <ZoomButton
+        label="Show one more row"
+        disabled={inView >= MAX_ZOOM_ROWS}
+        onClick={() => setZoomRows(inView + 1)}
+      >
+        <Plus aria-hidden className="size-4" strokeWidth={1.6} />
+      </ZoomButton>
+    </div>
+  )
+
   return (
     <div className="relative h-full min-h-0 min-w-0">
       <div
         ref={scrollRef}
         {...handlers}
+        onDragOver={(event) => {
+          if (!event.dataTransfer.types.includes(IMAGE_DRAG_TYPE)) return
+          event.preventDefault()
+          event.dataTransfer.dropEffect = 'copy'
+        }}
+        onDrop={(event) => {
+          const imageId = event.dataTransfer.getData(IMAGE_DRAG_TYPE)
+          const box = gridRef.current?.getBoundingClientRect()
+          if (!imageId || !box) return
+          event.preventDefault()
+          const cell = cellAtPoint(event.clientX - box.left, event.clientY - box.top, pitch)
+          const id = useProject.getState().addImageAt(imageId, cell.col, cell.row)
+          useUi.getState().select([id])
+        }}
         className={[
           'relative h-full min-h-0 min-w-0 touch-pan-y overflow-x-hidden overflow-y-auto',
           preview ? 'bg-preview' : 'bg-ground',
@@ -178,6 +228,12 @@ export function Canvas() {
             />
           )}
         </div>
+
+        {!desktop && zoomControl && (
+          <div className="mx-auto mt-3 flex justify-end" style={{ width: COLS * pitch.width }}>
+            {zoomControl}
+          </div>
+        )}
       </div>
 
       {adjusting && (
@@ -194,36 +250,9 @@ export function Canvas() {
         </p>
       )}
 
-      {/* Grid zoom: how many rows fit in view (SPEC V32). */}
-      {!preview && !adjusting && (
-        <div
-          role="group"
-          aria-label="Grid zoom"
-          className="absolute right-3 bottom-3 z-(--z-canvas-overlay) flex items-center gap-0.5 rounded-control border border-line bg-raised p-0.5 text-sm text-ink-2"
-        >
-          <ZoomButton
-            label="Show one fewer row"
-            disabled={inView <= MIN_ZOOM_ROWS}
-            onClick={() => setZoomRows(inView - 1)}
-          >
-            <Minus aria-hidden className="size-4" strokeWidth={1.6} />
-          </ZoomButton>
-          <button
-            type="button"
-            title="Reset to fit the width"
-            onClick={() => setZoomRows(null)}
-            className="h-7 min-w-14 rounded-chip px-1.5 tabular-nums transition-colors duration-150 ease-out hover:bg-hover pointer-coarse:h-10"
-          >
-            {inView} rows
-          </button>
-          <ZoomButton
-            label="Show one more row"
-            disabled={inView >= MAX_ZOOM_ROWS}
-            onClick={() => setZoomRows(inView + 1)}
-          >
-            <Plus aria-hidden className="size-4" strokeWidth={1.6} />
-          </ZoomButton>
-        </div>
+      {/* Desktop: pinned in the free gutter beside the grid. */}
+      {desktop && zoomControl && (
+        <div className="absolute right-3 bottom-3 z-(--z-canvas-overlay)">{zoomControl}</div>
       )}
     </div>
   )

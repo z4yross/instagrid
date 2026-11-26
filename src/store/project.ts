@@ -1,7 +1,7 @@
 import { temporal } from 'zundo'
 import { create } from 'zustand'
 import { clampTransform, frameSize } from '@/core/geometry'
-import { firstFreeCell, moveBlocks, placeBlock, resizeBlock } from '@/core/grid'
+import { firstFreeCell, hasCollision, moveBlocks, placeBlock, resizeBlock } from '@/core/grid'
 import type { GridError } from '@/core/grid'
 import { applyJoin, compositeBlock, planJoin, split } from '@/core/joinSplit'
 import type { JoinError, JoinPlan, SplitError } from '@/core/joinSplit'
@@ -26,6 +26,8 @@ interface ProjectState extends ProjectData {
 
   /** Add one 1×1 block per image, each on the first free cell (SPEC V11). One undo step. */
   addImages: (imageIds: readonly string[]) => string[]
+  /** Add an image on a cell if it is free, else on the first free cell. */
+  addImageAt: (imageId: string, col: number, row: number) => string
   addColorCell: (color?: string) => string
   remove: (ids: readonly string[]) => void
   /** Remove every block that shows the image (SPEC V18). */
@@ -98,6 +100,25 @@ export const useProject = create<ProjectState>()(
         }
         if (ids.length) set({ blocks })
         return ids
+      },
+
+      addImageAt: (imageId, col, row) => {
+        const blocks = get().blocks
+        const wanted = { col, row, colSpan: 1, rowSpan: 1 }
+        const spot = hasCollision(blocks, wanted) ? firstFreeCell(blocks) : { col, row }
+        const block: Block = {
+          id: newId(),
+          kind: 'image',
+          imageId,
+          color: DEFAULT_BARS_COLOR,
+          ...spot,
+          colSpan: 1,
+          rowSpan: 1,
+          frame: { cols: 1, rows: 1, col: 0, row: 0 },
+          transform: { ...IDENTITY_TRANSFORM },
+        }
+        set({ blocks: [...blocks, block] })
+        return block.id
       },
 
       addColorCell: (color = DEFAULT_CELL_COLOR) => {
