@@ -108,7 +108,7 @@ components:
 
 # Design System: InstaGrid
 
-Source of these tokens: the approved mockup `design/mockups/remake.html` (owner approval on board ticket i1, 2026-11-26). The app on branch `remake` implements this file; when the built app and this file disagree, re-run the documenter against the app.
+Source of these tokens: the approved mockup `design/mockups/remake.html` (owner approval on board ticket i1, 2026-11-26), checked against the built app (`src/theme/tokens.css`, `src/index.css`) after the finish review of 2026-11-26.
 
 ## Overview
 
@@ -179,7 +179,9 @@ Every token has a `-dark` sibling; the two are bound with `light-dark()` so one 
 
 Desktop (821px and wider): a three-column shell, 232px library, flexible canvas, 280px inspector, under a 48px top bar. Panels sit beside the canvas and never cover it. Between 821px and 1100px the side columns narrow before anything is hidden.
 
-Mobile (820px and narrower): the canvas runs the full width with a 16px gutter under a 56px top bar. The library is a bottom sheet (peek, half, full). When a block is selected a contextual action bar replaces the sheet's peek. Controls are 44px tall; primary dialog buttons 48px.
+Mobile (820px and narrower): the canvas runs the full width with a 16px gutter under a 56px top bar. The top bar holds the grid name, undo, redo, preview and export; the theme switch moves into the grids dialog so the name has room. The library is a bottom sheet (peek or open). When a block is selected a contextual action bar replaces the sheet's peek. Every touch control is at least 44px.
+
+The grid zoom control (rows in view) is never drawn over photos: on desktop it is pinned in the free gutter at the canvas corner; on mobile it sits under the grid inside the scroll area and hides while something is selected.
 
 The grid is always 3 columns of 3:4 cells with a 3px gap, centered, scrolling vertically. Spacing steps are 4, 8, 12, 16 and 24px.
 
@@ -241,7 +243,7 @@ Action bar: five icon-over-label actions, 44px targets, above a one-line summary
 ### Canvas states
 
 - **Arrange:** selection outline and handles; Split draws the block's internal cut lines and opens them into real gaps.
-- **Adjust:** the surround dims, the photo shows its full extent beyond the frame, controls for zoom, rotate, flip and bars color appear in the inspector (desktop) or the bar (mobile).
+- **Adjust:** the other blocks recede to a faint wash with no chips or badges, the photo shows its full extent beyond the frame at 30% and fades out before the top bar, and controls for zoom, fill or fit, rotate, flip and bars color appear in the inspector (desktop) or the bar (mobile).
 - **Preview:** every overlay hides; the grid alone, as it lands on the profile.
 
 Motion respects `prefers-reduced-motion`: transitions and the first-run count-in drop to instant.
