@@ -7,6 +7,12 @@ import { create } from 'zustand'
 
 export type DialogName = 'export' | 'projects' | 'receive'
 
+export interface SymmetryTarget {
+  sourceImageId: string
+  /** Set when an existing pattern is being changed. */
+  editImageId?: string
+}
+
 export interface ConfirmRequest {
   title: string
   body: string
@@ -26,12 +32,16 @@ interface OverlayState {
   toasts: Toast[]
   /** Mobile library sheet. */
   sheetOpen: boolean
+  /** Symmetry editor: the source photo, and the pattern being changed when editing one. */
+  symmetry: SymmetryTarget | null
   /** Set by the app shell; opens the system file picker. */
   pickFiles: () => void
 
   openDialog: (dialog: DialogName) => void
   closeDialog: () => void
   setSheetOpen: (open: boolean) => void
+  openSymmetry: (target: SymmetryTarget) => void
+  closeSymmetry: () => void
   setPickFiles: (pick: () => void) => void
 }
 
@@ -40,11 +50,14 @@ export const useOverlays = create<OverlayState>()((set) => ({
   confirm: null,
   toasts: [],
   sheetOpen: false,
+  symmetry: null,
   pickFiles: () => {},
 
   openDialog: (dialog) => set({ dialog }),
   closeDialog: () => set({ dialog: null }),
   setSheetOpen: (sheetOpen) => set({ sheetOpen }),
+  openSymmetry: (symmetry) => set({ symmetry, sheetOpen: false }),
+  closeSymmetry: () => set({ symmetry: null }),
   setPickFiles: (pickFiles) => set({ pickFiles }),
 }))
 

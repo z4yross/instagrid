@@ -30,7 +30,7 @@ export function useKeyboard() {
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
       const overlays = useOverlays.getState()
-      if (overlays.dialog || overlays.confirm) return
+      if (overlays.dialog || overlays.confirm || overlays.symmetry) return
       if (isTyping(event.target)) return
 
       const ui = useUi.getState()

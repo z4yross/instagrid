@@ -1,6 +1,15 @@
-import { Columns2, Copy, Move, SquareArrowRightEnter, Trash2, TriangleAlert } from 'lucide-react'
+import {
+  Aperture,
+  Columns2,
+  Copy,
+  Move,
+  SquareArrowRightEnter,
+  Trash2,
+  TriangleAlert,
+} from 'lucide-react'
 import type { ReactNode } from 'react'
 import { orderLabel } from '@/core/numbering'
+import { useLibrary } from '@/store/library'
 import { useProject } from '@/store/project'
 import { useUi } from '@/store/ui'
 import { deleteSelection, duplicateSelection, enterAdjust, splitSelection } from './actions'
@@ -8,6 +17,7 @@ import { AdjustControls, Swatches } from './AdjustControls'
 import { cx, ICON } from './classes'
 import { Button } from './kit'
 import { runJoin } from './runJoin'
+import { openInSymmetry, symmetryLabel } from './symmetryTarget'
 import { useSelection } from './useSelection'
 
 /** Desktop right panel: properties and actions of the selection (SPEC V30). */
@@ -16,6 +26,7 @@ export function Inspector() {
   const exitAdjust = useUi((s) => s.exitAdjust)
   const setColor = useProject((s) => s.setColor)
   const info = useSelection()
+  const images = useLibrary((s) => s.images)
   const { single, image, blocks } = info
 
   if (mode === 'preview') {
@@ -139,9 +150,13 @@ export function Inspector() {
 
       {info.canAdjust && single && image && (
         <Section title="Photo">
-          <Button className="mb-4 w-full" onClick={enterAdjust}>
+          <Button className="mb-2 w-full" onClick={enterAdjust}>
             <Move {...ICON} />
             Move photo in its frame
+          </Button>
+          <Button className="mb-4 w-full" onClick={() => openInSymmetry(image)}>
+            <Aperture {...ICON} />
+            {symmetryLabel(image, images)}
           </Button>
           <AdjustControls block={single} image={image} />
         </Section>

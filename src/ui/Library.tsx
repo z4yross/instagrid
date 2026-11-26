@@ -1,4 +1,4 @@
-import { Check, Plus, Smartphone, SquareDashed, X } from 'lucide-react'
+import { Aperture, Check, Plus, Smartphone, SquareDashed, X } from 'lucide-react'
 import { deleteImage } from '@/db/session'
 import { useLibrary } from '@/store/library'
 import type { LibraryImage } from '@/store/library'
@@ -8,6 +8,7 @@ import { cx, ICON } from './classes'
 import { Button, IconButton } from './kit'
 import { IMAGE_DRAG_TYPE } from './dragTypes'
 import { confirm, toast, useOverlays } from './overlays'
+import { openInSymmetry, symmetryLabel } from './symmetryTarget'
 
 async function removeImage(image: LibraryImage) {
   const used = blocksUsingImage(useProject.getState().blocks, image.id)
@@ -98,6 +99,17 @@ export function Thumbs({ columns, onPlaced }: ThumbsProps) {
             >
               <span className="grid size-6 place-items-center rounded-chip bg-black/80 text-white">
                 <X aria-hidden className="size-3.5" strokeWidth={2} />
+              </span>
+            </button>
+            <button
+              type="button"
+              aria-label={`${symmetryLabel(image, images)} from ${image.name}`}
+              title={symmetryLabel(image, images)}
+              onClick={() => openInSymmetry(image)}
+              className="absolute right-0 bottom-0 grid size-8 place-items-center opacity-0 transition-opacity duration-150 ease-out group-focus-within:opacity-100 group-hover:opacity-100 pointer-coarse:size-11 pointer-coarse:opacity-100"
+            >
+              <span className="grid size-6 place-items-center rounded-chip bg-black/80 text-white">
+                <Aperture aria-hidden className="size-3.5" strokeWidth={2} />
               </span>
             </button>
           </li>
