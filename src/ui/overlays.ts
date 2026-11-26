@@ -5,7 +5,7 @@ import { create } from 'zustand'
  * picker. Replaces browser alert / confirm / prompt (SPEC V27).
  */
 
-export type DialogName = 'export' | 'projects'
+export type DialogName = 'export' | 'projects' | 'receive'
 
 export interface ConfirmRequest {
   title: string

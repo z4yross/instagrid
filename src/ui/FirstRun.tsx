@@ -1,4 +1,4 @@
-import { ImagePlus, RotateCcw } from 'lucide-react'
+import { ImagePlus, RotateCcw, Smartphone } from 'lucide-react'
 import { useState } from 'react'
 import { orderLabel } from '@/core/numbering'
 import { ICON } from './classes'
@@ -14,6 +14,7 @@ const ORDER = [6, 5, 4, 3, 2, 1]
  */
 export function FirstRun() {
   const pickFiles = useOverlays((s) => s.pickFiles)
+  const openDialog = useOverlays((s) => s.openDialog)
   const [run, setRun] = useState(0)
 
   return (
@@ -36,8 +37,16 @@ export function FirstRun() {
             <ImagePlus {...ICON} />
             Add photos
           </Button>
-          <span className="text-ink-3">or drop them anywhere. Nothing leaves this device.</span>
+          <span className="text-ink-3">or drop them anywhere. Nothing is stored online.</span>
         </div>
+        <Button
+          variant="ghost"
+          className="mt-2 -ml-2 px-2 text-ink-2"
+          onClick={() => openDialog('receive')}
+        >
+          <Smartphone {...ICON} />
+          Add photos from your phone
+        </Button>
 
         <div key={run} className="mt-8 grid grid-cols-3 gap-[3px]" aria-hidden>
           {ORDER.map((n) => (

@@ -1,11 +1,11 @@
-import { Check, Plus, SquareDashed, X } from 'lucide-react'
+import { Check, Plus, Smartphone, SquareDashed, X } from 'lucide-react'
 import { deleteImage } from '@/db/session'
 import { useLibrary } from '@/store/library'
 import type { LibraryImage } from '@/store/library'
 import { blocksUsingImage, useProject } from '@/store/project'
 import { addColorCell, placeImages } from './actions'
 import { cx, ICON } from './classes'
-import { Button } from './kit'
+import { Button, IconButton } from './kit'
 import { IMAGE_DRAG_TYPE } from './dragTypes'
 import { confirm, toast, useOverlays } from './overlays'
 
@@ -112,6 +112,7 @@ export function Library() {
   const count = useLibrary((s) => s.images.length)
   const loading = useLibrary((s) => s.loading)
   const pickFiles = useOverlays((s) => s.pickFiles)
+  const openDialog = useOverlays((s) => s.openDialog)
 
   return (
     <aside aria-label="Photos" className="flex min-h-0 flex-col border-r border-line bg-panel">
@@ -119,7 +120,14 @@ export function Library() {
         <h2 className="font-semibold">
           Photos {count > 0 && <span className="font-normal text-ink-3">{count}</span>}
         </h2>
-        <Button className="ml-auto h-7 px-2" onClick={pickFiles}>
+        <IconButton
+          label="Add photos from your phone"
+          className="ml-auto size-7"
+          onClick={() => openDialog('receive')}
+        >
+          <Smartphone {...ICON} />
+        </IconButton>
+        <Button className="h-7 px-2" onClick={pickFiles}>
           <Plus {...ICON} />
           Add
         </Button>
