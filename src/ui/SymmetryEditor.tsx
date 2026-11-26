@@ -384,6 +384,7 @@ function Editor({ source, editing, onClose }: EditorProps) {
             max={359}
             value={Math.round(recipe.axisAngle)}
             onChange={(axisAngle) => update({ axisAngle })}
+            onNudge={(by) => update({ axisAngle: recipe.axisAngle + by })}
             readout={`${Math.round(recipe.axisAngle)}°`}
           />
           <label className="flex min-h-6 items-center gap-2 text-ink-2 pointer-coarse:min-h-11">
@@ -418,6 +419,7 @@ function Editor({ source, editing, onClose }: EditorProps) {
             max={180}
             value={Math.round(turn)}
             onChange={(value) => update({ rotation: value })}
+            onNudge={(by) => update({ rotation: recipe.rotation + by })}
             readout={`${Math.round(turn)}°`}
           />
           <Button
@@ -475,6 +477,7 @@ function Slider({
   step = 1,
   value,
   onChange,
+  onNudge,
   readout,
 }: {
   id: string
@@ -484,14 +487,28 @@ function Slider({
   step?: number
   value: number
   onChange: (value: number) => void
+  /** Adds one-degree buttons beside the slider, for angles (SPEC V56). */
+  onNudge?: (by: 1 | -1) => void
   readout: string
 }) {
+  const nudge =
+    'grid size-(--control-h) flex-none place-items-center rounded-control border border-line bg-raised transition-colors duration-150 ease-out hover:border-line-strong'
   return (
     <div className="grid gap-1">
       <label htmlFor={id} className="text-sm text-ink-3">
         {label}
       </label>
       <div className="flex min-h-6 items-center gap-2 pointer-coarse:min-h-11">
+        {onNudge && (
+          <button
+            type="button"
+            aria-label={`${label}: one degree less`}
+            onClick={() => onNudge(-1)}
+            className={nudge}
+          >
+            <Minus aria-hidden className="size-4" strokeWidth={1.8} />
+          </button>
+        )}
         <input
           id={id}
           type="range"
@@ -502,6 +519,16 @@ function Slider({
           onChange={(event) => onChange(Number(event.target.value))}
           className="slider min-w-0 flex-1"
         />
+        {onNudge && (
+          <button
+            type="button"
+            aria-label={`${label}: one degree more`}
+            onClick={() => onNudge(1)}
+            className={nudge}
+          >
+            <Plus aria-hidden className="size-4" strokeWidth={1.8} />
+          </button>
+        )}
         <output htmlFor={id} className="min-w-11 text-right text-ink-2">
           {readout}
         </output>
