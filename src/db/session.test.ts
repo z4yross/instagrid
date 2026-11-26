@@ -15,7 +15,9 @@ import {
   flushSave,
   listProjects,
   openProject,
+  stashUnsaved,
   stopAutosave,
+  UNSAVED_KEY,
 } from './session'
 
 const viewport = { width: 1440, height: 900 }
@@ -141,5 +143,95 @@ describe('projects', () => {
     await deleteProject(first)
     expect(useProject.getState().name).toBe('Untitled grid')
     expect(await listProjects()).toHaveLength(1)
+  })
+})
+
+describe('closing the page right after a change (V16)', () => {
+  const fakeStorage = () => {
+    const data = new Map<string, string>()
+    return {
+      data,
+      getItem: (key: string) => data.get(key) ?? null,
+      setItem: (key: string, value: string) => void data.set(key, value),
+      removeItem: (key: string) => void data.delete(key),
+    }
+  }
+
+  it('parks the unsaved layout and recovers it on the next start', async () => {
+    const storage = fakeStorage()
+    await boot(storage, viewport)
+    const id = useProject.getState().id
+    useProject.getState().addColorCell()
+    await flushSave()
+
+    // A second change, and the page goes away before its save runs.
+    useProject.getState().addColorCell()
+    useProject.getState().rename('Summer')
+    stashUnsaved()
+    expect(storage.data.has(UNSAVED_KEY)).toBe(true)
+    // Simulate the write never landing: put the older version back.
+    stopAutosave()
+    await projects.put([
+      {
+        id,
+        name: 'Untitled grid',
+        blocks: useProject.getState().blocks.slice(0, 1),
+        createdAt: 1,
+        updatedAt: 1,
+      },
+    ])
+    useProject.getState().load({ id: 'scratch', name: 'x', blocks: [] })
+
+    await boot(storage, viewport)
+    expect(useProject.getState()).toMatchObject({ id, name: 'Summer' })
+    expect(useProject.getState().blocks).toHaveLength(2)
+    expect((await projects.get(id))?.blocks).toHaveLength(2)
+    expect(storage.data.has(UNSAVED_KEY)).toBe(false)
+  })
+
+  it('parks nothing when everything is already saved', async () => {
+    const storage = fakeStorage()
+    await boot(storage, viewport)
+    useProject.getState().addColorCell()
+    await flushSave()
+    stashUnsaved()
+    expect(storage.data.has(UNSAVED_KEY)).toBe(false)
+  })
+
+  it('clears the parked copy once the save lands', async () => {
+    const storage = fakeStorage()
+    await boot(storage, viewport)
+    useProject.getState().addColorCell()
+    stashUnsaved()
+    expect(storage.data.has(UNSAVED_KEY)).toBe(true)
+    await flushSave()
+    expect(storage.data.has(UNSAVED_KEY)).toBe(false)
+  })
+
+  it('ignores a parked copy that is damaged or points at a deleted grid', async () => {
+    for (const raw of [
+      'not json',
+      JSON.stringify({ id: 'gone', name: 'x', blocks: [] }),
+      JSON.stringify({ id: 5, name: 'x', blocks: 'nope' }),
+    ]) {
+      const storage = fakeStorage()
+      storage.data.set(UNSAVED_KEY, raw)
+      await boot(storage, viewport)
+      expect(useProject.getState().name).toBe('Untitled grid')
+      expect(storage.data.has(UNSAVED_KEY)).toBe(false)
+      stopAutosave()
+    }
+  })
+
+  it('refuses a parked layout that breaks the grid rules', async () => {
+    const storage = fakeStorage()
+    await boot(storage, viewport)
+    const id = useProject.getState().id
+    stopAutosave()
+    const overlapping = [imageBlock('a', 0, 0), imageBlock('b', 0, 0)]
+    storage.data.set(UNSAVED_KEY, JSON.stringify({ id, name: 'Bad', blocks: overlapping }))
+    await boot(storage, viewport)
+    expect(useProject.getState().name).toBe('Untitled grid')
+    expect(useProject.getState().blocks).toEqual([])
   })
 })
